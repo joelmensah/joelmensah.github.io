@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TW1: Macbeth & Community Assessment Sheet</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Calibri:wght@400;700&family=Inter:wght@400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Calibri', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #f3f4f6;
+            color: #111827;
+        }
+
+        /* Spreadsheet paper container */
+        .paper-sheet {
+            background: #ffffff;
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 32px 40px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Table styling matching Excel/Spreadsheet printout */
+        table.assessment-table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 12.5px;
+            line-height: 1.15;
+        }
+
+        table.assessment-table th,
+        table.assessment-table td {
+            padding: 2px 6px;
+            text-align: center;
+            border: 1px solid transparent;
+        }
+
+        /* Gridlines option */
+        .show-gridlines table.assessment-table td,
+        .show-gridlines table.assessment-table th.main-header {
+            border: 1px solid #e5e7eb;
+        }
+
+        /* Vertical rotated headers matching the printed sheet */
+        .vertical-header {
+            height: 215px;
+            vertical-align: bottom;
+            padding-bottom: 8px !important;
+            width: 48px;
+        }
+
+        .vertical-text {
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            white-space: nowrap;
+            display: inline-block;
+            text-align: left;
+            font-weight: 700;
+            font-size: 12px;
+            letter-spacing: 0.01em;
+            color: #111;
+        }
+
+        .horizontal-header {
+            vertical-align: middle;
+            font-weight: 700;
+            font-size: 12px;
+            color: #111;
+        }
+
+        /* Data cells */
+        td.col-rank {
+            width: 48px;
+            color: #111;
+        }
+        td.col-fname {
+            width: 185px;
+            text-align: center;
+        }
+        td.col-lname {
+            width: 185px;
+            text-align: center;
+        }
+        td.col-score {
+            width: 56px;
+            font-variant-numeric: tabular-nums;
+            border-left: 1px solid rgba(255, 255, 255, 0.35) !important;
+            border-right: 1px solid rgba(255, 255, 255, 0.35) !important;
+        }
+
+        tbody tr:hover td {
+            outline: 1.5px solid #2563eb;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Print optimization */
+        @media print {
+            body {
+                background: #ffffff;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .paper-sheet {
+                box-shadow: none;
+                padding: 0;
+                max-width: 100%;
+                margin: 0;
+            }
+            table.assessment-table {
+                font-size: 10.5px;
+            }
+            .vertical-header {
+                height: 175px;
+            }
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+    </style>
+</head>
+<body class="py-6 px-2 sm:px-6">
+
+    <!-- Minimal Top Bar (Search + Grade Filter only) -->
+    <div class="no-print max-w-[960px] mx-auto mb-4 flex flex-wrap items-center justify-end gap-2.5">
+        <!-- Search Input -->
+        <div class="relative">
+            <input 
+                type="text" 
+                id="search-input" 
+                placeholder="Search student..." 
+                class="pl-8 pr-3 py-1.5 text-sm bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-52 sm:w-64"
+            >
+            <svg class="w-4 h-4 text-gray-400 absolute left-2.5 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+        </div>
+
+        <!-- Grade Filter -->
+        <select id="grade-filter" class="text-sm border border-gray-300 rounded-lg px-3 py-1.5 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option value="all">All Grades</option>
+            <option value="9">Grade 9</option>
+            <option value="8">Grade 8</option>
+            <option value="7">Grade 7</option>
+            <option value="6">Grade 6</option>
+            <option value="5">Grade 5</option>
+            <option value="4">Grade 4</option>
+            <option value="3">Grade 3</option>
+            <option value="2">Grade 2</option>
+            <option value="1">Grade 1</option>
+        </select>
+    </div>
+
+    <!-- Main Printable Spreadsheet Replica -->
+    <div id="sheet-container" class="paper-sheet rounded-sm overflow-x-auto">
+        <table class="assessment-table" id="assessment-table">
+            <thead>
+                <!-- Row 1: Top Assessment Title -->
+                <tr>
+                    <th colspan="3"></th>
+                    <th colspan="4" class="text-center font-bold text-[12.5px] pb-1 text-gray-900">
+                        TW1: Macbeth &amp; Community
+                    </th>
+                    <th colspan="2"></th>
+                </tr>
+                <!-- Row 2: Section Subheaders -->
+                <tr>
+                    <th colspan="3"></th>
+                    <th colspan="3" class="text-center font-bold text-[12px] pb-2 text-gray-900">
+                        A: Macbeth
+                    </th>
+                    <th colspan="1" class="text-center font-bold text-[12px] pb-2 text-gray-900 whitespace-nowrap">
+                        B: A Christmas Carol
+                    </th>
+                    <th colspan="2"></th>
+                </tr>
+                <!-- Row 3: Column Headers (Vertical + Horizontal) -->
+                <tr>
+                    <th class="vertical-header main-header cursor-pointer hover:bg-gray-50" data-sort="index" title="Sort by Rank">
+                        <span class="vertical-text">Rank Position</span>
+                    </th>
+                    <th class="horizontal-header main-header cursor-pointer hover:bg-gray-50" data-sort="fname" title="Sort by First Name">
+                        First name
+                    </th>
+                    <th class="horizontal-header main-header cursor-pointer hover:bg-gray-50" data-sort="lname" title="Sort by Last Name">
+                        Last name
+                    </th>
+                    <th class="vertical-header main-header cursor-pointer hover:bg-gray-50" data-sort="ao1" title="Sort by AO1-3: Shakespeare / 30">
+                        <span class="vertical-text">AO1-3: Shakespeare / 30</span>
+                    </th>
+                    <th class="vertical-header main-header cursor-pointer hover:bg-gray-50" data-sort="ao4" title="Sort by AO4: Technical Accuracy / 4">
+                        <span class="vertical-text">AO4: Technical Accuracy / 4</span>
+                    </th>
+                    <th class="vertical-header main-header cursor-pointer hover:bg-gray-50" data-sort="subtotal" title="Sort by A: Shakespeare Sub-total / 34">
+                        <span class="vertical-text">A: Shakespeare Sub-total / 34</span>
+                    </th>
+                    <th class="vertical-header main-header cursor-pointer hover:bg-gray-50" data-sort="novel" title="Sort by B: AO1-3. 19th-century novel / 30">
+                        <span class="vertical-text">B: AO1-3. 19th-century novel / 30</span>
+                    </th>
+                    <th class="vertical-header main-header cursor-pointer hover:bg-gray-50" data-sort="total" title="Sort by 1: Past Paper Total Marks / 64">
+                        <span class="vertical-text">1: Past Paper Total Marks / 64</span>
+                    </th>
+                    <th class="vertical-header main-header cursor-pointer hover:bg-gray-50" data-sort="grade" title="Sort by 1: Current Unit Grade">
+                        <span class="vertical-text">1: Current Unit Grade</span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody id="table-body">
+                <!-- Populated dynamically via JS -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Complete 149-row dataset transcribed from the 5 images:
+        // [Rank, First Name, Last Name, AO1-3 Shakespeare (/30), AO4 (/4), Shakespeare Sub-total (/34), B: 19th-century novel (/30), Past Paper Total (/64), Current Unit Grade]
+        const rawData = [
+            ["1", "Alex", "Bui", 27, 4, 31, 26, 57, 9],
+            ["2", "Qoyhum Olutayo Hillary", "Onafowokan", 25, 4, 29, 27, 56, 9],
+            ["3", "Thomas", "Ngome-Okezie", 26, 4, 30, 24, 54, 8],
+            ["~4", "Boubacar", "Jakiteh", 23, 4, 27, 26, 53, 8],
+            ["~4", "Maximilian", "Mitomi", 24, 4, 28, 25, 53, 8],
+            ["~4", "Stephen", "Olubajo", 24, 4, 28, 25, 53, 8],
+            ["~7", "Ye", "Ma", 24, 4, 28, 24, 52, 8],
+            ["~7", "Jayden", "Ntiamoah", 25, 3, 28, 24, 52, 8],
+            ["~7", "Sidney", "Peacock", 25, 4, 29, 23, 52, 8],
+            ["~7", "Ibrahim Marco", "Raveneau-Sylla", 24, 4, 28, 24, 52, 8],
+            ["~7", "Isaiah", "Zango", 24, 4, 28, 24, 52, 8],
+            ["~12", "Shaback", "Amaechi", 23, 4, 27, 24, 51, 8],
+            ["~12", "Lionel", "Berhane", 23, 4, 27, 24, 51, 8],
+            ["~12", "Georgios", "Christoforatos", 24, 3, 27, 24, 51, 8],
+            ["~12", "Paul", "Famosa", 24, 3, 27, 24, 51, 8],
+            ["~12", "Oluwatobi", "Olorunnisomo", 23, 4, 27, 24, 51, 8],
+            ["~12", "Levon", "Scott", 23, 4, 27, 24, 51, 8],
+            ["~12", "Joshua", "Williams", 23, 4, 27, 24, 51, 8],
+            ["~19", "Oghenevwegba", "Fydoro-Okiti", 23, 4, 27, 23, 50, 8],
+            ["~19", "Ewaen", "Michael Idugboe", 23, 4, 27, 23, 50, 8],
+            ["~19", "Jordan", "Ogundeyin", 23, 3, 26, 24, 50, 8],
+            ["~19", "David", "Okebu", 24, 4, 28, 22, 50, 8],
+            ["~23", "Israel", "Aladesuru", 22, 4, 26, 23, 49, 8],
+            ["~23", "Kevin", "Baah", 23, 4, 27, 22, 49, 8],
+            ["~23", "Aizeyosabo", "Momoh", 22, 4, 26, 23, 49, 8],
+            ["~23", "Osazenomwan", "Momoh", 23, 4, 27, 22, 49, 8],
+            ["~23", "Peter", "Oyenola", 22, 4, 26, 23, 49, 8],
+            ["~23", "Chibuikem", "Uchendu", 23, 4, 27, 22, 49, 8],
+            ["~29", "David", "Agyemang", 22, 4, 26, 22, 48, 7],
+            ["~29", "Darrell David", "Akoto", 22, 4, 26, 22, 48, 7],
+            ["~29", "Jayden", "Barker", 22, 4, 26, 22, 48, 7],
+            ["~29", "Otobong", "Umoren", 22, 4, 26, 22, 48, 7],
+            ["~33", "David", "Boakye", 20, 4, 24, 23, 47, 7],
+            ["~33", "Rafael", "Kassaye Wood", 22, 4, 26, 21, 47, 7],
+            ["~33", "Piers", "Mills Husey", 22, 4, 26, 21, 47, 7],
+            ["~33", "Gavontae", "Purcell-Owen", 22, 4, 26, 21, 47, 7],
+            ["~33", "Jamal", "Shittu", 21, 3, 24, 23, 47, 7],
+            ["~38", "Warees", "Adeniregun", 20, 4, 24, 22, 46, 7],
+            ["~38", "Jeremie", "Adeyemi", 21, 4, 25, 21, 46, 7],
+            ["~38", "Ikechukwu", "Agbonye", 21, 4, 25, 21, 46, 7],
+            ["~38", "Israel", "Ajo", 21, 4, 25, 21, 46, 7],
+            ["~38", "Aaron", "Awuku", 22, 4, 26, 20, 46, 7],
+            ["~38", "Cameron", "Green", 21, 4, 25, 21, 46, 7],
+            ["~38", "Gedion", "Meshesha", 22, 4, 26, 20, 46, 7],
+            ["~38", "Uzoma", "Nwachukwu", 21, 4, 25, 21, 46, 7],
+            ["~38", "Yeshvasin", "Purmessur", 22, 4, 26, 20, 46, 7],
+            ["~47", "Hezekiah", "Acquah", 20, 4, 24, 21, 45, 7],
+            ["~47", "King", "Bakare", 23, 4, 27, 18, 45, 7],
+            ["~47", "Harishram", "Sivagobikrishna", 21, 4, 25, 20, 45, 7],
+            ["~50", "Tilyan", "Elliah", 21, 4, 25, 19, 44, 7],
+            ["~50", "Stevin", "Suresh", 22, 3, 25, 19, 44, 7],
+            ["~52", "Lemuel", "Adou", 21, 4, 25, 18, 43, 6],
+            ["~52", "Olamide", "Awe", 18, 4, 22, 21, 43, 6],
+            ["~52", "Wesley", "Boakye", 20, 4, 24, 19, 43, 6],
+            ["~52", "Israel", "Joseph", 21, 4, 25, 18, 43, 6],
+            ["~52", "Makai", "Kibuuka-Musoke", 20, 4, 24, 19, 43, 6],
+            ["~57", "Samuel", "Ajayi", 18, 4, 22, 20, 42, 6],
+            ["~57", "Uyiosa", "Erhabor", 20, 4, 24, 18, 42, 6],
+            ["~57", "Joel Sebastian", "Garzon Moron", 20, 4, 24, 18, 42, 6],
+            ["~57", "Kosisochukwu", "Ibe", 21, 4, 25, 17, 42, 6],
+            ["~57", "Jeantai", "Lindsay", 18, 4, 22, 20, 42, 6],
+            ["~57", "Victor", "Ogundega", 21, 4, 25, 17, 42, 6],
+            ["~57", "Richmond", "Ogunfuyi", 19, 4, 23, 19, 42, 6],
+            ["~64", "Rayhan", "Afful", 21, 4, 25, 16, 41, 6],
+            ["~64", "Jordan", "Obukohwo", 21, 3, 24, 17, 41, 6],
+            ["~64", "Adeoluwa", "Odeyemi", 17, 4, 21, 20, 41, 6],
+            ["~64", "Osazeme", "Osas", 20, 4, 24, 17, 41, 6],
+            ["~64", "Musa", "Rahmani", 20, 4, 24, 17, 41, 6],
+            ["~64", "Michael", "Uwadiae", 20, 4, 24, 17, 41, 6],
+            ["~70", "Prince-Chima", "Chima", 18, 4, 22, 18, 40, 6],
+            ["~70", "Joel", "Masabanda-Tiban", 18, 4, 22, 18, 40, 6],
+            ["~70", "Oladamola", "Mobolaji", 18, 4, 22, 18, 40, 6],
+            ["~70", "Abdoul", "Sangare", 18, 4, 22, 18, 40, 6],
+            ["~70", "Ovuefe Cedric", "Uloho", 17, 4, 21, 19, 40, 6],
+            ["~75", "Jonathan", "Addae", 20, 4, 24, 15, 39, 6],
+            ["~75", "Jason", "Nkansah", 19, 4, 23, 16, 39, 6],
+            ["~75", "Leule", "Sisay", 18, 4, 22, 17, 39, 6],
+            ["~78", "Ajibola", "Abass", 17, 4, 21, 17, 38, 6],
+            ["~78", "Akinjuwon", "Akinleye", 16, 3, 19, 19, 38, 6],
+            ["~78", "Prince Kwabena", "Awuah", 19, 3, 22, 16, 38, 6],
+            ["~78", "Prince-Mikhael", "Dombo", 18, 4, 22, 16, 38, 6],
+            ["~78", "Hakeem", "Sesay", 17, 4, 21, 17, 38, 6],
+            ["~83", "Nathan", "Frampton", 18, 4, 22, 15, 37, 5],
+            ["~83", "Jayden", "Gebre", 17, 4, 21, 16, 37, 5],
+            ["~83", "Oliver", "Sengebwila", 17, 3, 20, 17, 37, 5],
+            ["~83", "Imran", "Sesay", 17, 4, 21, 16, 37, 5],
+            ["~87", "Alexander", "Asagba", 16, 4, 20, 16, 36, 5],
+            ["~87", "Elijah", "Fyffe", 19, 4, 23, 13, 36, 5],
+            ["~87", "D'Andre", "Minott", 18, 4, 22, 14, 36, 5],
+            ["~87", "Wesley", "Walters", 16, 4, 20, 16, 36, 5],
+            ["~87", "Samuel", "Wiafe", 16, 3, 19, 17, 36, 5],
+            ["~92", "Charlie", "Ford", 17, 3, 20, 15, 35, 5],
+            ["~92", "Adam", "Haid", 17, 3, 20, 15, 35, 5],
+            ["~92", "Jamiel", "Jackson-Davis", 15, 3, 18, 17, 35, 5],
+            ["~95", "Isaiah", "Ashie", 16, 4, 20, 14, 34, 5],
+            ["~95", "Aidan", "Clase Martinez", 15, 2, 17, 17, 34, 5],
+            ["~95", "Joel", "Kiwanuka", 15, 4, 19, 15, 34, 5],
+            ["~98", "Israel", "Atobrah-Marfo", 15, 3, 18, 15, 33, 5],
+            ["~98", "Izaiah", "Gayle", 15, 3, 18, 15, 33, 5],
+            ["~98", "Nathan", "Okoh", 16, 3, 19, 14, 33, 5],
+            ["~98", "Jibril", "Shittu", 17, 3, 20, 13, 33, 5],
+            ["~98", "Al-Amin", "Yusuf", 15, 3, 18, 15, 33, 5],
+            ["~103", "Samuel", "Arigbabu", 16, 4, 20, 12, 32, 4],
+            ["~103", "Olamide", "Famose", 16, 3, 19, 13, 32, 4],
+            ["~105", "Enoch", "Adeoshun", 15, 3, 18, 13, 31, 4],
+            ["~105", "Cairo", "Bent Pateman", 16, 3, 19, 12, 31, 4],
+            ["~105", "Zy'Shae", "Brown-Thomas", 15, 3, 18, 13, 31, 4],
+            ["~105", "Isaiah", "Lawrence", 15, 3, 18, 13, 31, 4],
+            ["~105", "Brian", "Mbunga", 15, 3, 18, 13, 31, 4],
+            ["~105", "Reuben", "Walusimbi", 12, 3, 15, 16, 31, 4],
+            ["~111", "Olaoluwa", "Oladipo", 15, 3, 18, 12, 30, 4],
+            ["~111", "Malachi-Saddeiq", "Smith", 14, 3, 17, 13, 30, 4],
+            ["~111", "Massire", "Sow", 14, 3, 17, 13, 30, 4],
+            ["~114", "Paul", "Benson", 17, 3, 20, 9, 29, 4],
+            ["~114", "Jeffrey", "Oshodin", 14, 3, 17, 12, 29, 4],
+            ["~114", "Jack", "Persson", 13, 3, 16, 13, 29, 4],
+            ["~117", "Joseph", "Aikhionbare", 14, 3, 17, 11, 28, 4],
+            ["~117", "Franck-Harvey", "Bassama Zibi", 12, 3, 15, 13, 28, 4],
+            ["~117", "Aaron", "McDonald", 6, 2, 8, 20, 28, 3],
+            ["~120", "Louis", "Bauer", 12, 4, 16, 11, 27, 3],
+            ["~120", "Ja'Zai", "Haywood", 13, 2, 15, 12, 27, 3],
+            ["~120", "Osman", "Kanu", 14, 2, 16, 11, 27, 3],
+            ["~120", "David", "Matti", 14, 2, 16, 11, 27, 3],
+            ["~120", "Anuoluwatomiwa", "Oluremi", 11, 3, 14, 13, 27, 3],
+            ["~120", "Osaremel", "Osayande", 13, 3, 16, 11, 27, 3],
+            ["126", "Jordell", "Dayle", 16, 3, 19, 7, 26, 3],
+            ["~127", "Karim", "Fernandez", 10, 3, 13, 12, 25, 3],
+            ["~127", "Makar", "Onysko", 13, 2, 15, 10, 25, 3],
+            ["~127", "Daniel", "Osazuwa", 11, 3, 14, 11, 25, 3],
+            ["~127", "David", "Sorinwa", 10, 3, 13, 12, 25, 3],
+            ["~127", "Jonathan", "Ubazue", 11, 3, 14, 11, 25, 3],
+            ["~132", "Kwabena", "Davis", 16, 2, 18, 6, 24, 3],
+            ["~132", "Kathene", "Fayama", 13, 3, 16, 8, 24, 3],
+            ["~132", "Funete", "Solomon", 16, 3, 19, 5, 24, 3],
+            ["135", "Mark", "Moigura", 10, 3, 13, 10, 23, 3],
+            ["136", "Michael", "Tijani", 8, 3, 11, 10, 21, 3],
+            ["~137", "Joshua", "Blackwood", 10, 2, 12, 8, 20, 3],
+            ["~137", "Maison", "Chambers-Huseyin", 10, 3, 13, 7, 20, 3],
+            ["~137", "Jaydon", "Pettican Castillo", 10, 2, 12, 8, 20, 3],
+            ["~140", "Ethan", "Donkor", 8, 3, 11, 7, 18, 2],
+            ["~140", "Serhii", "Mykhailevych", 8, 2, 10, 8, 18, 2],
+            ["142", "Kai", "McDermott", 7, 2, 9, 7, 16, 2],
+            ["143", "Kennedy", "Asare", 6, 2, 8, 7, 15, 2],
+            ["~144", "Micah", "Ashie", 3, 3, 6, 7, 13, 2],
+            ["~144", "Eliab", "Berhane", 6, 2, 8, 5, 13, 2],
+            ["~146", "Adrians", "Metra", 4, 2, 6, 6, 12, 1],
+            ["~146", "Emmanuel", "Ogunbase", 5, 2, 7, 5, 12, 1],
+            ["~148", "Arsenii", "Karuk", 1, 1, 2, 4, 6, 1],
+            ["~148", "Jaiden", "Kigozi", 2, 2, 4, 2, 6, 1]
+        ];
+
+        // Convert to structured objects
+        const students = rawData.map((row, idx) => ({
+            index: idx + 1,
+            rank: row[0],
+            fname: row[1],
+            lname: row[2],
+            ao1: row[3],
+            ao4: row[4],
+            subtotal: row[5],
+            novel: row[6],
+            total: row[7],
+            grade: row[8]
+        }));
+
+        let currentSort = { key: 'index', asc: true };
+
+        // Color Heatmap styling (green-to-yellow-to-red scale relative to column min/max)
+        function getHeatmapStyle(col, val) {
+            const maxMap = { ao1: 27, ao4: 4, subtotal: 31, novel: 27, total: 57, grade: 9 };
+            const minMap = { ao1: 1, ao4: 1, subtotal: 2, novel: 2, total: 6, grade: 1 };
+            const ratio = Math.max(0, Math.min(1, (val - minMap[col]) / (maxMap[col] - minMap[col])));
+            const hue = Math.round(ratio * 130); // 0 (red) -> 65 (yellow) -> 130 (green)
+            const weight = col === 'grade' ? 'font-weight: 600;' : '';
+            return `background-color: hsl(${hue}, 72%, 84%); color: #111827; ${weight}`;
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('table-body');
+            const searchQuery = document.getElementById('search-input').value.trim().toLowerCase();
+            const gradeFilter = document.getElementById('grade-filter').value;
+
+            // Filter rows
+            const filtered = students.filter(s => {
+                const matchesGrade = gradeFilter === 'all' || String(s.grade) === gradeFilter;
+                const fullName = `${s.fname} ${s.lname}`.toLowerCase();
+                const matchesSearch = !searchQuery || 
+                    fullName.includes(searchQuery) || 
+                    s.rank.toLowerCase().includes(searchQuery);
+                return matchesGrade && matchesSearch;
+            });
+
+            // Sort rows
+            filtered.sort((a, b) => {
+                let valA = a[currentSort.key];
+                let valB = b[currentSort.key];
+                if (typeof valA === 'string') {
+                    return currentSort.asc ? valA.localeCompare(valB) : valB.localeCompare(valA);
+                }
+                return currentSort.asc ? valA - valB : valB - valA;
+            });
+
+            // Build HTML rows
+            tbody.innerHTML = filtered.map(s => `
+                <tr>
+                    <td class="col-rank">${s.rank}</td>
+                    <td class="col-fname">${s.fname}</td>
+                    <td class="col-lname">${s.lname}</td>
+                    <td class="col-score" style="${getHeatmapStyle('ao1', s.ao1)}">${s.ao1}</td>
+                    <td class="col-score" style="${getHeatmapStyle('ao4', s.ao4)}">${s.ao4}</td>
+                    <td class="col-score" style="${getHeatmapStyle('subtotal', s.subtotal)}">${s.subtotal}</td>
+                    <td class="col-score" style="${getHeatmapStyle('novel', s.novel)}">${s.novel}</td>
+                    <td class="col-score" style="${getHeatmapStyle('total', s.total)}">${s.total}</td>
+                    <td class="col-score" style="${getHeatmapStyle('grade', s.grade)}">${s.grade}</td>
+                </tr>
+            `).join('');
+        }
+
+        // Event Listeners
+        document.getElementById('search-input').addEventListener('input', renderTable);
+        document.getElementById('grade-filter').addEventListener('change', renderTable);
+
+        // Column header sorting
+        document.querySelectorAll('th[data-sort]').forEach(th => {
+            th.addEventListener('click', () => {
+                const sortKey = th.getAttribute('data-sort');
+                if (currentSort.key === sortKey) {
+                    currentSort.asc = !currentSort.asc;
+                } else {
+                    currentSort.key = sortKey;
+                    // Default descending for numerical scores, ascending for rank/names
+                    currentSort.asc = ['index', 'fname', 'lname'].includes(sortKey);
+                }
+                renderTable();
+            });
+        });
+
+        // Initial render
+        renderTable();
+    </script>
+</body>
+</html>
