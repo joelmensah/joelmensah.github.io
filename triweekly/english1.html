@@ -17,7 +17,7 @@
 
         .paper-sheet {
             background: #ffffff;
-            max-width: 960px;
+            max-width: 1020px;
             margin: 0 auto;
             padding: 32px 40px;
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
@@ -72,24 +72,29 @@
             color: #111;
         }
 
+        td.col-rank, td.col-fname, td.col-lname {
+            background-color: #ffffff;
+        }
+
         td.col-rank {
             width: 48px;
             min-width: 42px;
             color: #111;
-            background-color: #ffffff;
         }
-        td.col-fname {
+        td.col-fname, td.col-lname {
             width: 185px;
             min-width: 120px;
             text-align: center;
-            background-color: #ffffff;
         }
-        td.col-lname {
-            width: 185px;
-            min-width: 120px;
+        td.col-set {
+            width: 65px;
+            min-width: 55px;
             text-align: center;
-            background-color: #ffffff;
+            font-weight: 600;
+            color: #374151;
+            background-color: #f9fafb;
         }
+
         td.col-score {
             width: 56px;
             min-width: 44px;
@@ -99,10 +104,13 @@
         }
 
         tbody tr:hover td {
-            outline: 1.5px solid #2563eb;
+            outline: 1.5px solid #3b82f6;
             position: relative;
             z-index: 5;
         }
+
+        th.bg-white { background-color: #ffffff; }
+        th.hover\:bg-gray-50:hover { background-color: #f9fafb; }
 
         @media (max-width: 640px) {
             .paper-sheet {
@@ -136,7 +144,7 @@
                 z-index: 3;
                 width: 38px;
                 min-width: 38px;
-                background-color: #ffffff;
+                box-shadow: 1px 0 3px rgba(0,0,0,0.05);
             }
 
             th.sticky-fname,
@@ -149,7 +157,6 @@
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
-                background-color: #ffffff;
                 box-shadow: 2px 0 5px -2px rgba(0, 0, 0, 0.12);
             }
 
@@ -157,51 +164,52 @@
                 min-width: 105px;
                 white-space: nowrap;
             }
+
+            td.col-set {
+                min-width: 52px;
+                white-space: nowrap;
+            }
         }
 
         @media print {
-            body {
-                background: #ffffff;
-            }
-            .no-print {
-                display: none !important;
-            }
+            body { background: #ffffff !important; }
+            .no-print { display: none !important; }
             .paper-sheet {
-                box-shadow: none;
+                background: #ffffff !important;
+                box-shadow: none !important;
                 padding: 0;
                 max-width: 100%;
                 margin: 0;
             }
-            table.assessment-table {
-                font-size: 10.5px;
-            }
-            .vertical-header {
-                height: 175px;
-            }
+            table.assessment-table { font-size: 10.5px; }
+            .vertical-header { height: 175px; }
             * {
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
+                color: #000 !important;
             }
+            td.col-score { color: #111 !important; }
         }
     </style>
 </head>
 <body class="py-3 sm:py-6 px-2 sm:px-6">
 
-    <div class="no-print max-w-[960px] mx-auto mb-3 sm:mb-4 bg-white rounded-xl shadow-sm border border-gray-200 p-3">
-        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
-            <div class="relative flex-1">
+    <!-- Centered and shrunk top toolbar -->
+    <div class="no-print max-w-[1020px] mx-auto mb-3 sm:mb-4 bg-white rounded-xl shadow-sm border border-gray-200 p-3 flex justify-center">
+        <div class="flex flex-col sm:flex-row items-center gap-3 w-full max-w-sm sm:max-w-none sm:w-auto">
+            <div class="relative w-full sm:w-[220px]">
                 <input 
                     type="text" 
                     id="search-input" 
                     placeholder="Search student..." 
-                    class="w-full pl-9 pr-3 py-2 text-base sm:text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    class="w-full pl-9 pr-3 py-2 text-base sm:text-sm border border-gray-300 rounded-lg bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                 <svg class="w-4 h-4 text-gray-400 absolute left-3 top-3 sm:top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                 </svg>
             </div>
 
-            <select id="grade-filter" class="w-full sm:w-44 text-base sm:text-sm border border-gray-300 rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <select id="grade-filter" class="w-full sm:w-[130px] text-base sm:text-sm border border-gray-300 rounded-lg px-3 py-2 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <option value="all">All Grades</option>
                 <option value="9">Grade 9</option>
                 <option value="8">Grade 8</option>
@@ -221,14 +229,14 @@
             <table class="assessment-table" id="assessment-table">
                 <thead>
                     <tr>
-                        <th colspan="3" class="bg-white"></th>
+                        <th colspan="4" class="bg-white"></th>
                         <th colspan="4" class="text-center font-bold text-[12.5px] pb-1 text-gray-900">
                             TW1: Macbeth &amp; Community
                         </th>
                         <th colspan="2"></th>
                     </tr>
                     <tr>
-                        <th colspan="3" class="bg-white"></th>
+                        <th colspan="4" class="bg-white"></th>
                         <th colspan="3" class="text-center font-bold text-[12px] pb-2 text-gray-900">
                             A: Macbeth
                         </th>
@@ -238,31 +246,34 @@
                         <th colspan="2"></th>
                     </tr>
                     <tr>
-                        <th class="vertical-header main-header sticky-rank cursor-pointer hover:bg-gray-50 bg-white" data-sort="index" title="Sort by Rank">
+                        <th class="vertical-header main-header sticky-rank cursor-pointer hover:bg-gray-50 bg-white" data-sort="index">
                             <span class="vertical-text">Rank Position</span>
                         </th>
-                        <th class="horizontal-header main-header sticky-fname cursor-pointer hover:bg-gray-50 bg-white" data-sort="fname" title="Sort by First Name">
+                        <th class="horizontal-header main-header sticky-fname cursor-pointer hover:bg-gray-50 bg-white" data-sort="fname">
                             First name
                         </th>
-                        <th class="horizontal-header main-header cursor-pointer hover:bg-gray-50 bg-white" data-sort="lname" title="Sort by Last Name">
+                        <th class="horizontal-header main-header cursor-pointer hover:bg-gray-50 bg-white" data-sort="lname">
                             Last name
                         </th>
-                        <th class="vertical-header main-header cursor-pointer hover:bg-gray-50" data-sort="ao1" title="Sort by AO1-3: Shakespeare / 30">
+                        <th class="horizontal-header main-header cursor-pointer hover:bg-gray-50 bg-white" data-sort="setOrder">
+                            Set
+                        </th>
+                        <th class="vertical-header main-header cursor-pointer hover:bg-gray-50" data-sort="ao1">
                             <span class="vertical-text">AO1-3: Shakespeare / 30</span>
                         </th>
-                        <th class="vertical-header main-header cursor-pointer hover:bg-gray-50" data-sort="ao4" title="Sort by AO4: Technical Accuracy / 4">
+                        <th class="vertical-header main-header cursor-pointer hover:bg-gray-50" data-sort="ao4">
                             <span class="vertical-text">AO4: Technical Accuracy / 4</span>
                         </th>
-                        <th class="vertical-header main-header cursor-pointer hover:bg-gray-50" data-sort="subtotal" title="Sort by A: Shakespeare Sub-total / 34">
+                        <th class="vertical-header main-header cursor-pointer hover:bg-gray-50" data-sort="subtotal">
                             <span class="vertical-text">A: Shakespeare Sub-total / 34</span>
                         </th>
-                        <th class="vertical-header main-header cursor-pointer hover:bg-gray-50" data-sort="novel" title="Sort by B: AO1-3. 19th-century novel / 30">
+                        <th class="vertical-header main-header cursor-pointer hover:bg-gray-50" data-sort="novel">
                             <span class="vertical-text">B: AO1-3. 19th-century novel / 30</span>
                         </th>
-                        <th class="vertical-header main-header cursor-pointer hover:bg-gray-50" data-sort="total" title="Sort by 1: Past Paper Total Marks / 64">
+                        <th class="vertical-header main-header cursor-pointer hover:bg-gray-50" data-sort="total">
                             <span class="vertical-text">1: Past Paper Total Marks / 64</span>
                         </th>
-                        <th class="vertical-header main-header cursor-pointer hover:bg-gray-50" data-sort="grade" title="Sort by 1: Current Unit Grade">
+                        <th class="vertical-header main-header cursor-pointer hover:bg-gray-50" data-sort="grade">
                             <span class="vertical-text">1: Current Unit Grade</span>
                         </th>
                     </tr>
@@ -426,18 +437,164 @@
             ["~148", "Jaiden", "Kigozi", 2, 2, 4, 2, 6, 1]
         ];
 
-        const students = rawData.map((row, idx) => ({
-            index: idx + 1,
-            rank: row[0],
-            fname: row[1],
-            lname: row[2],
-            ao1: row[3],
-            ao4: row[4],
-            subtotal: row[5],
-            novel: row[6],
-            total: row[7],
-            grade: row[8]
-        }));
+        const setLookup = {
+            "Aizeyosabo Momoh": "Set 1",
+            "Alex Bui": "Set 1",
+            "Boubacar Jakiteh": "Set 1",
+            "Ewaen Michael Idugboe": "Set 1",
+            "Georgios Christoforatos": "Set 1",
+            "Ibrahim Marco Raveneau-Sylla": "Set 1",
+            "Isaiah Zango": "Set 1",
+            "Israel Aladesuru": "Set 1",
+            "Jamal Shittu": "Set 1",
+            "Jayden Barker": "Set 1",
+            "Jayden Ntiamoah": "Set 1",
+            "Jordan Ogundeyin": "Set 1",
+            "Joshua Williams": "Set 1",
+            "Lemuel Adou": "Set 1",
+            "Levon Scott": "Set 1",
+            "Lionel Berhane": "Set 1",
+            "Maximilian Mitomi": "Set 1",
+            "Oghenevwegba Fydoro-Okiti": "Set 1",
+            "Oluwatobi Olorunnisomo": "Set 1",
+            "Osazenomwan Momoh": "Set 1",
+            "Paul Famosa": "Set 1",
+            "Qoyhum Olutayo Hillary Onafowokan": "Set 1",
+            "Sayed Hussain": "Set 1",
+            "Shaback Amaechi": "Set 1",
+            "Sidney Peacock": "Set 1",
+            "Stephen Olubajo": "Set 1",
+            "Stevin Suresh": "Set 1",
+            "Thomas Ngome-Okezie": "Set 1",
+            "Ye Ma": "Set 1",
+
+            "Aaron Awuku": "Set 2",
+            "Cameron Green": "Set 2",
+            "Chibuikem Uchendu": "Set 2",
+            "Darrell David Akoto": "Set 2",
+            "David Agyemang": "Set 2",
+            "David Okebu": "Set 2",
+            "Gavontae Purcell-Owen": "Set 2",
+            "Gedion Meshesha": "Set 2",
+            "Hezekiah Acquah": "Set 2",
+            "Ikechukwu Agbonye": "Set 2",
+            "Israel Ajo": "Set 2",
+            "Israel Joseph": "Set 2",
+            "Jeremie Adeyemi": "Set 2",
+            "Jordan Obukohwo": "Set 2",
+            "Kevin Baah": "Set 2",
+            "King Bakare": "Set 2",
+            "Kosisochukwu Ibe": "Set 2",
+            "Leule Sisay": "Set 2",
+            "Makai Kibuuka-Musoke": "Set 2",
+            "Oliver Sengebwila": "Set 2",
+            "Osazeme Osas": "Set 2",
+            "Otobong Umoren": "Set 2",
+            "Peter Oyenola": "Set 2",
+            "Piers Mills Husey": "Set 2",
+            "Prince-Mikhael Dombo": "Set 2",
+            "Rafael Kassaye Wood": "Set 2",
+            "Rayhan Afful": "Set 2",
+            "Victor Ogundega": "Set 2",
+            "Yeshvasin Purmessur": "Set 2",
+
+            "Adam Haid": "Set 3",
+            "Aidan Clase Martinez": "Set 3",
+            "Ajibola Abass": "Set 3",
+            "Al-Amin Yusuf": "Set 3",
+            "Alexander Asagba": "Set 3",
+            "Brian Mbunga": "Set 3",
+            "Charlie Ford": "Set 3",
+            "Prince-Chima Chima": "Set 3",
+            "D'Andre Minott": "Set 3",
+            "Hakeem Sesay": "Set 3",
+            "Imran Sesay": "Set 3",
+            "Isaiah Ashie": "Set 3",
+            "Izaiah Gayle": "Set 3",
+            "Jason Nkansah": "Set 3",
+            "Jayden Gebre": "Set 3",
+            "Jeantai Lindsay": "Set 3",
+            "Joel Kiwanuka": "Set 3",
+            "Joel Masabanda-Tiban": "Set 3",
+            "Jonathan Ubazue": "Set 3",
+            "Nathan Frampton": "Set 3",
+            "Nathan Okoh": "Set 3",
+            "Oladamola Mobolaji": "Set 3",
+            "Osaremel Osayande": "Set 3",
+            "Osman Kanu": "Set 3",
+            "Ovuefe Cedric Uloho": "Set 3",
+            "Prince Kwabena Awuah": "Set 3",
+            "Samuel Wiafe": "Set 3",
+            "Samuel Ajayi": "Set 3",
+            "Samuel Arigbabu": "Set 3",
+            "Uyiosa Erhabor": "Set 3",
+
+            "Aaron McDonald": "Set 4",
+            "Abdoul Sangare": "Set 4",
+            "Adeoluwa Odeyemi": "Set 4",
+            "Akinjuwon Akinleye": "Set 4",
+            "David Boakye": "Set 4",
+            "Elijah Fyffe": "Set 4",
+            "Harishram Sivagobikrishna": "Set 4",
+            "Jamiel Jackson-Davis": "Set 4",
+            "Joel Sebastian Garzon Moron": "Set 4",
+            "Jonathan Addae": "Set 4",
+            "Michael Uwadiae": "Set 4",
+            "Musa Rahmani": "Set 4",
+            "Olamide Awe": "Set 4",
+            "Reuben Walusimbi": "Set 4",
+            "Richmond Ogunfuyi": "Set 4",
+            "Tilyan Elliah": "Set 4",
+            "Uzoma Nwachukwu": "Set 4",
+            "Warees Adeniregun": "Set 4",
+            "Wesley Boakye": "Set 4",
+
+            "Cairo Bent Pateman": "Set 5",
+            "David Matti": "Set 5",
+            "Enoch Adeoshun": "Set 5",
+            "Franck-Harvey Bassama Zibi": "Set 5",
+            "Isaiah Lawrence": "Set 5",
+            "Israel Atobrah-Marfo": "Set 5",
+            "Jibril Shittu": "Set 5",
+            "Jordell Dayle": "Set 5",
+            "Keyondre Graham": "Set 5",
+            "Maison Chambers-Huseyin": "Set 5",
+            "Malachi-Saddeiq Smith": "Set 5",
+            "Mark Moigura": "Set 5",
+            "Olaoluwa Oladipo": "Set 5",
+            "Paul Benson": "Set 5",
+            "Olamide Famose": "Set 5",
+            "Wesley Walters": "Set 5",
+            "Zy'Shae Brown-Thomas": "Set 5"
+        };
+
+        const setPriority = {
+            "Set 1": 1,
+            "Set 2": 2,
+            "Set 3": 3,
+            "Set 4": 4,
+            "Set 5": 5,
+            "N/A": 6
+        };
+
+        const students = rawData.map((row, idx) => {
+            const fullName = `${row[1]} ${row[2]}`;
+            const assignedSet = setLookup[fullName] || "N/A";
+            return {
+                index: idx + 1,
+                rank: row[0],
+                fname: row[1],
+                lname: row[2],
+                set: assignedSet,
+                setOrder: setPriority[assignedSet],
+                ao1: row[3],
+                ao4: row[4],
+                subtotal: row[5],
+                novel: row[6],
+                total: row[7],
+                grade: row[8]
+            };
+        });
 
         let currentSort = { key: 'index', asc: true };
 
@@ -460,13 +617,17 @@
                 const fullName = `${s.fname} ${s.lname}`.toLowerCase();
                 const matchesSearch = !searchQuery || 
                     fullName.includes(searchQuery) || 
-                    s.rank.toLowerCase().includes(searchQuery);
+                    s.rank.toLowerCase().includes(searchQuery) ||
+                    s.set.toLowerCase().includes(searchQuery);
                 return matchesGrade && matchesSearch;
             });
 
             filtered.sort((a, b) => {
                 let valA = a[currentSort.key];
                 let valB = b[currentSort.key];
+                if (valA === valB) {
+                    return a.index - b.index;
+                }
                 if (typeof valA === 'string') {
                     return currentSort.asc ? valA.localeCompare(valB) : valB.localeCompare(valA);
                 }
@@ -478,6 +639,7 @@
                     <td class="col-rank">${s.rank}</td>
                     <td class="col-fname" title="${s.fname}">${s.fname}</td>
                     <td class="col-lname">${s.lname}</td>
+                    <td class="col-set">${s.set}</td>
                     <td class="col-score" style="${getHeatmapStyle('ao1', s.ao1)}">${s.ao1}</td>
                     <td class="col-score" style="${getHeatmapStyle('ao4', s.ao4)}">${s.ao4}</td>
                     <td class="col-score" style="${getHeatmapStyle('subtotal', s.subtotal)}">${s.subtotal}</td>
@@ -498,7 +660,7 @@
                     currentSort.asc = !currentSort.asc;
                 } else {
                     currentSort.key = sortKey;
-                    currentSort.asc = ['index', 'fname', 'lname'].includes(sortKey);
+                    currentSort.asc = ['index', 'fname', 'lname', 'setOrder'].includes(sortKey);
                 }
                 renderTable();
             });
