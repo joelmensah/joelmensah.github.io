@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TW1: Macbeth & Community Assessment Sheet</title>
+    <title>English Rank Im cooked</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Calibri:wght@400;700&family=Inter:wght@400;500;600;700&display=swap');
@@ -15,7 +15,6 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* Spreadsheet paper container */
         .paper-sheet {
             background: #ffffff;
             max-width: 960px;
@@ -24,7 +23,6 @@
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
         }
 
-        /* Smooth touch horizontal scrolling container */
         .table-scroll-wrapper {
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
@@ -32,7 +30,6 @@
             width: 100%;
         }
 
-        /* Table styling matching Excel/Spreadsheet printout */
         table.assessment-table {
             border-collapse: separate;
             border-spacing: 0;
@@ -48,7 +45,6 @@
             border-bottom: 1px solid rgba(229, 231, 235, 0.7);
         }
 
-        /* Vertical rotated headers matching the printed sheet */
         .vertical-header {
             height: 215px;
             vertical-align: bottom;
@@ -76,7 +72,6 @@
             color: #111;
         }
 
-        /* Data cells */
         td.col-rank {
             width: 48px;
             min-width: 42px;
@@ -109,7 +104,6 @@
             z-index: 5;
         }
 
-        /* Mobile Responsive Adjustments (< 640px) */
         @media (max-width: 640px) {
             .paper-sheet {
                 padding: 12px 8px;
@@ -135,7 +129,6 @@
                 font-size: 11px;
             }
 
-            /* Sticky Rank + First Name on mobile so student identity stays visible while swiping scores */
             th.sticky-rank,
             td.col-rank {
                 position: sticky;
@@ -166,7 +159,6 @@
             }
         }
 
-        /* Print optimization */
         @media print {
             body {
                 background: #ffffff;
@@ -195,10 +187,8 @@
 </head>
 <body class="py-3 sm:py-6 px-2 sm:px-6">
 
-    <!-- Simplified Top Toolbar (Only Search Student & All Grades, Mobile Optimized with 16px base font) -->
     <div class="no-print max-w-[960px] mx-auto mb-3 sm:mb-4 bg-white rounded-xl shadow-sm border border-gray-200 p-3">
         <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
-            <!-- Search Input -->
             <div class="relative flex-1">
                 <input 
                     type="text" 
@@ -211,7 +201,6 @@
                 </svg>
             </div>
 
-            <!-- Grade Filter -->
             <select id="grade-filter" class="w-full sm:w-44 text-base sm:text-sm border border-gray-300 rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <option value="all">All Grades</option>
                 <option value="9">Grade 9</option>
@@ -227,12 +216,10 @@
         </div>
     </div>
 
-    <!-- Main Printable Spreadsheet Replica -->
     <div id="sheet-container" class="paper-sheet rounded-sm">
         <div class="table-scroll-wrapper">
             <table class="assessment-table" id="assessment-table">
                 <thead>
-                    <!-- Row 1: Top Assessment Title -->
                     <tr>
                         <th colspan="3" class="bg-white"></th>
                         <th colspan="4" class="text-center font-bold text-[12.5px] pb-1 text-gray-900">
@@ -240,7 +227,6 @@
                         </th>
                         <th colspan="2"></th>
                     </tr>
-                    <!-- Row 2: Section Subheaders -->
                     <tr>
                         <th colspan="3" class="bg-white"></th>
                         <th colspan="3" class="text-center font-bold text-[12px] pb-2 text-gray-900">
@@ -251,7 +237,6 @@
                         </th>
                         <th colspan="2"></th>
                     </tr>
-                    <!-- Row 3: Column Headers (Vertical + Horizontal) -->
                     <tr>
                         <th class="vertical-header main-header sticky-rank cursor-pointer hover:bg-gray-50 bg-white" data-sort="index" title="Sort by Rank">
                             <span class="vertical-text">Rank Position</span>
@@ -283,15 +268,12 @@
                     </tr>
                 </thead>
                 <tbody id="table-body">
-                    <!-- Populated dynamically via JS -->
                 </tbody>
             </table>
         </div>
     </div>
 
     <script>
-        // Complete 149-row dataset transcribed from the 5 images:
-        // [Rank, First Name, Last Name, AO1-3 Shakespeare (/30), AO4 (/4), Shakespeare Sub-total (/34), B: 19th-century novel (/30), Past Paper Total (/64), Current Unit Grade]
         const rawData = [
             ["1", "Alex", "Bui", 27, 4, 31, 26, 57, 9],
             ["2", "Qoyhum Olutayo Hillary", "Onafowokan", 25, 4, 29, 27, 56, 9],
@@ -444,7 +426,6 @@
             ["~148", "Jaiden", "Kigozi", 2, 2, 4, 2, 6, 1]
         ];
 
-        // Convert to structured objects
         const students = rawData.map((row, idx) => ({
             index: idx + 1,
             rank: row[0],
@@ -460,12 +441,11 @@
 
         let currentSort = { key: 'index', asc: true };
 
-        // Permanent Color Heatmap styling for all score cells
         function getHeatmapStyle(col, val) {
             const maxMap = { ao1: 30, ao4: 4, subtotal: 34, novel: 30, total: 64, grade: 9 };
             const minMap = { ao1: 1, ao4: 1, subtotal: 2, novel: 2, total: 6, grade: 1 };
             const ratio = Math.max(0, Math.min(1, (val - minMap[col]) / (maxMap[col] - minMap[col])));
-            const hue = Math.round(ratio * 130); // 0 (red) to 130 (green)
+            const hue = Math.round(ratio * 130);
             const weight = col === 'grade' ? 'font-weight: 600;' : '';
             return `background-color: hsl(${hue}, 70%, 85%); color: #111827; ${weight}`;
         }
@@ -475,7 +455,6 @@
             const searchQuery = document.getElementById('search-input').value.trim().toLowerCase();
             const gradeFilter = document.getElementById('grade-filter').value;
 
-            // Filter rows
             const filtered = students.filter(s => {
                 const matchesGrade = gradeFilter === 'all' || String(s.grade) === gradeFilter;
                 const fullName = `${s.fname} ${s.lname}`.toLowerCase();
@@ -485,7 +464,6 @@
                 return matchesGrade && matchesSearch;
             });
 
-            // Sort rows
             filtered.sort((a, b) => {
                 let valA = a[currentSort.key];
                 let valB = b[currentSort.key];
@@ -495,7 +473,6 @@
                 return currentSort.asc ? valA - valB : valB - valA;
             });
 
-            // Build HTML rows
             tbody.innerHTML = filtered.map(s => `
                 <tr>
                     <td class="col-rank">${s.rank}</td>
@@ -511,11 +488,9 @@
             `).join('');
         }
 
-        // Event Listeners
         document.getElementById('search-input').addEventListener('input', renderTable);
         document.getElementById('grade-filter').addEventListener('change', renderTable);
 
-        // Column header sorting
         document.querySelectorAll('th[data-sort]').forEach(th => {
             th.addEventListener('click', () => {
                 const sortKey = th.getAttribute('data-sort');
@@ -523,14 +498,12 @@
                     currentSort.asc = !currentSort.asc;
                 } else {
                     currentSort.key = sortKey;
-                    // Default descending for numerical scores, ascending for rank/names
                     currentSort.asc = ['index', 'fname', 'lname'].includes(sortKey);
                 }
                 renderTable();
             });
         });
 
-        // Initial render
         renderTable();
     </script>
 </body>
