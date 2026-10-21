@@ -209,6 +209,16 @@
                 </svg>
             </div>
 
+            <select id="set-filter" class="w-full sm:w-[110px] text-base sm:text-sm border border-gray-300 rounded-lg px-3 py-2 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option value="all">All Sets</option>
+                <option value="Set 1">Set 1</option>
+                <option value="Set 2">Set 2</option>
+                <option value="Set 3">Set 3</option>
+                <option value="Set 4">Set 4</option>
+                <option value="Set 5">Set 5</option>
+                <option value="N/A">N/A</option>
+            </select>
+
             <select id="grade-filter" class="w-full sm:w-[130px] text-base sm:text-sm border border-gray-300 rounded-lg px-3 py-2 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <option value="all">All Grades</option>
                 <option value="9">Grade 9</option>
@@ -610,16 +620,18 @@
         function renderTable() {
             const tbody = document.getElementById('table-body');
             const searchQuery = document.getElementById('search-input').value.trim().toLowerCase();
+            const setFilter = document.getElementById('set-filter').value;
             const gradeFilter = document.getElementById('grade-filter').value;
 
             const filtered = students.filter(s => {
+                const matchesSet = setFilter === 'all' || s.set === setFilter;
                 const matchesGrade = gradeFilter === 'all' || String(s.grade) === gradeFilter;
                 const fullName = `${s.fname} ${s.lname}`.toLowerCase();
                 const matchesSearch = !searchQuery || 
                     fullName.includes(searchQuery) || 
                     s.rank.toLowerCase().includes(searchQuery) ||
                     s.set.toLowerCase().includes(searchQuery);
-                return matchesGrade && matchesSearch;
+                return matchesSet && matchesGrade && matchesSearch;
             });
 
             filtered.sort((a, b) => {
@@ -651,6 +663,7 @@
         }
 
         document.getElementById('search-input').addEventListener('input', renderTable);
+        document.getElementById('set-filter').addEventListener('change', renderTable);
         document.getElementById('grade-filter').addEventListener('change', renderTable);
 
         document.querySelectorAll('th[data-sort]').forEach(th => {
