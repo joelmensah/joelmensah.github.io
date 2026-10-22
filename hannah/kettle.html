@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hannah Kettle Questions</title>
+  <style>
+    body {
+      background: white;
+      color: black;
+      font-family: Arial, sans-serif;
+      margin: 16px;
+    }
+
+    .columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    a {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    @media (max-width: 600px) {
+      .columns {
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <p>You have to actually scroll to get the questions in the mark scheme dont be lazy</p>
+
+  <div class="columns">
+    <section>
+      <h2>Hannah Kettle Questions</h2>
+      <div id="questions"></div>
+    </section>
+
+    <section>
+      <h2>Answers</h2>
+      <div id="answers"></div>
+    </section>
+  </div>
+
+  <script>
+    const weeks = [
+      { week: 6, file: "6. 2018Jun3H - Evens.pdf", answer: "https://pmt.physicsandmathstutor.com/download/Maths/GCSE/Past-Papers/Edexcel/Paper-3H/MS/June%202018%20MS.pdf" },
+      { week: 7, file: "7. 2019Jun1H - Odds.pdf", answer: "https://pmt.physicsandmathstutor.com/download/Maths/GCSE/Past-Papers/Edexcel/Paper-1H/MS/June%202019%20MS.pdf" },
+      { week: 8, file: "8. 2019Jun1H - Evens.pdf", answer: "https://pmt.physicsandmathstutor.com/download/Maths/GCSE/Past-Papers/Edexcel/Paper-1H/MS/June%202019%20MS.pdf" },
+      { week: 9, file: "9. 2019Jun2H - Odds.pdf", answer: "https://pmt.physicsandmathstutor.com/download/Maths/GCSE/Past-Papers/Edexcel/Paper-2H/MS/June%202019%20MS.pdf" },
+      { week: 10, file: "10. 2019Jun2H - Evens.pdf", answer: "https://pmt.physicsandmathstutor.com/download/Maths/GCSE/Past-Papers/Edexcel/Paper-2H/MS/June%202019%20MS.pdf" },
+      { week: 11, file: "11. 2019Jun3H - Odds.pdf", answer: "https://pmt.physicsandmathstutor.com/download/Maths/GCSE/Past-Papers/Edexcel/Paper-3H/MS/June%202019%20MS.pdf" },
+      { week: 12, file: "12. 2019Jun3H - Evens.pdf", answer: "https://pmt.physicsandmathstutor.com/download/Maths/GCSE/Past-Papers/Edexcel/Paper-3H/MS/June%202019%20MS.pdf" },
+      { week: 13, file: "13. 2020Nov1H - Odds.pdf", answer: "https://qualifications.pearson.com/content/dam/pdf/GCSE/mathematics/2015/exam-materials/1MA1_1H_msc_20210114.pdf" },
+      { week: 14, file: "14. 2020Nov1H - Evens.pdf", answer: "https://qualifications.pearson.com/content/dam/pdf/GCSE/mathematics/2015/exam-materials/1MA1_1H_msc_20210114.pdf" },
+      { week: 15, file: "15. 2020Nov2H - Odds.pdf", answer: "https://qualifications.pearson.com/content/dam/pdf/GCSE/mathematics/2015/exam-materials/1MA1_2H_msc_20210114.pdf" },
+      { week: 16, file: "16. 2020Nov2H - Evens.pdf", answer: "https://qualifications.pearson.com/content/dam/pdf/GCSE/mathematics/2015/exam-materials/1MA1_2H_msc_20210114.pdf" },
+      { week: 17, file: "17. 2020Nov3H - Odds.pdf", answer: "https://qualifications.pearson.com/content/dam/pdf/GCSE/mathematics/2015/exam-materials/1MA1_3H_msc_20210114.pdf" },
+      { week: 18, file: "18. 2020Nov3H - Evens.pdf", answer: "https://qualifications.pearson.com/content/dam/pdf/GCSE/mathematics/2015/exam-materials/1MA1_3H_msc_20210114.pdf" },
+      { week: 19, file: "19. 2021Nov1H - Odds.pdf", answer: "https://qualifications.pearson.com/content/dam/pdf/GCSE/mathematics/2015/exam-materials/1ma1-1h-rms-20220113.pdf" },
+      { week: 20, file: "20. 2021Nov1H - Evens.pdf", answer: "https://qualifications.pearson.com/content/dam/pdf/GCSE/mathematics/2015/exam-materials/1ma1-1h-rms-20220113.pdf" },
+      { week: 21, file: "21. 2021Nov2H - Odds.pdf", answer: "https://qualifications.pearson.com/content/dam/pdf/GCSE/mathematics/2015/exam-materials/1ma1-2h-rms-20220113.pdf" },
+      { week: 22, file: "22. 2021Nov2H - Evens.pdf", answer: "https://qualifications.pearson.com/content/dam/pdf/GCSE/mathematics/2015/exam-materials/1ma1-2h-rms-20220113.pdf" },
+      { week: 23, file: "23. 2021Nov3H - Odds.pdf", answer: "https://qualifications.pearson.com/content/dam/pdf/GCSE/mathematics/2015/exam-materials/1ma1-3h-rms-20220113.pdf" },
+      { week: 24, file: "24. 2021Nov3H - Evens.pdf", answer: "https://qualifications.pearson.com/content/dam/pdf/GCSE/mathematics/2015/exam-materials/1ma1-3h-rms-20220113.pdf" },
+      { week: 25, file: "25. 2018Nov1H - Odds.pdf", answer: "https://pmt.physicsandmathstutor.com/download/Maths/GCSE/Past-Papers/Edexcel/Paper-1H/MS/Nov%202018%20MS.pdf" },
+      { week: 26, file: "26. 2018Nov1H - Evens.pdf", answer: "https://pmt.physicsandmathstutor.com/download/Maths/GCSE/Past-Papers/Edexcel/Paper-1H/MS/Nov%202018%20MS.pdf" },
+      { week: 27, file: "27. 2018Nov2H - Odds.pdf", answer: "https://pmt.physicsandmathstutor.com/download/Maths/GCSE/Past-Papers/Edexcel/Paper-2H/MS/Nov%202018%20MS.pdf" },
+      { week: 28, file: "28. 2022Jun1H - Odds.pdf", answer: "https://qualifications.pearson.com/content/dam/pdf/GCSE/mathematics/2015/exam-materials/1ma1-1h-rms-20220825.pdf" }
+    ];
+
+    const questions = document.getElementById("questions");
+    const answers = document.getElementById("answers");
+
+    for (const item of weeks) {
+      const questionLink = document.createElement("a");
+      questionLink.textContent = `Week ${item.week}.pdf`;
+      questionLink.href = "https://pdfgithub.com/joelmensah/joelmensah.github.io/blob/main/" + encodeURIComponent(item.file).replace(/%2E/g, ".");
+      questionLink.target = "_blank";
+      questionLink.rel = "noopener noreferrer";
+      questions.appendChild(questionLink);
+
+      const answerLink = document.createElement("a");
+      answerLink.textContent = `Week ${item.week}.pdf`;
+      answerLink.href = item.answer;
+      answerLink.target = "_blank";
+      answerLink.rel = "noopener noreferrer";
+      answers.appendChild(answerLink);
+    }
+  </script>
+</body>
+</html>
