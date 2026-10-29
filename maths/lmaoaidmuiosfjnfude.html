@@ -1,0 +1,2559 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0b1022">
+<title>Maths Ranked</title>
+<style>
+:root{
+  --bg:#080c18;
+  --panel:#101726;
+  --panel2:#141e30;
+  --line:#243147;
+  --line-bright:#334563;
+  --text:#f0f4fa;
+  --muted:#94a3b8;
+  --purple:#a9baff;
+  --mint:#7de0c7;
+  --orange:#edbd82;
+  --danger:#f08b91;
+  --blue:#9dc7f4;
+  --shadow:0 16px 40px rgba(0,0,0,.32);
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background-color:var(--bg);
+  background-image:
+    radial-gradient(ellipse at 12% 0%, rgba(45,36,104,.55) 0, transparent 42%),
+    radial-gradient(ellipse at 92% 10%, rgba(18,72,92,.45) 0, transparent 36%),
+    radial-gradient(rgba(148,163,184,.07) 1px, transparent 1px);
+  background-size:100% 100%, 100% 100%, 24px 24px;
+  color:var(--text);
+  font:14px/1.55 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+
+button,input,select{font:inherit}
+button{cursor:pointer;border:0}
+button:disabled{opacity:.45;cursor:not-allowed}
+a{color:var(--mint);text-decoration:none}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-track{background:#090d16}
+::-webkit-scrollbar-thumb{background:#28364d;border-radius:999px;border:2px solid #090d16}
+::-webkit-scrollbar-thumb:hover{background:#3a4d6b}
+
+.wrap{width:min(1180px,calc(100% - 36px));margin:auto}
+
+.topbar{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  min-height:48px;
+  padding:12px 0 14px;
+  gap:14px;
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.navright{display:flex;gap:8px;align-items:center}
+.status{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  padding:6px 11px;
+  border-radius:8px;
+  color:#b4c0d0;
+  background:rgba(13,20,34,.75);
+  border:1px solid rgba(165,184,208,.16);
+  font-size:11px;
+  font-weight:600;
+}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--danger)}
+.dot.live{background:var(--mint)}
+
+.grid2{
+  display:grid;
+  grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);
+  gap:20px;
+  margin:24px 0 52px;
+  align-items:stretch;
+}
+
+.card{
+  min-width:0;
+  padding:24px;
+  border:1px solid rgba(153,176,207,.16);
+  border-radius:14px;
+  background:linear-gradient(180deg, rgba(19,28,46,.92) 0%, rgba(13,20,33,.95) 100%);
+  box-shadow:var(--shadow), inset 0 1px 0 rgba(255,255,255,.05);
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+
+.card-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:20px;
+}
+.card-title{
+  margin:0;
+  color:#f0f4fa;
+  font-size:20px;
+  font-weight:800;
+  line-height:1.2;
+  letter-spacing:-.5px;
+}
+.card-sub{
+  margin:6px 0 0;
+  color:var(--muted);
+  font-size:12.5px;
+  line-height:1.55;
+}
+.step{
+  padding:5px 9px;
+  border:1px solid rgba(125,224,199,.24);
+  border-radius:6px;
+  color:#9de8d5;
+  background:rgba(125,224,199,.07);
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.6px;
+  white-space:nowrap;
+}
+
+.fields{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:15px 13px;
+}
+.field{
+  display:flex;
+  flex-direction:column;
+  gap:7px;
+  min-width:0;
+}
+.field.full{grid-column:1/-1}
+.field label{
+  color:#a9b7c9;
+  font-size:10.5px;
+  font-weight:750;
+  letter-spacing:.6px;
+  text-transform:uppercase;
+}
+.field input,.field select{
+  width:100%;
+  min-height:44px;
+  padding:11px 13px;
+  border:1px solid #28364a;
+  border-radius:8px;
+  background:#090f1a;
+  color:var(--text);
+  font-size:13px;
+  outline:none;
+  transition:border-color .15s ease, background-color .15s ease, box-shadow .15s ease;
+}
+.field input:hover,.field select:hover{border-color:#3b4e6b}
+.field input:focus,.field select:focus{
+  border-color:var(--mint);
+  background:#0b1320;
+  box-shadow:0 0 0 3px rgba(125,224,199,.1);
+}
+.field input::placeholder{color:#64748b}
+.field select option{background:#101726;color:var(--text)}
+
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  min-height:41px;
+  padding:10px 16px;
+  border-radius:8px;
+  font-size:12.5px;
+  font-weight:750;
+  letter-spacing:.05px;
+  box-shadow:none;
+  text-decoration:none;
+  transition:background-color .15s ease, border-color .15s ease, color .15s ease, transform .12s ease;
+}
+.btn:hover:not(:disabled){transform:translateY(-1px)}
+.btn:active:not(:disabled){transform:translateY(0)}
+.btn-primary{background:#e2edf2;color:#0c141d;border:1px solid #e2edf2}
+.btn-primary:hover:not(:disabled){background:#ffffff;border-color:#ffffff}
+.btn-secondary{background:#121c2c;color:#d5dfeb;border:1px solid #2e3d52}
+.btn-secondary:hover:not(:disabled){background:#19263b;border-color:#435775}
+.btn-purple{background:#b8c7f7;color:#0e1729;border:1px solid #b8c7f7}
+.btn-purple:hover:not(:disabled){background:#cbd7fc;border-color:#cbd7fc}
+.btn-ghost{background:transparent;border:1px solid #2e3d52;color:#aebccd}
+.btn-danger{background:#281720;color:#f4b4b9;border:1px solid #522e3b}
+.btn-danger:hover:not(:disabled){background:#341d29;border-color:#6b3b4c}
+
+.card-bottom{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:12px;
+  margin-top:20px;
+}
+.card-bottom .btn{width:100%}
+
+.board-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  padding:11px 13px;
+  border-radius:8px;
+  background:rgba(255,255,255,.025);
+  border:1px solid #263447;
+  color:#a4b2c4;
+  font-size:11.5px;
+  flex-wrap:wrap;
+}
+.board-row strong{color:#a9e3d7;font-size:12px}
+
+.calc-pill{
+  font-weight:850;
+  font-size:10px;
+  padding:4px 8px;
+  border-radius:5px;
+  letter-spacing:.3px;
+  background:rgba(255,133,140,.1);
+  color:#ff8f96;
+  border:1px solid rgba(255,133,140,.28);
+}
+.calc-pill.allowed{
+  background:rgba(125,224,199,.1);
+  color:#9ee8d7;
+  border-color:rgba(125,224,199,.3);
+}
+
+.joinbox{
+  margin-top:8px;
+  padding:10px 10px 10px 14px;
+  border:1px solid #28364a;
+  border-radius:9px;
+  background:#090f1a;
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:10px;
+  align-items:center;
+  transition:border-color .15s ease, box-shadow .15s ease;
+}
+.joinbox:focus-within{
+  border-color:var(--purple);
+  box-shadow:0 0 0 3px rgba(169,186,255,.1);
+}
+.joinbox input{
+  min-width:0;
+  letter-spacing:5px;
+  text-transform:uppercase;
+  font-size:19px;
+  font-weight:900;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  border:0;
+  outline:0;
+  background:transparent;
+  color:var(--text);
+  width:100%;
+}
+
+.divider-label{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin:20px 0 12px;
+  font-size:9.5px;
+  font-weight:800;
+  letter-spacing:1.2px;
+  text-transform:uppercase;
+  color:#7c8ca3;
+}
+.divider-label:before,.divider-label:after{
+  content:"";
+  height:1px;
+  flex:1;
+  background:#233042;
+}
+
+.notice{
+  border:1px solid #66532f;
+  background:#ffb86b0c;
+  color:#e9d4b3;
+  padding:13px 15px;
+  border-radius:9px;
+  font-size:12.5px;
+  line-height:1.55;
+  margin:14px 0;
+}
+.notice.green{border-color:#2a6b59;background:rgba(125,224,199,.07);color:#bcf7e5;font-weight:650}
+.notice.red{border-color:#71404a;background:#ff858c0c;color:#ffb9be}
+.hidden{display:none!important}
+
+.toast-wrap{
+  position:fixed;
+  right:18px;
+  bottom:18px;
+  z-index:1200;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.toast{
+  max-width:min(420px,calc(100vw - 36px));
+  padding:12px 15px;
+  border:1px solid #35445c;
+  border-radius:9px;
+  background:#141e2e;
+  box-shadow:0 12px 35px rgba(0,0,0,.35);
+  color:var(--text);
+  font-size:12.5px;
+  font-weight:600;
+  animation:slide .18s ease;
+}
+.toast.bad{border-color:#9e4752;background:#21141b;color:#ffccd0}
+.toast.good{border-color:#2f7d67;background:#102221;color:#c4f7e6}
+@keyframes slide{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+.modal-backdrop{
+  position:fixed;
+  inset:0;
+  background:rgba(4,8,15,.84);
+  backdrop-filter:blur(5px);
+  z-index:1150;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:16px;
+}
+.modal-backdrop.open{display:flex}
+.modal{
+  width:min(580px,100%);
+  max-height:90vh;
+  overflow:auto;
+  padding:24px;
+  border:1px solid #334259;
+  border-radius:14px;
+  background:#101826;
+  box-shadow:0 24px 70px rgba(0,0,0,.5);
+}
+.modal h2{margin:0 0 6px;font-size:20px;letter-spacing:-.35px}
+.modal p{color:var(--muted);font-size:13px;margin:0 0 16px}
+.modal-actions{display:flex;gap:9px;justify-content:flex-end;margin-top:18px;flex-wrap:wrap}
+
+.done-popup{
+  width:min(640px,100%);
+  text-align:center;
+  padding:36px 28px;
+  border:1px solid #4e6c69;
+  border-radius:16px;
+  background:#101826;
+  box-shadow:0 24px 80px rgba(0,0,0,.55);
+  animation:popIn .18s ease-out;
+}
+.done-badge{
+  display:inline-block;
+  padding:6px 13px;
+  border:1px solid rgba(125,224,199,.35);
+  border-radius:6px;
+  background:rgba(125,224,199,.09);
+  color:#a9e5d8;
+  font-weight:850;
+  font-size:11px;
+  letter-spacing:1.1px;
+  text-transform:uppercase;
+  margin-bottom:14px;
+}
+.done-big-title{
+  font-size:clamp(38px,5.5vw,58px);
+  font-weight:950;
+  line-height:1.02;
+  letter-spacing:-1.5px;
+  margin:0 0 10px;
+  color:#eef4fa;
+}
+.done-sub{font-size:clamp(18px,2.3vw,22px);font-weight:750;color:var(--text);margin:0 0 10px}
+.done-desc{color:#9aa8ba;font-size:13.5px;line-height:1.65;max-width:500px;margin:0 auto 24px}
+@keyframes popIn{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
+
+/* Lobby Screen */
+.lobby-shell{padding:20px 0 52px}
+.lobby-toolbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:18px;
+  flex-wrap:wrap;
+}
+.eyebrow{
+  font-size:10.5px;
+  font-weight:850;
+  letter-spacing:1.3px;
+  text-transform:uppercase;
+  color:#8eacd8;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.eyebrow:before{content:"";width:18px;height:2px;background:#8eacd8}
+.lobby-name{font-size:clamp(24px,3.2vw,34px);letter-spacing:-.9px;font-weight:850;margin:6px 0 0}
+.lobby-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:18px}
+
+.room-hero{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  padding:15px 18px;
+  border:1px solid rgba(125,224,199,.22);
+  border-radius:10px;
+  background:linear-gradient(90deg, rgba(16,38,44,.65) 0%, rgba(16,26,42,.55) 100%);
+  margin:4px 0 16px;
+}
+.duel-title{font-size:10px;letter-spacing:1.1px;color:#94a3b8;text-transform:uppercase;font-weight:800}
+.room-code-big{
+  font-weight:950;
+  font-size:29px;
+  letter-spacing:4px;
+  color:#a9e5d8;
+  line-height:1.1;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+.copy-btn{font-size:11.5px;padding:8px 13px}
+
+.players-capacity{margin:0 0 10px;color:var(--muted);font-size:12px;font-weight:700;letter-spacing:.15px}
+.players{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));
+  gap:12px;
+  align-items:stretch;
+}
+.player-card{
+  padding:14px 15px;
+  border:1px solid #263447;
+  border-radius:10px;
+  background:rgba(9,15,25,.75);
+  transition:border-color .15s ease;
+}
+.player-top{display:flex;align-items:center;gap:11px}
+.avatar{
+  width:40px;
+  height:40px;
+  border-radius:9px;
+  display:grid;
+  place-items:center;
+  font-size:16px;
+  font-weight:900;
+  color:#0c1424;
+  background:linear-gradient(135deg,#7de0c7,#9dc7f4);
+  flex-shrink:0;
+}
+.avatar.waiting{
+  border:1px dashed #41516b;
+  background:#121c2d;
+  color:#94a3b8;
+}
+.player-card strong{display:block;font-size:13.5px;color:#f0f4fa}
+.player-card small{color:var(--muted);font-size:11.5px}
+.player-score{
+  margin-top:12px;
+  border-top:1px solid #222f42;
+  padding-top:10px;
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  gap:8px;
+  flex-wrap:wrap;
+  color:var(--muted);
+  font-size:11.5px;
+}
+.player-score span{white-space:nowrap}
+.player-score b{font-size:13.5px;color:var(--text)}
+
+.paper-info{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  align-items:stretch;
+  gap:10px;
+  margin:15px 0;
+}
+.info-box{
+  padding:12px 14px;
+  border:1px solid #263447;
+  border-radius:9px;
+  background:rgba(9,15,25,.68);
+  display:flex;
+  align-items:center;
+  min-height:48px;
+}
+.info-box.tier-info strong{font-size:13px;font-weight:750;color:#e1e8f0}
+.info-box.calculator-info strong{font-size:13px;font-weight:800}
+
+.timerbox{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  padding:16px 18px;
+  border:1px solid #28364a;
+  border-radius:10px;
+  background:#090f1a;
+  margin:14px 0;
+  flex-wrap:wrap;
+}
+.timerlabel{font-size:10px;font-weight:800;letter-spacing:1.1px;text-transform:uppercase;color:#8d9bb0}
+.timer{
+  font-variant-numeric:tabular-nums;
+  font-size:34px;
+  font-weight:800;
+  letter-spacing:-.8px;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+.timer.running{color:#8be8d2}
+.timer.locked{color:#edbd82}
+.match-actions{display:flex;gap:8px;flex-wrap:wrap}
+
+.maths-toolkit-bar{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin:12px 0;
+  align-items:center;
+  justify-content:space-between;
+}
+.toolkit-left,.toolkit-right{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.tool-btn{
+  padding:8px 12px;
+  border:1px solid #314056;
+  border-radius:8px;
+  background:#121c2b;
+  color:#d0dae8;
+  font-size:11.5px;
+  font-weight:700;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  transition:background-color .15s ease, border-color .15s ease;
+}
+.tool-btn:hover{background:#19263a;border-color:#485c78}
+.tool-btn.active{
+  background:rgba(125,224,199,.1);
+  border-color:rgba(125,224,199,.48);
+  color:#a9e5d8;
+}
+
+.waiting-host-message{
+  margin:18px 0 4px;
+  padding:32px 20px;
+  text-align:center;
+  font-size:clamp(23px,3vw,34px);
+  line-height:1.2;
+  font-weight:900;
+  letter-spacing:-.8px;
+  color:#e8edf5;
+  background:#090f1a;
+  border:1px solid #263447;
+  border-radius:11px;
+}
+
+/* Battle Countdown Overlay */
+.battle-transition{
+  position:fixed;
+  inset:0;
+  z-index:1100;
+  background:#ffffff;
+  color:#17202b;
+  display:grid;
+  place-items:center;
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  transition:opacity 1.45s ease,visibility 0s linear 1.45s;
+}
+.battle-transition.visible{
+  opacity:1;
+  visibility:visible;
+  pointer-events:auto;
+  transition:opacity 1.45s ease,visibility 0s;
+}
+.transition-content{text-align:center;padding:24px;opacity:0;transition:opacity .24s ease}
+.battle-transition.countdown-running .transition-content{opacity:1}
+.transition-kicker{
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:2.4px;
+  color:#536070;
+  text-transform:uppercase;
+  margin-bottom:16px;
+}
+.transition-countdown{
+  font-size:clamp(86px,18vw,180px);
+  font-weight:800;
+  line-height:.95;
+  letter-spacing:-.08em;
+  font-variant-numeric:tabular-nums;
+  color:#101923;
+}
+
+/* Embedded Official Edexcel PDF Viewer & Fullscreen Exam Workspace */
+html.battle-lock-scroll, body.battle-lock-scroll{overflow:hidden!important;overscroll-behavior:none}
+
+.pdf-viewer-container{
+  margin:14px 0;
+  border:1px solid #28364a;
+  border-radius:12px;
+  overflow:hidden;
+  background:#080d16;
+}
+.pdf-viewer-container.mark-scheme-mode{border-color:rgba(125,224,199,.45)}
+.pdf-viewer-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:12px 16px;
+  background:#101826;
+  border-bottom:1px solid #263447;
+  font-size:13px;
+  font-weight:750;
+  flex-wrap:wrap;
+}
+.pdf-header-controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.pdf-mode-pill{
+  padding:4px 9px;
+  border-radius:5px;
+  font-size:10.5px;
+  font-weight:800;
+  background:#172236;
+  color:#b6c6f4;
+  border:1px solid #31415c;
+}
+.pdf-mode-pill.ms{
+  background:rgba(125,224,199,.1);
+  color:#a9e5d8;
+  border-color:rgba(125,224,199,.32);
+}
+.pdf-frame{width:100%;height:820px;border:0;display:block;background:#1e222d}
+
+.book-message{
+  padding:28px 22px;
+  text-align:center;
+  color:#dce5ed;
+  font-size:14px;
+  background:#0e1522;
+  border-top:1px solid #263447;
+}
+#bookFallbackNotice{background:#161b22;color:#e4e9ef;border-top:1px solid #333d49}
+
+.pdf-viewer-container.battle-fullscreen{
+  position:fixed!important;
+  inset:0!important;
+  z-index:950!important;
+  width:100vw!important;
+  height:100vh!important;
+  height:100dvh!important;
+  max-width:none!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden!important;
+  background-color:var(--bg)!important;
+  background-image:
+    radial-gradient(ellipse at 12% 0%, rgba(45,36,104,.5) 0, transparent 42%),
+    radial-gradient(ellipse at 92% 10%, rgba(18,72,92,.4) 0, transparent 36%)!important;
+}
+.pdf-viewer-container.battle-fullscreen .pdf-viewer-header{display:none!important}
+.pdf-viewer-container.battle-fullscreen #bookLoadingNotice,
+.pdf-viewer-container.battle-fullscreen #bookFallbackNotice{
+  flex:0 0 auto;
+  margin:0;
+  border-radius:0;
+  padding:16px 18px;
+}
+
+.exam-workspace{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 268px;
+  gap:24px;
+  align-items:start;
+  width:min(1340px,100%);
+  margin:0 auto;
+  padding:20px;
+  background:#080d16;
+}
+.pdf-viewer-container.battle-fullscreen .exam-workspace:not(.hidden){
+  flex:1 1 auto;
+  min-height:0;
+  height:100%;
+  background:transparent;
+  padding:20px 26px;
+}
+
+.paper-scroll-column{
+  width:100%;
+  max-height:820px;
+  overflow-y:auto;
+  overflow-x:hidden;
+  overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;
+  padding:2px 12px 32px 2px;
+  scrollbar-width:thin;
+  scrollbar-color:#334359 #090e18;
+}
+.pdf-viewer-container.battle-fullscreen .paper-scroll-column{
+  height:100%;
+  max-height:none;
+}
+
+.scroll-paper-pages{
+  width:100%;
+  max-width:920px;
+  margin:0 auto;
+  display:flex;
+  flex-direction:column;
+  gap:22px;
+}
+
+.scroll-paper-page{
+  width:100%;
+  background:#ffffff;
+  color:#1c222b;
+  border:1px solid #d0d7e2;
+  border-radius:10px;
+  padding:14px 14px 12px;
+  box-shadow:0 12px 32px rgba(0,0,0,.35);
+  overflow:hidden;
+}
+.scroll-paper-page-label{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font:700 11px/1.2 Inter,ui-sans-serif,system-ui,sans-serif;
+  color:#64748b;
+  padding:0 4px 10px;
+  border-bottom:1px solid #eef2f6;
+  margin-bottom:8px;
+}
+.scroll-paper-page canvas{
+  display:block;
+  width:100%;
+  height:auto;
+  margin:0 auto;
+  background:#ffffff;
+}
+
+.scroll-paper-end{
+  width:100%;
+  max-width:920px;
+  margin:26px auto 12px;
+  padding:28px 20px;
+  border:1px solid #263447;
+  border-radius:12px;
+  background:#0a101b;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:16px;
+  text-align:center;
+}
+.scroll-paper-end span{
+  color:#8e9db3;
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:1.6px;
+  text-transform:uppercase;
+}
+
+/* Flat green DONE! button with zero glow or shadow */
+.btn-done-green{
+  background:#7de0c7!important;
+  color:#081c17!important;
+  border:1px solid #7de0c7!important;
+  border-radius:11px!important;
+  padding:18px 46px!important;
+  font-size:clamp(22px,2.8vw,30px)!important;
+  line-height:1.1!important;
+  font-weight:900!important;
+  letter-spacing:-.8px!important;
+  text-transform:uppercase;
+  box-shadow:none!important;
+  filter:none!important;
+  min-width:260px;
+  transition:background-color .15s ease,border-color .15s ease!important;
+}
+.btn-done-green:hover:not(:disabled){
+  background:#93ead4!important;
+  border-color:#93ead4!important;
+  transform:none!important;
+  box-shadow:none!important;
+  filter:none!important;
+}
+.btn-done-green:active:not(:disabled){
+  background:#68cdb4!important;
+  border-color:#68cdb4!important;
+  transform:none!important;
+  box-shadow:none!important;
+}
+
+/* Sticky Side Stopwatch Rail */
+.exam-side-rail{
+  position:sticky;
+  top:0;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+.side-rail-card{
+  background:rgba(15,23,38,.95);
+  border:1px solid rgba(153,176,207,.18);
+  border-radius:12px;
+  padding:18px 16px;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+.side-rail-label{
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:1.2px;
+  text-transform:uppercase;
+  color:#8fa0b4;
+  margin-bottom:5px;
+}
+.side-rail-timer{
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-variant-numeric:tabular-nums;
+  font-size:34px;
+  font-weight:850;
+  letter-spacing:-1px;
+  color:#7de0c7;
+  line-height:1.05;
+}
+.side-rail-timer.locked{color:#edbd82}
+
+.side-progress-track{
+  width:100%;
+  height:5px;
+  background:#1b2638;
+  border-radius:999px;
+  overflow:hidden;
+  margin-top:8px;
+}
+.side-progress-fill{
+  height:100%;
+  width:0%;
+  background:#7de0c7;
+  border-radius:999px;
+  transition:width .2s ease;
+}
+
+.side-rail-meta{
+  padding-top:12px;
+  border-top:1px solid #233044;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  font-size:12px;
+  color:#a9b7c9;
+}
+.side-rail-meta strong{
+  color:#f0f4fa;
+  font-weight:750;
+}
+.side-rail-btn{
+  width:100%;
+  justify-content:center;
+}
+
+#finishPaperFallbackBtn{display:none}
+.pdf-viewer-container.battle-fullscreen #finishPaperFallbackBtn:not(.hidden){
+  display:inline-flex;
+  position:absolute;
+  right:22px;
+  bottom:18px;
+  z-index:5;
+}
+.pdf-viewer-container.battle-fullscreen .pdf-frame{
+  display:block;
+  flex:1 1 auto;
+  width:100%;
+  height:auto;
+  min-height:0;
+  border:0;
+}
+
+.score-form{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:12px;
+  align-items:end;
+}
+.score-form .field input{font-size:18px;font-weight:850}
+.grade-preview{
+  background:#090f1a;
+  border:1px solid #28364a;
+  border-radius:8px;
+  padding:10px 13px;
+  min-height:44px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  font-size:13px;
+}
+.grade-preview b{font-size:17px;color:#7de0c7}
+.small-muted{font-size:11.5px;color:#8694a8;margin-top:10px}
+
+@media(max-width:960px){
+  .grid2{grid-template-columns:1fr}
+  .exam-workspace{
+    grid-template-columns:1fr;
+    gap:12px;
+    padding:12px;
+  }
+  .pdf-viewer-container.battle-fullscreen .exam-workspace:not(.hidden){
+    display:flex;
+    flex-direction:column;
+    padding:10px 12px;
+  }
+  .exam-side-rail{
+    order:-1;
+    width:100%;
+    position:static;
+  }
+  .side-rail-card{
+    width:100%;
+    padding:12px 14px;
+    flex-direction:row;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    flex-wrap:wrap;
+  }
+  .side-rail-timer{font-size:24px}
+  .side-progress-track{display:none}
+  .side-rail-meta{
+    padding-top:0;
+    border-top:0;
+    flex-direction:row;
+    align-items:center;
+    gap:10px;
+  }
+  .side-rail-btn{width:auto}
+  .paper-scroll-column{
+    flex:1 1 auto;
+    min-height:0;
+    padding-right:2px;
+  }
+}
+@media(max-width:580px){
+  .wrap{width:calc(100% - 20px)}
+  .fields,.players,.paper-info,.score-form{grid-template-columns:1fr}
+  .joinbox{grid-template-columns:1fr;padding:10px}
+  .joinbox .btn{width:100%}
+  .card{padding:16px}
+  .scroll-paper-page{padding:8px 7px 7px}
+  .btn-done-green{width:100%;min-width:0;padding:16px 24px!important}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <div class="navright">
+      <span class="status" id="statusPill"><i id="statusDot" class="dot"></i><span id="statusText">Server Inactive</span></span>
+    </div>
+  </header>
+
+  <main id="homeScreen">
+    <section class="grid2" aria-label="Create or join an Edexcel GCSE Maths lobby">
+      <article class="card" id="create">
+        <div>
+          <div class="card-head">
+            <div>
+              <h2 class="card-title">Create a Lobby</h2>
+            </div>
+            <span class="step">LEADER</span>
+          </div>
+          <form id="createForm">
+            <div class="fields">
+              <div class="field full">
+                <label for="hostName">Display Name</label>
+                <input id="hostName" maxlength="24" placeholder="e.g. Joel" autocomplete="nickname" required>
+              </div>
+              <div class="field">
+                <label for="tier">Paper Tier</label>
+                <select id="tier" required>
+                  <option value="Higher" selected>Higher</option>
+                  <option value="Foundation">Foundation</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="paper">Edexcel Paper</label>
+                <select id="paper" required>
+                  <option value="Paper 1 (Non-Calculator)">Paper 1 — Non-Calculator</option>
+                  <option value="Paper 2 (Calculator)">Paper 2 — Calculator</option>
+                  <option value="Paper 3 (Calculator)">Paper 3 — Calculator</option>
+                </select>
+              </div>
+              <div class="field full">
+                <label for="paperYear">Choose Your Past Paper (2017-2025)</label>
+                <select id="paperYear" required></select>
+              </div>
+              <div class="field full">
+                <label for="maxPlayers">Players Allowed</label>
+                <select id="maxPlayers" name="maxPlayers" required>
+                  <option value="2" selected>2 Players</option>
+                  <option value="3">3 Players</option>
+                  <option value="4">4 Players</option>
+                  <option value="5">5 Players</option>
+                  <option value="6">6 Players</option>
+                  <option value="7">7 Players</option>
+                  <option value="8">8 Players</option>
+                </select>
+              </div>
+              <div class="field full">
+                <div class="board-row">
+                  <div><span>Selected: </span><strong id="formatSummaryLabel">Paper 1 - Higher Tier - June 2024</strong></div>
+                  <span class="calc-pill" id="calcStatusBadge">NON-CALCULATOR</span>
+                </div>
+              </div>
+            </div>
+            <div class="card-bottom">
+              <button class="btn btn-primary" type="submit">Create Lobby →</button>
+            </div>
+          </form>
+        </div>
+      </article>
+
+      <article class="card" id="join">
+        <div>
+          <div class="card-head">
+            <div>
+              <h2 class="card-title">Join A Lobby</h2>
+              <p class="card-sub">Enter your friend's 6-character code</p>
+            </div>
+            <span class="step">OPPONENT</span>
+          </div>
+          <form id="joinForm">
+            <div class="field">
+              <label for="joinName">Display Name</label>
+              <input id="joinName" maxlength="24" placeholder="e.g. Sam" autocomplete="nickname" required>
+            </div>
+            <div class="divider-label">ENTER ROOM CODE</div>
+            <div class="joinbox">
+              <input id="joinCode" maxlength="6" minlength="6" placeholder="ENTER CODE HERE" aria-label="Six character lobby code" required>
+              <button type="submit" class="btn btn-purple">Join Match →</button>
+            </div>
+          </form>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <main id="lobbyScreen" class="lobby-shell hidden">
+    <div class="lobby-toolbar">
+      <div>
+        <div class="eyebrow" id="lobbyEyebrow">PEARSON EDEXCEL 1MA1 ARENA</div>
+        <h1 class="lobby-name" id="lobbyHeading">Your Edexcel Maths duel is ready.</h1>
+      </div>
+      <div style="display:flex;gap:9px;flex-wrap:wrap">
+        <button class="btn btn-secondary" id="homeBtn">← Home</button>
+        <button class="btn btn-danger" id="leaveBtn">Leave lobby</button>
+      </div>
+    </div>
+
+    <div class="lobby-grid">
+      <section class="card">
+        <div class="card-head">
+          <div>
+            <h2 class="card-title">The Arena</h2>
+            <p class="card-sub" id="lobbySub">Waiting for your opponent to join online.</p>
+          </div>
+          <span class="step" id="lobbyStateBadge">WAITING</span>
+        </div>
+
+        <div class="room-hero">
+          <div>
+            <div class="duel-title">Room Code</div>
+            <div id="codeBig" class="room-code-big">------</div>
+          </div>
+          <button class="btn btn-secondary copy-btn" id="copyCode">Copy code</button>
+        </div>
+        
+        <div class="players-capacity" id="playersCapacityLabel">1 / 2 players joined</div>
+        <div class="players" id="playersList"></div>
+
+        <div class="paper-info">
+          <div class="info-box tier-info"><strong id="lobbyTier">Higher Paper (Out of 80 Marks)</strong></div>
+          <div class="info-box calculator-info"><strong id="lobbyCalcRule" class="calculator-status">Non-Calculator</strong></div>
+        </div>
+
+        <div id="timerBox" class="timerbox">
+          <div>
+            <div class="timerlabel" id="timerLabel">STOPWATCH (ELAPSED TIME)</div>
+            <div class="timer" id="timerView">00:00:00</div>
+          </div>
+          <div class="match-actions">
+            <button class="btn btn-primary" id="startBtn">Start Duel</button>
+            <button class="btn btn-done-green hidden" id="finishPaperBtn">DONE!</button>
+          </div>
+        </div>
+
+        <div id="mathsToolkitBar" class="maths-toolkit-bar hidden">
+          <div class="toolkit-left">
+            <button type="button" class="tool-btn" id="toggleFormulaBtn">Formula Sheet ↗</button>
+          </div>
+          <div class="toolkit-right" id="postFinishDocButtons">
+            <button type="button" class="tool-btn hidden" id="viewQpBtn">📄 Question Paper (QP)</button>
+            <button type="button" class="tool-btn hidden" id="viewMaBtn">✍️ Worked Solutions</button>
+          </div>
+        </div>
+
+        <div id="preBattlePaperNotice" class="waiting-host-message">
+          Waiting For Host To Start...
+        </div>
+
+        <!-- Embedded Official Edexcel PDF Viewer -->
+        <div id="pdfViewerContainer" class="pdf-viewer-container hidden">
+          <div class="pdf-viewer-header">
+            <span id="pdfViewerTitle">📄 Official Edexcel Question Paper</span>
+            <div class="pdf-header-controls">
+              <span id="pdfModeBadge" class="pdf-mode-pill">QUESTION PAPER (QP)</span>
+              <button type="button" class="btn btn-secondary" style="padding:5px 10px;font-size:11px" id="switchRenderEngineBtn" title="Switch embedded viewer mode if your browser tries to download PDFs">Compat Viewer: OFF</button>
+            </div>
+          </div>
+          <div id="bookLoadingNotice" class="book-message hidden" role="status">Opening question paper…</div>
+          <div id="bookFallbackNotice" class="book-message hidden" role="status">Scroll view is unavailable for this PDF, so the standard viewer is being used.</div>
+
+          <!-- Center Scrollable Paper + Side Stopwatch -->
+          <div id="bookViewer" class="exam-workspace hidden" aria-label="Scrollable question paper">
+            <div id="paperScrollColumn" class="paper-scroll-column" role="region" aria-label="Question paper pages">
+              <div id="scrollPaperPages" class="scroll-paper-pages"></div>
+              <div id="scrollPaperEnd" class="scroll-paper-end">
+                <span>END OF PAPER</span>
+                <button type="button" class="btn btn-done-green hidden" id="finishPaperBottomBtn">DONE!</button>
+              </div>
+            </div>
+
+            <aside class="exam-side-rail" aria-label="Match stopwatch">
+              <div class="side-rail-card">
+                <div>
+                  <div class="side-rail-label" id="sideTimerLabel">STOPWATCH</div>
+                  <div class="side-rail-timer" id="sideTimerView">00:00:00</div>
+                </div>
+                <div class="side-rail-meta">
+                  <strong id="bookPageCounter">Page 1</strong>
+                  <div class="side-progress-track" aria-hidden="true">
+                    <div class="side-progress-fill" id="sidePageProgress"></div>
+                  </div>
+                  <span id="sideCalcBadge">Non-Calculator</span>
+                </div>
+                <button type="button" class="tool-btn side-rail-btn" id="sideFormulaBtn">Formula Sheet ↗</button>
+              </div>
+            </aside>
+          </div>
+
+          <iframe id="pdfFrame" class="pdf-frame hidden" title="Embedded Edexcel Maths PDF"></iframe>
+          <button type="button" class="btn btn-done-green hidden" id="finishPaperFallbackBtn">DONE!</button>
+        </div>
+
+        <div id="scorePanel" class="hidden">
+          <div class="divider-label">CHECK YOUR WORK USING THE WORKED SOLUTIONS ABOVE</div>
+          <form id="scoreForm" class="score-form">
+            <div class="field">
+              <label for="scoreInput">Marks scored (0–80)</label>
+              <input id="scoreInput" type="number" min="0" max="80" step="1" placeholder="e.g. 64" required>
+            </div>
+            <div class="field">
+              <label for="maxScoreInput">Total paper marks</label>
+              <input id="maxScoreInput" type="number" min="1" max="80" step="1" value="80" readonly>
+            </div>
+            <div class="field">
+              <label>Estimated Edexcel Grade</label>
+              <div class="grade-preview"><span>Grade:</span><b id="liveGradePreview">—</b></div>
+            </div>
+            <div class="field full">
+              <button class="btn btn-primary" type="submit">Submit Final Edexcel Score &amp; Grade</button>
+            </div>
+          </form>
+          <p class="small-muted">Use the worked solutions above to check your answers and mark your paper out of 80.</p>
+        </div>
+        <div id="resultPanel" class="notice green hidden"></div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<!-- BIG CENTER-SCREEN POPUP WHEN PLAYER FINISHES PAPER -->
+<div class="modal-backdrop" id="doneOverlayModal" role="dialog" aria-modal="true" aria-labelledby="doneBigHeading">
+  <div class="done-popup">
+    <div class="done-badge" id="doneTimeBadge">STOPWATCH LOCKED AT 00:00:00</div>
+    <h2 class="done-big-title" id="doneBigHeading">DONE!</h2>
+    <div class="done-sub">Working out now visible!</div>
+    <p class="done-desc">MARK your paper! No point in cheating ; you'll only be cheating yourself.</p>
+    <button class="btn btn-primary" id="closeDoneOverlayBtn" style="padding:14px 28px;font-size:15px">View Worked Solutions &amp; Grade Paper →</button>
+  </div>
+</div>
+
+<!-- ADMIN / OVERRIDE SUPABASE MODAL -->
+<div class="modal-backdrop" id="settingsModal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+  <div class="modal">
+    <h2 id="settingsTitle">Global Supabase Connection</h2>
+    <p>To configure your Supabase database for <strong>everyone</strong> using the site, paste your URL and Anon Key into <code>GLOBAL_SUPABASE_URL</code> and <code>GLOBAL_SUPABASE_ANON_KEY</code> at the top of the script in <code>index.html</code>. You can also test or save them below:</p>
+    <div class="fields">
+      <div class="field full"><label for="supabaseUrl">Supabase project URL</label><input id="supabaseUrl" type="url" placeholder="https://your-project.supabase.co"></div>
+      <div class="field full"><label for="supabaseKey">Supabase anon / publishable key</label><input id="supabaseKey" type="password" placeholder="Paste your public anon key"></div>
+    </div>
+    <div id="onlineSettingsState" class="small-muted" style="margin-top:11px">Checking connection…</div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="closeSettings">Close</button>
+      <button class="btn btn-primary" id="connectOnline">Save &amp; Connect</button>
+    </div>
+  </div>
+</div>
+
+<div id="battleTransition" class="battle-transition" role="status" aria-live="assertive" aria-label="Battle countdown">
+  <div class="transition-content">
+    <div class="transition-kicker" id="transitionKicker">GET READY</div>
+    <div class="transition-countdown" id="transitionCountdown">5</div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toasts" aria-live="polite"></div>
+
+<script>
+window.__supabaseReady = new Promise(resolve => {
+  const supabaseScript = document.createElement('script');
+  supabaseScript.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+  supabaseScript.async = true;
+  supabaseScript.onload = () => resolve(true);
+  supabaseScript.onerror = () => resolve(false);
+  document.head.appendChild(supabaseScript);
+});
+</script>
+<script>
+(function(){
+'use strict';
+
+const GLOBAL_SUPABASE_URL = "https://hpxbdpwpurimganzxblp.supabase.co";
+const GLOBAL_SUPABASE_ANON_KEY = "sb_publishable_Vjq5i-184WPTkdVhoyNNlA_578g1Y2S";
+
+const EDEXCEL_1MA1_SERIES = [
+  { id: 'June 2025',      pmtPrefix: 'June 2025', mgSuffix: 'may2025',  hasMA: false },
+  { id: 'November 2024',  pmtPrefix: 'Nov 2024',  mgSuffix: 'nov2024',  hasMA: true  },
+  { id: 'June 2024',      pmtPrefix: 'June 2024', mgSuffix: 'may2024',  hasMA: true  },
+  { id: 'November 2023',  pmtPrefix: 'Nov 2023',  mgSuffix: 'nov2023',  hasMA: true  },
+  { id: 'June 2023',      pmtPrefix: 'June 2023', mgSuffix: 'may2023',  hasMA: true  },
+  { id: 'November 2022',  pmtPrefix: 'Nov 2022',  mgSuffix: 'nov2022',  hasMA: true  },
+  { id: 'June 2022',      pmtPrefix: 'June 2022', mgSuffix: 'june2022', hasMA: true  },
+  { id: 'November 2021',  pmtPrefix: 'Nov 2021',  mgSuffix: 'nov2021',  hasMA: true  },
+  { id: 'November 2020',  pmtPrefix: 'June 2020', mgSuffix: 'nov2020',  hasMA: true, labelOverride: 'November 2020 (Summer 2020 Sitting)' },
+  { id: 'November 2019',  pmtPrefix: 'Nov 2019',  mgSuffix: 'nov2019',  hasMA: true  },
+  { id: 'June 2019',      pmtPrefix: 'June 2019', mgSuffix: 'june2019', hasMA: true  },
+  { id: 'November 2018',  pmtPrefix: 'Nov 2018',  mgSuffix: 'nov2018',  hasMA: true  },
+  { id: 'June 2018',      pmtPrefix: 'June 2018', mgSuffix: 'june2018', hasMA: true  },
+  { id: 'November 2017',  pmtPrefix: 'Nov 2017',  mgSuffix: 'nov2017',  hasMA: true  },
+  { id: 'June 2017',      pmtPrefix: 'June 2017', mgSuffix: 'june2017', hasMA: true  }
+];
+
+function getOfficialEdexcelUrls(paperName, seriesId, tier){
+  const pNum = /Paper 2/i.test(paperName) ? '2' : /Paper 3/i.test(paperName) ? '3' : '1';
+  const tCode = /Foundation/i.test(tier) ? 'F' : 'H';
+  const paperCode = `${pNum}${tCode}`;
+
+  const seriesObj = EDEXCEL_1MA1_SERIES.find(s => seriesId.includes(s.id)) || EDEXCEL_1MA1_SERIES[2];
+  const prefix = encodeURIComponent(seriesObj.pmtPrefix);
+
+  const basePmt = `https://pmt.physicsandmathstutor.com/download/Maths/GCSE/Past-Papers/Edexcel/Paper-${paperCode}`;
+  const qpUrl = `${basePmt}/QP/${prefix}%20QP.pdf`;
+  const msUrl = `${basePmt}/MS/${prefix}%20MS.pdf`;
+
+  const mgPaperCode = paperCode.toLowerCase();
+  const mgQp = `https://old-asset.mathsgenie.co.uk/papers/${mgPaperCode}${seriesObj.mgSuffix}.pdf`;
+  const mgMs = `https://old-asset.mathsgenie.co.uk/papers/${mgPaperCode}${seriesObj.mgSuffix}ms.pdf`;
+  const mgMa = `https://old-asset.mathsgenie.co.uk/papers/${mgPaperCode}${seriesObj.mgSuffix}ans.pdf`;
+  const maUrl = seriesObj.hasMA ? `${basePmt}/MA/${prefix}%20MA.pdf` : mgMa;
+
+  return {
+    code: `1MA1/${paperCode}`,
+    qp: qpUrl,
+    ms: msUrl,
+    ma: maUrl,
+    mgQp,
+    mgMs,
+    mgMa
+  };
+}
+
+const $=id=>document.getElementById(id);
+const state={
+  online:false,
+  client:null,
+  room:null,
+  role:null,
+  playerId:null,
+  subscription:null,
+  timerHandle:null,
+  loadedPdfKey:null,
+  viewingMode:'qp',
+  useGoogleViewer:false,
+  battleSequenceKey:null,
+  battleSequenceComplete:false,
+  battleSequenceInterval:null,
+  pdfDoc:null,
+  pdfDocumentUrl:null,
+  pdfLoadingKey:null,
+  pdfLoadFailedUrl:null,
+  pdfJsPromise:null,
+  bookRenderToken:0,
+  bookRenderTasks:[],
+  scrollPaperObserver:null,
+  scrollPaperEndObserver:null,
+  scrollPaperActiveObserver:null,
+  scrollPaperEndReached:false,
+  scrollPaperLastWidth:0,
+  scrollPaperBuiltForUrl:null,
+  currentVisiblePage:1
+};
+const configKey='maths_ranked_supabase_v1',nameKey='maths_ranked_name_v1',legacyConfigKey='paperduel_supabase_v1',legacyNameKey='paperduel_name_v1';
+const homeScreen=$('homeScreen'), lobbyScreen=$('lobbyScreen');
+
+function toast(msg,type=''){
+  const el=document.createElement('div');
+  el.className='toast '+type;
+  el.textContent=msg;
+  $('toasts').appendChild(el);
+  setTimeout(()=>el.remove(),3800);
+}
+
+function escapeHtml(s){
+  return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function formatStopwatch(totalSeconds){
+  const secs = Math.max(0, Math.floor(Number(totalSeconds) || 0));
+  const hrs = String(Math.floor(secs / 3600)).padStart(2, '0');
+  const mins = String(Math.floor((secs % 3600) / 60)).padStart(2, '0');
+  const remSecs = String(secs % 60).padStart(2, '0');
+  return `${hrs}:${mins}:${remSecs}`;
+}
+
+function setStopwatchDisplays(text){
+  $('timerView').textContent = text;
+  if($('sideTimerView')) $('sideTimerView').textContent = text;
+}
+
+function isCalculatorPaper(paperStr){
+  return !/non-calculator|paper 1/i.test(String(paperStr || ''));
+}
+
+function estimateGcseMathsGrade(percent, tier){
+  const p = Number(percent) || 0;
+  if(/Foundation/i.test(tier)){
+    if(p >= 72) return '5';
+    if(p >= 58) return '4';
+    if(p >= 42) return '3';
+    if(p >= 26) return '2';
+    if(p >= 11) return '1';
+    return 'U';
+  }
+  if(p >= 82) return '9';
+  if(p >= 68) return '8';
+  if(p >= 56) return '7';
+  if(p >= 42) return '6';
+  if(p >= 30) return '5';
+  if(p >= 18) return '4';
+  if(p >= 12) return '3';
+  return 'U';
+}
+
+function parseRoomPaperUrls(r){
+  if(r && r.paper_url){
+    try{
+      const parsed = JSON.parse(r.paper_url);
+      if(parsed && parsed.qp && parsed.ms) return parsed;
+    }catch(e){}
+  }
+  const parts = String(r?.paper || '').split('—').map(s => s.trim());
+  const paperPart = parts[0] || 'Paper 1 (Non-Calculator)';
+  const seriesPart = parts[1] || 'June 2024';
+  return getOfficialEdexcelUrls(paperPart, seriesPart, r?.tier || 'Higher');
+}
+
+function getRoomMetadata(room){
+  if(!room || !room.paper_url) return {};
+  try{
+    const parsed = typeof room.paper_url === 'string' ? JSON.parse(room.paper_url) : room.paper_url;
+    return parsed && typeof parsed === 'object' ? parsed : {};
+  }catch(e){ return {}; }
+}
+
+function getRoomPlayerLimit(room){
+  const value = Number(getRoomMetadata(room).maxPlayers) || 2;
+  return Math.max(2, Math.min(8, Math.floor(value)));
+}
+
+function getRoomParticipants(room){
+  if(!room) return [];
+  const metadata = getRoomMetadata(room);
+  let participants = Array.isArray(metadata.participants) ? metadata.participants : [];
+  if(!participants.length){
+    participants = [];
+    if(room.host_name){
+      participants.push({
+        id:'host', name:room.host_name, score:room.host_score ?? null,
+        elapsed:room.host_max ?? null, percent:room.host_percent ?? null,
+        done:!!room.host_done
+      });
+    }
+    if(room.guest_name){
+      participants.push({
+        id:'guest', name:room.guest_name, score:room.guest_score ?? null,
+        elapsed:room.guest_max ?? null, percent:room.guest_percent ?? null,
+        done:!!room.guest_done
+      });
+    }
+    return participants;
+  }
+  participants = participants.map((player, index)=>{
+    const id = player.id || (index === 0 ? 'host' : index === 1 ? 'guest' : `player-${index+1}`);
+    const legacy = id === 'host'
+      ? {score:room.host_score, elapsed:room.host_max, percent:room.host_percent, done:room.host_done}
+      : id === 'guest'
+      ? {score:room.guest_score, elapsed:room.guest_max, percent:room.guest_percent, done:room.guest_done}
+      : {};
+    return {
+      id,
+      name: id === 'host' ? (room.host_name || player.name || 'Leader') : id === 'guest' ? (room.guest_name || player.name || 'Player 2') : (player.name || `Player ${index+1}`),
+      score: player.score ?? legacy.score ?? null,
+      elapsed: player.elapsed ?? legacy.elapsed ?? null,
+      percent: player.percent ?? legacy.percent ?? null,
+      done: player.done ?? !!legacy.done
+    };
+  });
+  return participants;
+}
+
+function getCurrentParticipant(room){
+  if(!room) return null;
+  const players = getRoomParticipants(room);
+  return players.find(player => player.id === state.playerId)
+    || players.find(player => player.id === (state.role === 'host' ? 'host' : state.role === 'guest' ? 'guest' : ''))
+    || null;
+}
+
+function participantResultText(player, tier){
+  if(player.done && player.score !== null && player.score !== undefined){
+    const percent = Number(player.percent ?? (Number(player.score) / 80 * 100));
+    const grade = estimateGcseMathsGrade(percent, tier);
+    return `Grade ${grade} · ${player.score}/80 · ${formatStopwatch(player.elapsed || 0)}`;
+  }
+  if(player.elapsed !== null && player.elapsed !== undefined) return `Marking… (${formatStopwatch(player.elapsed)})`;
+  return '—';
+}
+
+function renderParticipantCards(room){
+  const container = $('playersList');
+  if(!container) return;
+  const participants = getRoomParticipants(room);
+  const capacity = getRoomPlayerLimit(room);
+  container.replaceChildren();
+  $('playersCapacityLabel').textContent = room.status === 'waiting'
+    ? `${participants.length} / ${capacity} players joined`
+    : `${participants.length} player${participants.length === 1 ? '' : 's'} in this match`;
+
+  participants.forEach((player)=>{
+    const card = document.createElement('div');
+    card.className = 'player-card';
+    const top = document.createElement('div');
+    top.className = 'player-top';
+    const avatar = document.createElement('div');
+    avatar.className = 'avatar small';
+    avatar.textContent = (player.name || '?').trim().charAt(0).toUpperCase() || '?';
+    if(player.id === state.playerId) avatar.title = 'You';
+    const details = document.createElement('div');
+    const name = document.createElement('strong');
+    name.textContent = player.name + (player.id === state.playerId ? ' (You)' : '');
+    const ready = document.createElement('small');
+    if(player.done) ready.textContent = 'Score submitted ✓';
+    else if(player.elapsed !== null && player.elapsed !== undefined) ready.textContent = `Finished (${formatStopwatch(player.elapsed)}) — Marking…`;
+    else if(room.status === 'waiting') ready.textContent = player.id === 'host' ? 'Leader' : 'Joined · waiting for host';
+    else ready.textContent = player.id === state.playerId ? 'You are playing' : 'In the match';
+    details.append(name, ready);
+    top.append(avatar, details);
+
+    const scoreRow = document.createElement('div');
+    scoreRow.className = 'player-score';
+    const resultLabel = document.createElement('span');
+    resultLabel.textContent = 'Results:';
+    const resultValue = document.createElement('b');
+    resultValue.textContent = participantResultText(player, room.tier);
+    scoreRow.append(resultLabel, resultValue);
+    card.append(top, scoreRow);
+    container.append(card);
+  });
+
+  if(room.status === 'waiting' && participants.length < capacity){
+    const openSlots = capacity - participants.length;
+    const card = document.createElement('div');
+    card.className = 'player-card';
+    const top = document.createElement('div');
+    top.className = 'player-top';
+    const avatar = document.createElement('div');
+    avatar.className = 'avatar small waiting';
+    avatar.textContent = '+';
+    const details = document.createElement('div');
+    const name = document.createElement('strong');
+    name.textContent = `Waiting for ${openSlots} more player${openSlots === 1 ? '' : 's'}`;
+    const small = document.createElement('small');
+    small.textContent = 'Share the room code';
+    details.append(name, small);
+    top.append(avatar, details);
+    const scoreRow = document.createElement('div');
+    scoreRow.className = 'player-score';
+    const label = document.createElement('span');
+    label.textContent = 'Results:';
+    const value = document.createElement('b');
+    value.textContent = '—';
+    scoreRow.append(label, value);
+    card.append(top, scoreRow);
+    container.append(card);
+  }
+}
+
+async function updateCurrentParticipant(changes){
+  if(!state.room || !state.room.id || !state.playerId) throw new Error('No active player session');
+  const db = state.client;
+  for(let attempt=0; attempt<6; attempt++){
+    const {data:row, error:readError} = await db.from('gcse_lobbies').select('*').eq('id',state.room.id).single();
+    if(readError) throw readError;
+    const metadata = getRoomMetadata(row);
+    const participants = getRoomParticipants(row);
+    const index = participants.findIndex(player => player.id === state.playerId);
+    if(index < 0) throw new Error('Your player slot was not found in this lobby.');
+    participants[index] = {...participants[index], ...changes};
+    const urls = parseRoomPaperUrls(row);
+    const nextMetadata = {...urls, ...metadata, maxPlayers:getRoomPlayerLimit(row), participants};
+    const fields = {paper_url:JSON.stringify(nextMetadata)};
+    const legacyPrefix = state.playerId === 'host' ? 'host' : state.playerId === 'guest' ? 'guest' : null;
+    if(legacyPrefix){
+      if(Object.prototype.hasOwnProperty.call(changes,'score')) fields[`${legacyPrefix}_score`] = changes.score;
+      if(Object.prototype.hasOwnProperty.call(changes,'elapsed')) fields[`${legacyPrefix}_max`] = changes.elapsed;
+      if(Object.prototype.hasOwnProperty.call(changes,'percent')) fields[`${legacyPrefix}_percent`] = changes.percent;
+      if(Object.prototype.hasOwnProperty.call(changes,'done')) fields[`${legacyPrefix}_done`] = changes.done;
+    }
+    let query = db.from('gcse_lobbies').update(fields).eq('id',row.id);
+    if(row.paper_url === null || row.paper_url === undefined) query = query.is('paper_url',null);
+    else query = query.eq('paper_url',row.paper_url);
+    const {data:updated, error:updateError} = await query.select().maybeSingle();
+    if(updateError) throw updateError;
+    if(updated){
+      state.room = baseRoom(updated);
+      renderRoom();
+      return updated;
+    }
+  }
+  throw new Error('The lobby changed repeatedly. Please try again.');
+}
+
+function updateStatus(){
+  const live = state.online && !!state.client;
+  $('statusText').textContent = 'Server Inactive';
+  $('statusDot').classList.remove('live');
+  $('statusPill').classList.toggle('hidden', live);
+  $('onlineSettingsState').textContent = live
+    ? 'Connected to Supabase! Everyone can create and join Maths Ranked lobbies.'
+    : 'Not connected yet. Paste your Supabase URL and Anon Key.';
+}
+
+function populateEdexcelOptions(){
+  const yearSel = $('paperYear');
+  yearSel.innerHTML = EDEXCEL_1MA1_SERIES.map(s => {
+    const label = s.labelOverride || `${s.id} Series`;
+    return `<option value="${escapeHtml(s.id)}">${escapeHtml(label)}</option>`;
+  }).join('');
+  yearSel.value = 'June 2024';
+  updateFormatBadges();
+}
+
+function updateFormatBadges(){
+  const tier = $('tier').value;
+  const paper = $('paper').value;
+  const year = $('paperYear').value;
+  const calc = isCalculatorPaper(paper);
+  $('formatSummaryLabel').textContent = `${paper.replace(/\s*\((?:Non-Calculator|Calculator)\)/i, '')} - ${tier} Tier - ${year}`;
+  const badge = $('calcStatusBadge');
+  badge.textContent = calc ? 'CALCULATOR' : 'NON-CALCULATOR';
+  badge.classList.toggle('allowed', calc);
+}
+
+function randomCode(){
+  const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let out='';
+  for(let i=0;i<6;i++) out+=chars[Math.floor(Math.random()*chars.length)];
+  return out;
+}
+
+function normalizedName(id){
+  return $(id).value.trim().slice(0,24) || 'Candidate';
+}
+
+function baseRoom(data){
+  return {
+    id: data.id || null,
+    code: data.code,
+    host_name: data.host_name,
+    guest_name: data.guest_name || '',
+    subject: 'Mathematics (Edexcel 1MA1)',
+    exam_board: data.exam_board || 'Pearson Edexcel (1MA1)',
+    paper: data.paper,
+    tier: data.tier || 'Higher',
+    duration: Number(data.duration) || 80,
+    paper_url: data.paper_url || '',
+    status: data.status || 'waiting',
+    started_at: data.started_at || null,
+    host_score: data.host_score ?? null,
+    host_max: data.host_max ?? null,
+    guest_score: data.guest_score ?? null,
+    guest_max: data.guest_max ?? null,
+    host_percent: data.host_percent ?? null,
+    guest_percent: data.guest_percent ?? null,
+    host_done: !!data.host_done,
+    guest_done: !!data.guest_done,
+    created_at: data.created_at || new Date().toISOString()
+  };
+}
+
+function setHome(){
+  stopStopwatch();
+  resetBattleSequence();
+  if(state.pdfDoc){ try{ state.pdfDoc.destroy(); }catch(e){} }
+  state.pdfDoc = null;
+  state.pdfDocumentUrl = null;
+  state.pdfLoadingKey = null;
+  state.pdfLoadFailedUrl = null;
+  state.loadedPdfKey = null;
+  stopScrollPaperObservers();
+  $('bookViewer').classList.add('hidden');
+  $('scrollPaperPages').replaceChildren();
+  state.scrollPaperEndReached = false;
+  state.scrollPaperBuiltForUrl = null;
+  $('pdfViewerContainer').classList.remove('battle-fullscreen');
+  document.body.classList.remove('battle-lock-scroll');
+  document.documentElement.classList.remove('battle-lock-scroll');
+  $('pdfFrame').classList.add('hidden');
+  $('bookLoadingNotice').classList.add('hidden');
+  $('bookFallbackNotice').classList.add('hidden');
+  if(state.subscription){
+    try{ state.subscription.unsubscribe(); }catch(e){}
+    state.subscription=null;
+  }
+  state.room=null;
+  state.role=null;
+  state.playerId=null;
+  state.viewingMode='qp';
+  $('pdfFrame').src='about:blank';
+  homeScreen.classList.remove('hidden');
+  lobbyScreen.classList.add('hidden');
+}
+
+function setLobby(){
+  homeScreen.classList.add('hidden');
+  lobbyScreen.classList.remove('hidden');
+  $('maxScoreInput').value = '80';
+  $('scoreInput').value = '';
+  $('liveGradePreview').textContent = '—';
+  window.scrollTo({top:0,behavior:'smooth'});
+  renderRoom();
+}
+
+function isMyPaperFinished(r){
+  if(!r) return false;
+  const player = getCurrentParticipant(r);
+  return Boolean((player && (player.elapsed !== null && player.elapsed !== undefined || player.done)) || r.status === 'finished');
+}
+
+function ensureEmbeddedPdf(r){
+  const alreadyFinished = isMyPaperFinished(r) || r.status === 'finished';
+  const battleHasStarted = r.status === 'active' || r.status === 'finished';
+  const shouldShow = battleHasStarted && (state.battleSequenceComplete || alreadyFinished || r.status === 'finished');
+  $('pdfViewerContainer').classList.toggle('hidden', !shouldShow);
+  const shouldUseFullscreenPaper = battleHasStarted && shouldShow && r.status === 'active' && !alreadyFinished && state.viewingMode === 'qp' && state.battleSequenceComplete;
+  $('pdfViewerContainer').classList.toggle('battle-fullscreen', shouldUseFullscreenPaper);
+  document.body.classList.toggle('battle-lock-scroll', shouldUseFullscreenPaper || (!state.battleSequenceComplete && r.status === 'active'));
+  document.documentElement.classList.toggle('battle-lock-scroll', shouldUseFullscreenPaper || (!state.battleSequenceComplete && r.status === 'active'));
+  $('mathsToolkitBar').classList.toggle('hidden', !shouldShow);
+  $('preBattlePaperNotice').classList.toggle('hidden', battleHasStarted);
+  $('bookLoadingNotice').classList.add('hidden');
+  $('bookFallbackNotice').classList.add('hidden');
+
+  if(!battleHasStarted || !shouldShow) return;
+
+  if(!alreadyFinished) state.viewingMode = 'qp';
+  const finished = alreadyFinished;
+  $('viewQpBtn').classList.toggle('hidden', !finished);
+  $('viewMaBtn').classList.toggle('hidden', !finished);
+  $('viewQpBtn').classList.toggle('active', state.viewingMode === 'qp');
+  $('viewMaBtn').classList.toggle('active', state.viewingMode === 'ma');
+
+  const urls = parseRoomPaperUrls(r);
+  const mode = state.viewingMode;
+  const rawUrl = mode === 'ma' ? urls.ma : urls.qp;
+  const key = `${r.id || r.code}_${rawUrl}_${state.useGoogleViewer}`;
+  const isAnswerMode = mode === 'ma';
+  $('pdfViewerContainer').classList.toggle('mark-scheme-mode', isAnswerMode);
+  $('pdfModeBadge').classList.toggle('ms', isAnswerMode);
+
+  if(mode === 'ma'){
+    $('pdfViewerTitle').textContent = `✍️ Edexcel Worked Model Solutions — ${urls.code} (${r.paper})`;
+    $('pdfModeBadge').textContent = 'WORKED MODEL ANSWERS (MA)';
+  } else {
+    $('pdfViewerTitle').textContent = `📄 Edexcel Maths Paper — ${urls.code} (${r.paper})`;
+    $('pdfModeBadge').textContent = `${r.tier.toUpperCase()} QUESTION PAPER (80 MARKS)`;
+  }
+
+  if(mode === 'qp'){
+    $('switchRenderEngineBtn').classList.add('hidden');
+    $('pdfFrame').classList.add('hidden');
+    if(state.pdfDoc && state.pdfDocumentUrl === rawUrl){
+      $('bookLoadingNotice').classList.add('hidden');
+      $('bookFallbackNotice').classList.add('hidden');
+      $('bookViewer').classList.remove('hidden');
+      updatePaperControls();
+      return;
+    }
+    $('bookViewer').classList.add('hidden');
+    if(state.pdfLoadFailedUrl === rawUrl){
+      $('bookFallbackNotice').classList.remove('hidden');
+      $('bookFallbackNotice').textContent = 'This PDF could not be opened in scroll view. The standard PDF viewer is available below.';
+      $('pdfFrame').classList.remove('hidden');
+      const fallbackKey = `${key}_fallback`;
+      if(state.loadedPdfKey !== fallbackKey){
+        state.loadedPdfKey = fallbackKey;
+        $('pdfFrame').src = state.useGoogleViewer
+          ? `https://docs.google.com/viewer?url=${encodeURIComponent(rawUrl)}&embedded=true`
+          : `${rawUrl}#toolbar=1&navpanes=0&view=FitH`;
+      }
+      updatePaperControls(true);
+      return;
+    }
+    if(state.pdfLoadingKey !== key){
+      $('bookLoadingNotice').classList.remove('hidden');
+      void loadScrollPdf(rawUrl, key);
+    } else {
+      $('bookLoadingNotice').classList.remove('hidden');
+    }
+    return;
+  }
+
+  $('switchRenderEngineBtn').classList.remove('hidden');
+  stopScrollPaperObservers();
+  $('bookViewer').classList.add('hidden');
+  $('pdfFrame').classList.remove('hidden');
+  const finalSrc = state.useGoogleViewer
+    ? `https://docs.google.com/viewer?url=${encodeURIComponent(rawUrl)}&embedded=true`
+    : `${rawUrl}#toolbar=1&navpanes=0&view=FitH`;
+  if(state.loadedPdfKey !== key){
+    state.loadedPdfKey = key;
+    $('pdfFrame').src = finalSrc;
+  }
+}
+
+function ensurePdfJsLibrary(){
+  if(window.pdfjsLib) return Promise.resolve(window.pdfjsLib);
+  if(state.pdfJsPromise) return state.pdfJsPromise;
+  state.pdfJsPromise = new Promise((resolve,reject)=>{
+    let settled = false;
+    const script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+    script.async = true;
+    const finish = (err) => {
+      if(settled) return;
+      settled = true;
+      clearTimeout(timeoutId);
+      if(err) reject(err);
+      else if(window.pdfjsLib){
+        window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        resolve(window.pdfjsLib);
+      } else reject(new Error('PDF reader library did not initialise.'));
+    };
+    const timeoutId = setTimeout(()=>finish(new Error('PDF reader library timed out.')),12000);
+    script.onload = () => finish(null);
+    script.onerror = () => finish(new Error('PDF reader library could not load.'));
+    document.head.appendChild(script);
+  }).catch(err=>{
+    state.pdfJsPromise = null;
+    throw err;
+  });
+  return state.pdfJsPromise;
+}
+
+async function loadScrollPdf(rawUrl, key){
+  state.pdfLoadingKey = key;
+  state.pdfLoadFailedUrl = null;
+  $('bookLoadingNotice').classList.remove('hidden');
+  $('bookViewer').classList.add('hidden');
+  $('pdfFrame').classList.add('hidden');
+  try{
+    const pdfjs = await ensurePdfJsLibrary();
+    if(state.pdfLoadingKey !== key || !state.room || state.viewingMode !== 'qp') return;
+    const loadingTask = pdfjs.getDocument({url:rawUrl, withCredentials:false});
+    const doc = await loadingTask.promise;
+    if(state.pdfLoadingKey !== key || !state.room || state.viewingMode !== 'qp'){
+      try{ doc.destroy(); }catch(e){}
+      return;
+    }
+    if(state.pdfDoc && state.pdfDoc !== doc){ try{ state.pdfDoc.destroy(); }catch(e){} }
+    state.pdfDoc = doc;
+    state.pdfDocumentUrl = rawUrl;
+    state.pdfLoadFailedUrl = null;
+    state.pdfLoadingKey = null;
+    state.loadedPdfKey = key;
+    $('bookLoadingNotice').classList.add('hidden');
+    $('bookFallbackNotice').classList.add('hidden');
+    $('pdfFrame').classList.add('hidden');
+    $('bookViewer').classList.remove('hidden');
+    await renderContinuousPaper(true);
+    updatePaperControls();
+  }catch(err){
+    if(state.pdfLoadingKey !== key) return;
+    state.pdfLoadingKey = null;
+    state.pdfLoadFailedUrl = rawUrl;
+    $('bookLoadingNotice').classList.add('hidden');
+    $('bookFallbackNotice').classList.remove('hidden');
+    $('bookFallbackNotice').textContent = 'This PDF could not be opened in scroll view. The standard PDF viewer is available below.';
+    $('bookViewer').classList.add('hidden');
+    $('pdfFrame').classList.remove('hidden');
+    const fallbackSrc = state.useGoogleViewer
+      ? `https://docs.google.com/viewer?url=${encodeURIComponent(rawUrl)}&embedded=true`
+      : `${rawUrl}#toolbar=1&navpanes=0&view=FitH`;
+    $('pdfFrame').src = fallbackSrc;
+    state.loadedPdfKey = `${key}_fallback`;
+    updatePaperControls(true);
+  }
+}
+
+function stopScrollPaperObservers(){
+  if(state.scrollPaperObserver){ state.scrollPaperObserver.disconnect(); state.scrollPaperObserver=null; }
+  if(state.scrollPaperEndObserver){ state.scrollPaperEndObserver.disconnect(); state.scrollPaperEndObserver=null; }
+  if(state.scrollPaperActiveObserver){ state.scrollPaperActiveObserver.disconnect(); state.scrollPaperActiveObserver=null; }
+}
+
+async function renderScrollPageElement(pageElement, token){
+  if(!state.pdfDoc || token !== state.bookRenderToken || pageElement.dataset.rendered === 'true' || pageElement.dataset.rendering === 'true') return;
+  pageElement.dataset.rendering = 'true';
+  const pageNo = Number(pageElement.dataset.pageNumber);
+  try{
+    const page = pageElement._pdfPage || await state.pdfDoc.getPage(pageNo);
+    if(token !== state.bookRenderToken) return;
+    pageElement._pdfPage = page;
+    const baseViewport = page.getViewport({scale:1});
+    const pageWidth = Math.max(220, pageElement.clientWidth - 28);
+    const viewport = page.getViewport({scale:pageWidth / baseViewport.width});
+    const canvas = pageElement.querySelector('canvas');
+    const ctx = canvas.getContext('2d', {alpha:false});
+    const outputScale = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.floor(viewport.width * outputScale);
+    canvas.height = Math.floor(viewport.height * outputScale);
+    canvas.style.width = `${viewport.width}px`;
+    canvas.style.height = `${viewport.height}px`;
+    canvas.style.aspectRatio = 'auto';
+    const task = page.render({
+      canvasContext:ctx,
+      viewport,
+      transform:outputScale === 1 ? null : [outputScale,0,0,outputScale,0,0]
+    });
+    state.bookRenderTasks.push(task);
+    await task.promise;
+    if(token === state.bookRenderToken){
+      pageElement.dataset.rendered = 'true';
+      pageElement.dataset.rendering = 'false';
+    }
+  }catch(err){
+    pageElement.dataset.rendering = 'false';
+    if(err?.name !== 'RenderingCancelledException') console.warn(`Could not render paper page ${pageNo}:`,err);
+  }
+}
+
+async function renderContinuousPaper(forceRebuild=false){
+  const doc = state.pdfDoc;
+  if(!doc || !state.pdfDocumentUrl) return;
+  const scroll = $('paperScrollColumn');
+  const pagesRoot = $('scrollPaperPages');
+  const currentUrl = state.pdfDocumentUrl;
+  const previousScrollTop = scroll.scrollTop;
+  const width = pagesRoot.clientWidth || scroll.clientWidth || window.innerWidth;
+  const needsBuild = forceRebuild || state.scrollPaperBuiltForUrl !== currentUrl || pagesRoot.children.length !== doc.numPages;
+
+  stopScrollPaperObservers();
+  state.bookRenderTasks.forEach(task=>{try{task.cancel();}catch(e){}});
+  state.bookRenderTasks = [];
+  const token = ++state.bookRenderToken;
+  state.scrollPaperLastWidth = width;
+
+  if(needsBuild){
+    state.scrollPaperEndReached = false;
+    state.currentVisiblePage = 1;
+    pagesRoot.replaceChildren();
+    for(let pageNo=1; pageNo<=doc.numPages; pageNo++){
+      const pageElement = document.createElement('article');
+      pageElement.className = 'scroll-paper-page';
+      pageElement.dataset.pageNumber = String(pageNo);
+      pageElement.setAttribute('aria-label', `Page ${pageNo} of ${doc.numPages}`);
+      const label = document.createElement('div');
+      label.className = 'scroll-paper-page-label';
+      label.innerHTML = `<span>Edexcel GCSE Maths</span><span>Page ${pageNo} of ${doc.numPages}</span>`;
+      const canvas = document.createElement('canvas');
+      canvas.setAttribute('aria-label', `Question paper page ${pageNo}`);
+      canvas.style.aspectRatio = '1 / 1.414';
+      pageElement.append(label,canvas);
+      pagesRoot.appendChild(pageElement);
+    }
+    state.scrollPaperBuiltForUrl = currentUrl;
+  } else {
+    Array.from(pagesRoot.querySelectorAll('.scroll-paper-page')).forEach(el => {
+      el.dataset.rendered = 'false';
+      el.dataset.rendering = 'false';
+    });
+  }
+
+  const pageElements = Array.from(pagesRoot.querySelectorAll('.scroll-paper-page'));
+
+  state.scrollPaperObserver = new IntersectionObserver(entries=>{
+    for(const entry of entries){
+      if(entry.isIntersecting) void renderScrollPageElement(entry.target,token);
+    }
+  }, {root:scroll, rootMargin:'900px 0px', threshold:0.01});
+  pageElements.forEach(el=>state.scrollPaperObserver.observe(el));
+
+  state.scrollPaperActiveObserver = new IntersectionObserver(entries=>{
+    for(const entry of entries){
+      if(entry.isIntersecting){
+        state.currentVisiblePage = Number(entry.target.dataset.pageNumber) || 1;
+        updatePaperControls();
+      }
+    }
+  }, {root:scroll, rootMargin:'-35% 0px -55% 0px', threshold:0});
+  pageElements.forEach(el=>state.scrollPaperActiveObserver.observe(el));
+
+  const lastPage = pageElements[pageElements.length-1];
+  if(lastPage){
+    state.scrollPaperEndObserver = new IntersectionObserver(entries=>{
+      for(const entry of entries){
+        if(entry.isIntersecting && token === state.bookRenderToken){
+          state.scrollPaperEndReached = true;
+          updatePaperControls();
+        }
+      }
+    }, {root:scroll, rootMargin:'0px', threshold:0.1});
+    state.scrollPaperEndObserver.observe(lastPage);
+  }
+
+  if(needsBuild) scroll.scrollTop = 0;
+  else scroll.scrollTop = previousScrollTop;
+  updatePaperControls();
+}
+
+function updatePaperControls(fallback=false){
+  const doc = state.pdfDoc;
+  const total = doc?.numPages || 0;
+  const cur = state.currentVisiblePage || 1;
+  if($('bookPageCounter')){
+    $('bookPageCounter').textContent = total ? `Page ${cur} of ${total}` : 'Question Paper';
+  }
+  if($('sidePageProgress')){
+    const pct = total > 0 ? Math.min(100, Math.max(5, (cur / total) * 100)) : 0;
+    $('sidePageProgress').style.width = `${pct}%`;
+  }
+  const atLastPage = state.scrollPaperEndReached;
+  const myPaperFinished = isMyPaperFinished(state.room);
+  const shouldShowDone = !!state.room && state.room.status==='active' && !myPaperFinished && state.battleSequenceComplete && (atLastPage || fallback);
+  const fullscreen = $('pdfViewerContainer').classList.contains('battle-fullscreen');
+
+  $('finishPaperBtn').classList.toggle('hidden', !shouldShowDone || fullscreen);
+  const bottomButton = $('finishPaperBottomBtn');
+  const fallbackButton = $('finishPaperFallbackBtn');
+  if(bottomButton) bottomButton.classList.toggle('hidden', !shouldShowDone || fallback);
+  if(fallbackButton) fallbackButton.classList.toggle('hidden', !shouldShowDone || !fallback);
+}
+
+function resetBattleSequence(){
+  if(state.battleSequenceInterval){ clearInterval(state.battleSequenceInterval); state.battleSequenceInterval=null; }
+  state.battleSequenceKey=null;
+  state.battleSequenceComplete=false;
+  const overlay=$('battleTransition');
+  if(overlay){ overlay.classList.remove('visible'); overlay.classList.remove('countdown-running'); }
+  if(!state.room || state.room.status==='waiting'){
+    document.body.classList.remove('battle-lock-scroll');
+    document.documentElement.classList.remove('battle-lock-scroll');
+  }
+}
+
+function syncBattleSequence(r){
+  if(!r || r.status==='waiting'){
+    if(state.battleSequenceKey !== null) resetBattleSequence();
+    return;
+  }
+  if(r.status !== 'active'){
+    if(state.battleSequenceInterval){ clearInterval(state.battleSequenceInterval); state.battleSequenceInterval=null; }
+    state.battleSequenceComplete = true;
+    $('battleTransition').classList.remove('visible');
+    $('pdfViewerContainer').classList.remove('battle-fullscreen');
+    document.body.classList.remove('battle-lock-scroll');
+    document.documentElement.classList.remove('battle-lock-scroll');
+    return;
+  }
+  const sequenceKey = `${r.id || r.code}:${r.started_at || ''}`;
+  if(state.battleSequenceKey !== sequenceKey){
+    resetBattleSequence();
+    state.battleSequenceKey = sequenceKey;
+    state.battleSequenceComplete = false;
+    state.scrollPaperEndReached = false;
+    state.currentVisiblePage = 1;
+    const scrollCol = $('paperScrollColumn');
+    if(scrollCol) scrollCol.scrollTop = 0;
+  }
+  if(state.battleSequenceComplete) return;
+  const revealAt = new Date(r.started_at || 0).getTime();
+  const remaining = revealAt - Date.now();
+  if(!Number.isFinite(revealAt) || revealAt <= 0 || remaining <= 0){
+    completeBattleSequence();
+    return;
+  }
+  $('battleTransition').classList.add('visible');
+  document.body.classList.add('battle-lock-scroll');
+  document.documentElement.classList.add('battle-lock-scroll');
+  if(remaining > 5000){
+    $('battleTransition').classList.remove('countdown-running');
+    $('transitionKicker').textContent = 'GET READY';
+    $('transitionCountdown').textContent = '…';
+  }else{
+    $('battleTransition').classList.add('countdown-running');
+    $('transitionKicker').textContent = 'STARTING IN';
+    $('transitionCountdown').textContent = String(Math.max(1,Math.ceil(remaining/1000)));
+  }
+  if(!state.battleSequenceInterval){
+    state.battleSequenceInterval = setInterval(()=>{
+      if(state.room) syncBattleSequence(state.room);
+    },100);
+  }
+}
+
+function completeBattleSequence(){
+  if(state.battleSequenceComplete) return;
+  state.battleSequenceComplete = true;
+  if(state.battleSequenceInterval){ clearInterval(state.battleSequenceInterval); state.battleSequenceInterval=null; }
+  $('battleTransition').classList.remove('visible');
+  if(state.room) renderRoom();
+  const keepLocked = !!state.room && state.room.status==='active' && !isMyPaperFinished(state.room) && state.viewingMode==='qp';
+  document.body.classList.toggle('battle-lock-scroll', keepLocked);
+  document.documentElement.classList.toggle('battle-lock-scroll', keepLocked);
+}
+
+function renderRoom(){
+  const r = state.room;
+  if(!r) return;
+  syncBattleSequence(r);
+
+  const participants = getRoomParticipants(r);
+  const maxPlayers = getRoomPlayerLimit(r);
+  const currentPlayer = getCurrentParticipant(r);
+  const myPaperFinished = isMyPaperFinished(r);
+  const myScoreSubmitted = !!currentPlayer?.done;
+  const myLockedTime = currentPlayer?.elapsed;
+  const calcAllowed = isCalculatorPaper(r.paper);
+
+  $('lobbyHeading').textContent = r.status==='finished'
+    ? (participants.length > 2 ? 'Maths Match Complete' : 'Maths 1v1 Complete')
+    : myPaperFinished
+    ? 'Worked Solutions Unlocked — Grade Your Paper'
+    : r.status==='active'
+    ? (participants.length > 2 ? 'Maths Match In Progress' : 'Maths 1v1 In Progress')
+    : 'Your Maths 1v1 is Ready';
+
+  $('lobbySub').textContent = r.status==='waiting'
+    ? `${participants.length} of ${maxPlayers} players joined. The leader can start once at least 2 players have joined.`
+    : myPaperFinished && !myScoreSubmitted
+    ? 'Your stopwatch is locked! Use the worked solutions below to grade your paper out of 80.'
+    : r.status==='active'
+    ? 'Scroll down through the Edexcel question paper, then click DONE! on the last page.'
+    : 'Everyone has finished and graded their paper.';
+
+  $('lobbyStateBadge').textContent = r.status.toUpperCase();
+  $('codeBig').textContent = r.code;
+
+  renderParticipantCards(r);
+
+  $('lobbyTier').textContent = `${r.tier} Paper (Out of 80 Marks)`;
+  $('lobbyCalcRule').textContent = calcAllowed ? 'Calculator' : 'Non-Calculator';
+  $('lobbyCalcRule').style.color = calcAllowed ? '#a2e6d8' : '#ff858c';
+  if($('sideCalcBadge')){
+    $('sideCalcBadge').textContent = calcAllowed ? 'Calculator Allowed' : 'Non-Calculator';
+    $('sideCalcBadge').style.color = calcAllowed ? '#a2e6d8' : '#ff858c';
+  }
+
+  ensureEmbeddedPdf(r);
+
+  $('startBtn').classList.toggle('hidden', state.role!=='host' || r.status!=='waiting');
+  $('startBtn').disabled = participants.length < 2;
+
+  $('finishPaperBtn').classList.add('hidden');
+  if(r.status === 'active' && !myPaperFinished && state.battleSequenceComplete){
+    if(state.pdfDoc && state.pdfDocumentUrl === parseRoomPaperUrls(r).qp && state.viewingMode === 'qp') updatePaperControls();
+    else if(state.pdfLoadFailedUrl && state.pdfLoadFailedUrl === parseRoomPaperUrls(r).qp && state.viewingMode === 'qp') updatePaperControls(true);
+  }
+
+  $('scorePanel').classList.toggle('hidden', !myPaperFinished || myScoreSubmitted);
+  $('scoreForm').classList.toggle('hidden', myScoreSubmitted);
+
+  $('timerLabel').textContent = myPaperFinished ? 'YOUR LOCKED STOPWATCH TIME' : 'STOPWATCH (ELAPSED TIME)';
+  if($('sideTimerLabel')) $('sideTimerLabel').textContent = myPaperFinished ? 'LOCKED TIME' : 'STOPWATCH';
+  $('timerView').classList.toggle('running', r.status==='active' && !myPaperFinished);
+  $('timerView').classList.toggle('locked', myPaperFinished);
+  if($('sideTimerView')) $('sideTimerView').classList.toggle('locked', myPaperFinished);
+
+  $('resultPanel').classList.toggle('hidden', r.status!=='finished');
+  if(r.status==='finished'){
+    const ranked = getRoomParticipants(r).filter(player => player.done && player.score !== null && player.score !== undefined)
+      .sort((a,b)=>Number(b.percent ?? (b.score/80*100))-Number(a.percent ?? (a.score/80*100)) || Number(a.elapsed || 0)-Number(b.elapsed || 0));
+    if(ranked.length){
+      const winner = ranked[0];
+      const pct = Number(winner.percent ?? (winner.score/80*100));
+      const grade = estimateGcseMathsGrade(pct, r.tier);
+      const tie = ranked.filter(player => Number(player.percent ?? (player.score/80*100)) === pct && Number(player.elapsed || 0) === Number(winner.elapsed || 0));
+      $('resultPanel').textContent = tie.length > 1
+        ? `It's a tie between ${tie.map(player=>player.name).join(', ')} with ${winner.score}/80 (Grade ${grade}).`
+        : `🏆 ${winner.name} wins with ${winner.score}/80 (${pct.toFixed(1)}% · Grade ${grade} in ${formatStopwatch(winner.elapsed || 0)}) out of ${ranked.length} player${ranked.length===1?'':'s'}.`;
+    }else{
+      $('resultPanel').textContent = 'The match is complete.';
+    }
+  }
+
+  if(r.status==='active' && !myPaperFinished){
+    startStopwatchDisplay();
+  } else if(myPaperFinished && myLockedTime !== null && myLockedTime !== undefined){
+    stopStopwatch();
+    setStopwatchDisplays(formatStopwatch(myLockedTime));
+  } else if(r.status==='waiting'){
+    stopStopwatch();
+    setStopwatchDisplays('00:00:00');
+  } else {
+    stopStopwatch();
+  }
+}
+
+function getElapsedSeconds(){
+  if(!state.room || !state.room.started_at) return 0;
+  const elapsed = Math.floor((Date.now() - new Date(state.room.started_at).getTime()) / 1000);
+  return Math.max(0, elapsed);
+}
+
+function startStopwatchDisplay(){
+  stopStopwatch();
+  const tick = () => {
+    if(!state.room) return;
+    setStopwatchDisplays(formatStopwatch(getElapsedSeconds()));
+  };
+  tick();
+  state.timerHandle = setInterval(tick, 1000);
+}
+
+function stopStopwatch(){
+  if(state.timerHandle){
+    clearInterval(state.timerHandle);
+    state.timerHandle = null;
+  }
+}
+
+function requireOnline(){
+  if(!state.online || !state.client){
+    $('settingsModal').classList.add('open');
+    toast('Connect your Supabase project first.','bad');
+    return false;
+  }
+  return true;
+}
+
+async function supabaseCreate(data){
+  const code = randomCode();
+  const db = state.client;
+
+  const row = {
+    code,
+    host_name: data.host_name,
+    guest_name: null,
+    subject: 'Mathematics (Edexcel 1MA1)',
+    exam_board: data.exam_board,
+    paper: data.paper,
+    tier: data.tier,
+    duration: 90,
+    paper_url: JSON.stringify({
+      ...data.urls,
+      maxPlayers: Math.max(2, Math.min(8, Number(data.maxPlayers) || 2)),
+      participants: [{id:'host', name:data.host_name, score:null, elapsed:null, percent:null, done:false}]
+    }),
+    status: 'waiting',
+    host_done: false,
+    guest_done: false
+  };
+  const {data:created, error} = await db.from('gcse_lobbies').insert(row).select().single();
+  if(error) throw error;
+  state.room = baseRoom(created);
+  state.role = 'host';
+  state.playerId = 'host';
+  state.viewingMode = 'qp';
+  subscribeRoom(created.id);
+  setLobby();
+  toast(`Edexcel lobby created: ${code}`,'good');
+}
+
+async function supabaseJoin(code,name){
+  const db = state.client;
+  for(let attempt=0; attempt<6; attempt++){
+    const {data:r, error} = await db.from('gcse_lobbies').select('*').eq('code',code).maybeSingle();
+    if(error) throw error;
+    if(!r){ toast('Online lobby not found. Check the code.','bad'); return; }
+    if(r.status!=='waiting'){ toast('That match has already started.','bad'); return; }
+    if(String(r.host_name || '').toLowerCase() === name.toLowerCase()){
+      toast('Choose a different display name from the host.','bad');
+      return;
+    }
+
+    const participants = getRoomParticipants(r);
+    const duplicate = participants.some(player => String(player.name || '').toLowerCase() === name.toLowerCase());
+    if(duplicate){ toast('That display name is already being used in this lobby.','bad'); return; }
+    const capacity = getRoomPlayerLimit(r);
+    if(participants.length >= capacity){ toast('This lobby is full. Ask the leader for another room code.','bad'); return; }
+
+    const playerId = participants.length === 1 ? 'guest' : `p_${Date.now().toString(36)}_${randomCode()}`;
+    const newPlayer = {id:playerId, name, score:null, elapsed:null, percent:null, done:false};
+    const urls = parseRoomPaperUrls(r);
+    const metadata = {...urls, ...getRoomMetadata(r), maxPlayers:capacity, participants:[...participants,newPlayer]};
+    const fields = {paper_url:JSON.stringify(metadata)};
+    if(!r.guest_name) fields.guest_name = name;
+
+    let query = db.from('gcse_lobbies').update(fields).eq('id',r.id).eq('status','waiting');
+    if(r.paper_url === null || r.paper_url === undefined) query = query.is('paper_url',null);
+    else query = query.eq('paper_url',r.paper_url);
+    if(!r.guest_name) query = query.is('guest_name',null);
+    const {data:updated, error:updErr} = await query.select().maybeSingle();
+    if(updErr) throw updErr;
+    if(!updated) continue;
+
+    state.room = baseRoom(updated);
+    state.playerId = playerId;
+    state.role = playerId === 'guest' ? 'guest' : 'player';
+    state.viewingMode = 'qp';
+    subscribeRoom(updated.id);
+    setLobby();
+    toast('Connected to Maths lobby!','good');
+    return;
+  }
+  toast('This lobby changed while you were joining. Please try again.','bad');
+}
+
+function subscribeRoom(id){
+  if(state.subscription){
+    try{ state.subscription.unsubscribe(); }catch(e){}
+  }
+  state.subscription = state.client.channel('lobby-'+id)
+    .on('postgres_changes',{event:'*',schema:'public',table:'gcse_lobbies',filter:'id=eq.'+id},payload=>{
+      if(payload.new){
+        state.room = baseRoom(payload.new);
+        renderRoom();
+      }
+    })
+    .subscribe();
+}
+
+async function updateOnline(fields){
+  if(!state.room || !state.room.id) throw new Error('No active online room');
+  const {data, error} = await state.client.from('gcse_lobbies').update(fields).eq('id',state.room.id).select().single();
+  if(error) throw error;
+  state.room = baseRoom(data);
+  renderRoom();
+  return data;
+}
+
+async function startMatch(){
+  if(!state.room || getRoomParticipants(state.room).length < 2){
+    toast('At least 2 players must join before the leader can start.','bad');
+    return;
+  }
+  if(state.room.status !== 'waiting') return;
+  const revealAt = new Date(Date.now() + 6500).toISOString();
+  try{
+    state.viewingMode = 'qp';
+    state.loadedPdfKey = null;
+    state.pdfLoadFailedUrl = null;
+    await updateOnline({status:'active', started_at:revealAt});
+    toast('Duel starting — get ready!','good');
+  }catch(e){
+    toast('Could not start the online duel: '+e.message,'bad');
+  }
+}
+
+async function finishPaperAndRevealSolutions(){
+  if(!state.room || state.room.status !== 'active') return;
+  const elapsedSecs = getElapsedSeconds();
+  try{
+    state.viewingMode = 'ma';
+    state.loadedPdfKey = null;
+    await updateCurrentParticipant({elapsed:elapsedSecs});
+    $('doneTimeBadge').textContent = `Time Taken: ${formatStopwatch(elapsedSecs)}`;
+    $('doneOverlayModal').classList.add('open');
+  }catch(e){
+    toast('Could not lock time: '+e.message,'bad');
+  }
+}
+
+async function submitScore(e){
+  e.preventDefault();
+  const score = Number($('scoreInput').value), max = 80;
+  if(!Number.isFinite(score) || score<0 || score>max){
+    toast('Enter a valid mark between 0 and 80.','bad');
+    return;
+  }
+  if(!state.room || !state.playerId){ toast('Your player session could not be found.','bad'); return; }
+  const percent = (score / max) * 100;
+  const grade = estimateGcseMathsGrade(percent, state.room?.tier);
+  const current = getCurrentParticipant(state.room);
+  const elapsedSecs = current?.elapsed ?? getElapsedSeconds();
+
+  try{
+    let updated = await updateCurrentParticipant({score, elapsed:elapsedSecs, percent, done:true});
+    toast(`Submitted: ${score}/80 (Grade ${grade})`,'good');
+    const participants = getRoomParticipants(updated);
+    if(participants.length >= 2 && participants.every(player => player.done)){
+      await updateOnline({status:'finished'});
+    }
+  }catch(err){
+    toast('Could not submit score: '+err.message,'bad');
+  }
+}
+
+async function initSupabaseConnection(){
+  const libraryLoaded = await (window.__supabaseReady || Promise.resolve(!!window.supabase));
+  let url = GLOBAL_SUPABASE_URL.trim();
+  let key = GLOBAL_SUPABASE_ANON_KEY.trim();
+
+  if(!url || !key || url.includes('YOUR-PROJECT-ID') || key.includes('YOUR_PUBLIC_ANON_KEY')){
+    try{
+      const saved = JSON.parse(localStorage.getItem(configKey) || localStorage.getItem(legacyConfigKey) || 'null');
+      if(saved && saved.url && saved.key){
+        url = saved.url;
+        key = saved.key;
+      }
+    }catch(e){}
+  }
+
+  if(url && key && !url.includes('YOUR-PROJECT-ID') && !key.includes('YOUR_PUBLIC_ANON_KEY')){
+    $('supabaseUrl').value = url;
+    $('supabaseKey').value = key;
+    if(libraryLoaded && window.supabase && window.supabase.createClient){
+      await connectSupabase(false, url, key);
+    } else {
+      updateStatus();
+      $('onlineSettingsState').textContent = 'Server Inactive. The connection library could not load; check your internet connection and reload to enable online matches.';
+    }
+  } else {
+    updateStatus();
+  }
+}
+
+async function connectSupabase(showSuccess=true, customUrl=null, customKey=null){
+  const url = (customUrl || $('supabaseUrl').value).trim().replace(/\/$/,'');
+  const key = (customKey || $('supabaseKey').value).trim();
+  if(!url || !key){
+    toast('Enter both the Supabase project URL and public anon key.','bad');
+    return;
+  }
+  if(!window.supabase || !window.supabase.createClient){
+    toast('Could not load the Supabase browser library.','bad');
+    return;
+  }
+  try{
+    const client = window.supabase.createClient(url,key);
+    const test = await client.from('gcse_lobbies').select('id').limit(1);
+    if(test.error) throw test.error;
+    state.client = client;
+    state.online = true;
+    localStorage.setItem(configKey, JSON.stringify({url,key}));
+    updateStatus();
+    if(showSuccess) toast('Connected to Supabase!','good');
+  }catch(e){
+    state.client = null;
+    state.online = false;
+    updateStatus();
+    $('onlineSettingsState').textContent = 'Connection failed: '+e.message;
+    if(showSuccess) toast('Could not connect. Check your Supabase URL, key, and SQL setup.','bad');
+  }
+}
+
+$('tier').addEventListener('change', updateFormatBadges);
+$('paper').addEventListener('change', updateFormatBadges);
+$('paperYear').addEventListener('change', updateFormatBadges);
+
+$('scoreInput').addEventListener('input', () => {
+  const s = Number($('scoreInput').value), m = 80;
+  if(Number.isFinite(s) && s >= 0 && s <= 80){
+    const pct = (s / m) * 100;
+    const g = estimateGcseMathsGrade(pct, state.room?.tier || 'Higher');
+    $('liveGradePreview').textContent = `Grade ${g} (${pct.toFixed(0)}%)`;
+  } else {
+    $('liveGradePreview').textContent = '—';
+  }
+});
+
+let paperResizeTimer = null;
+window.addEventListener('resize',()=>{
+  if(!state.pdfDoc || $('bookViewer').classList.contains('hidden')) return;
+  clearTimeout(paperResizeTimer);
+  paperResizeTimer = setTimeout(()=>{
+    const width = $('scrollPaperPages').clientWidth || $('paperScrollColumn').clientWidth || window.innerWidth;
+    if(Math.abs(width - state.scrollPaperLastWidth) > 35){
+      void renderContinuousPaper(false);
+    }
+  }, 180);
+});
+
+function openFormulaSheet(){
+  const tier = state.room?.tier || $('tier').value || 'Higher';
+  const formulaSheetUrl = /Foundation/i.test(tier)
+    ? 'https://qualifications.pearson.com/content/dam/pdf/GCSE/mathematics/2015/exam-materials/2026-exam-aid-foundation.pdf'
+    : 'https://qualifications.pearson.com/content/dam/pdf/GCSE/mathematics/2015/exam-materials/2026-exam-aid-higher.pdf';
+  window.open(formulaSheetUrl, '_blank', 'noopener');
+}
+
+$('toggleFormulaBtn').addEventListener('click', openFormulaSheet);
+if($('sideFormulaBtn')) $('sideFormulaBtn').addEventListener('click', openFormulaSheet);
+
+$('viewQpBtn').addEventListener('click', () => {
+  state.viewingMode = 'qp';
+  state.loadedPdfKey = null;
+  if(state.room) ensureEmbeddedPdf(state.room);
+});
+$('viewMaBtn').addEventListener('click', () => {
+  state.viewingMode = 'ma';
+  state.loadedPdfKey = null;
+  if(state.room) ensureEmbeddedPdf(state.room);
+});
+
+$('switchRenderEngineBtn').addEventListener('click', () => {
+  state.useGoogleViewer = !state.useGoogleViewer;
+  $('switchRenderEngineBtn').textContent = state.useGoogleViewer ? 'Compat Viewer: ON' : 'Compat Viewer: OFF';
+  state.loadedPdfKey = null;
+  if(state.room) ensureEmbeddedPdf(state.room);
+});
+
+const savedDisplayName = localStorage.getItem(nameKey) || localStorage.getItem(legacyNameKey) || '';
+$('hostName').value = savedDisplayName;
+$('joinName').value = savedDisplayName;
+
+$('createForm').addEventListener('submit', async e=>{
+  e.preventDefault();
+  if(!requireOnline()) return;
+  const name = normalizedName('hostName');
+  localStorage.setItem(nameKey, name);
+  const paperVal = $('paper').value;
+  const yearVal = $('paperYear').value;
+  const tierVal = $('tier').value;
+  const maxPlayersVal = Math.max(2, Math.min(8, Number($('maxPlayers').value) || 2));
+  const urls = getOfficialEdexcelUrls(paperVal, yearVal, tierVal);
+  const combinedPaperLabel = `${paperVal} — ${yearVal}`;
+
+  const data = {
+    host_name: name,
+    exam_board: `Pearson Edexcel (${urls.code})`,
+    paper: combinedPaperLabel,
+    tier: tierVal,
+    maxPlayers: maxPlayersVal,
+    urls
+  };
+  try{
+    await supabaseCreate(data);
+  }catch(err){
+    toast('Could not create Edexcel lobby: '+err.message,'bad');
+  }
+});
+
+$('joinForm').addEventListener('submit', async e=>{
+  e.preventDefault();
+  if(!requireOnline()) return;
+  const name = normalizedName('joinName');
+  localStorage.setItem(nameKey, name);
+  const code = $('joinCode').value.trim().toUpperCase();
+  if(!/^[A-HJ-NP-Z2-9]{6}$/.test(code)){
+    toast('Enter a valid six-character code.','bad');
+    return;
+  }
+  try{
+    await supabaseJoin(code, name);
+  }catch(err){
+    toast('Could not join Edexcel lobby: '+err.message,'bad');
+  }
+});
+
+$('joinCode').addEventListener('input', e=>{
+  e.target.value = e.target.value.toUpperCase().replace(/[^A-HJ-NP-Z2-9]/g,'').slice(0,6);
+});
+
+$('startBtn').addEventListener('click', startMatch);
+$('finishPaperBtn').addEventListener('click', finishPaperAndRevealSolutions);
+$('finishPaperBottomBtn').addEventListener('click', finishPaperAndRevealSolutions);
+$('finishPaperFallbackBtn').addEventListener('click', finishPaperAndRevealSolutions);
+
+$('closeDoneOverlayBtn').addEventListener('click', ()=>{
+  $('doneOverlayModal').classList.remove('open');
+  $('pdfViewerContainer').scrollIntoView({behavior:'smooth'});
+});
+$('doneOverlayModal').addEventListener('click', e=>{
+  if(e.target === $('doneOverlayModal')) $('doneOverlayModal').classList.remove('open');
+});
+
+$('scoreForm').addEventListener('submit', submitScore);
+$('copyCode').addEventListener('click', async()=>{
+  try{
+    await navigator.clipboard.writeText(state.room.code);
+    toast('Room code copied!','good');
+  }catch(e){
+    toast('Your room code is '+state.room.code);
+  }
+});
+
+$('homeBtn').addEventListener('click', setHome);
+$('leaveBtn').addEventListener('click', ()=>{
+  if(state.online && state.role==='host' && state.room?.status==='waiting'){
+    state.client.from('gcse_lobbies').delete().eq('id',state.room.id).then(()=>{}).catch(()=>{});
+  }
+  setHome();
+});
+
+$('closeSettings').addEventListener('click', ()=>$('settingsModal').classList.remove('open'));
+$('settingsModal').addEventListener('click', e=>{
+  if(e.target===$('settingsModal')) $('settingsModal').classList.remove('open');
+});
+$('connectOnline').addEventListener('click', async()=>{
+  await connectSupabase(true);
+  if(state.online) $('settingsModal').classList.remove('open');
+});
+
+populateEdexcelOptions();
+initSupabaseConnection();
+})();
+</script>
+</body>
+</html>
