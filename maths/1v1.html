@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#0b1022">
-<title>PaperDuel — Official Edexcel GCSE Maths (1MA1) 1v1 Arena</title>
+<title>Maths Ranked — Edexcel GCSE Maths 1v1 Arena</title>
 <style>
 :root{--bg:#0b1022;--panel:#131a33;--panel2:#182140;--line:#2a3558;--text:#f6f8ff;--muted:#a4afd0;--purple:#a99bff;--mint:#7ef2c4;--orange:#ffb86b;--danger:#ff858c;--blue:#75c8ff;--shadow:0 20px 60px #03061477}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse at 12% 0%,#251f54 0,transparent 38%),radial-gradient(ellipse at 95% 12%,#113d4d 0,transparent 32%),var(--bg);color:var(--text);font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;min-height:100vh}
@@ -49,54 +49,439 @@ button,input,select{font:inherit}button{cursor:pointer;border:0}button:disabled{
 .score-form{display:grid;grid-template-columns:1fr 1fr 1fr;gap:11px;align-items:end}.score-form .field input{font-size:18px;font-weight:850}.grade-preview{background:#0c1226;border:1px solid #303c62;border-radius:11px;padding:10px 13px;min-height:45px;display:flex;align-items:center;justify-content:space-between;font-size:13px}.grade-preview b{font-size:18px;color:var(--mint)}.activity{font-size:12px;color:var(--muted);line-height:1.75;padding-left:18px}.activity li{padding-left:3px}.small-muted{font-size:11px;color:#8691af}.sheet-card{background:#10172c;border:1px solid #303b60;border-radius:12px;padding:13px;color:var(--muted);font-size:12px}.sheet-card strong{color:var(--text)}
 @media(max-width:960px){.hero{grid-template-columns:1fr}.grid2,.lobby-grid{grid-template-columns:1fr}.paper-info{grid-template-columns:1fr 1fr}.steps{grid-template-columns:1fr 1fr}.score-form{grid-template-columns:1fr 1fr}}
 @media(max-width:580px){.wrap{width:min(100% - 24px,1320px)}.fields,.players,.paper-info,.steps,.score-form{grid-template-columns:1fr}.joinbox{grid-template-columns:1fr}.pdf-frame{height:560px}}
+
+/* Maths Ranked — compact, near-black interface inspired by the supplied reference */
+:root{
+  --bg:#0a0d12;
+  --panel:#111722;
+  --panel2:#151d2a;
+  --line:#252f3e;
+  --text:#e8edf5;
+  --muted:#8d9bb0;
+  --purple:#8faeff;
+  --mint:#77e6cf;
+  --orange:#ffb36b;
+  --danger:#ff7c87;
+  --blue:#73b7ff;
+  --shadow:0 18px 44px #00000035;
+}
+html{scroll-behavior:smooth}
+body{
+  background-color:var(--bg);
+  background-image:radial-gradient(ellipse at 50% -12%,#182236 0,transparent 48%);
+  color:var(--text);
+  font-size:14px;
+}
+.wrap{width:min(1120px,calc(100% - 36px))}
+.topbar{padding:18px 0;border-bottom-color:#ffffff12;gap:14px}
+.brand{gap:5px;font-size:19px;letter-spacing:-.7px;white-space:nowrap}
+.brand-mark{
+  display:inline-block;width:auto;height:auto;border-radius:0;padding:0;
+  background:linear-gradient(180deg,#ff6979 0%,#ffb35f 38%,#ffe477 64%,#65e7c6 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  font:900 25px/1 ui-monospace,SFMono-Regular,Menlo,monospace;box-shadow:none;
+}
+.brand-name{font-weight:900;color:#e8edf5}
+.brand-sub{margin-left:8px;font-size:9px;font-weight:800;padding:4px 7px;border-radius:6px;background:#ffffff06;color:#9caac0;border:1px solid #2b3443;letter-spacing:.7px}
+.navright{gap:8px}
+.home-actions{display:flex;gap:10px;flex-wrap:wrap;padding:22px 0 8px}
+.home-actions a{text-decoration:none}
+.status{background:#0e131b;border-color:var(--line);padding:6px 10px;border-radius:8px;font-size:11px}
+.btn{padding:10px 13px;border-radius:8px;font-size:12px;box-shadow:none;transition:background .15s,border-color .15s,transform .15s}
+.btn-primary{background:#e8edf5;color:#0b1018;box-shadow:none}
+.btn-primary:hover:not(:disabled){background:#fff}
+.btn-secondary{background:#101620;color:#cbd4e2;border-color:#293444}
+.btn-purple{background:#8faeff;color:#0a1220}
+.btn-ghost{border-color:#293444;color:#a9b5c7}
+.btn-danger{background:#2a171e;color:#ffabb2;border-color:#59303a}
+.hero{padding:26px 0 18px;grid-template-columns:1.08fr .92fr;gap:20px;align-items:stretch}
+.eyebrow{font-size:10px;letter-spacing:1.25px;color:#8eacd8}
+.eyebrow:before{background:#8eacd8;width:18px}
+h1{font-size:clamp(34px,4.4vw,50px);line-height:1.04;letter-spacing:-2px;margin:12px 0 13px;font-weight:900}
+h1 span{background:linear-gradient(90deg,#80e3d1,#8cb9ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{font-size:14px;line-height:1.7;max-width:600px;color:#a3afc2;margin-bottom:18px}
+.hero-art{
+  background-color:#101722;
+  background-image:radial-gradient(#29374b .8px,transparent .8px);
+  background-size:14px 14px;
+  border:1px solid #293444;border-radius:14px;padding:18px;box-shadow:none;
+}
+.hero-art:before{color:#ffffff09}
+.duel-title{font-size:10px;letter-spacing:1.1px;color:#8f9db1}
+.player-mini{background:#0d131c;border:1px solid #273244;border-radius:10px;padding:13px 9px}
+.avatar{width:42px;height:42px;border-radius:10px;margin-bottom:8px;background:linear-gradient(135deg,#7ce4d0,#9dcaff)}
+.avatar.purple{background:linear-gradient(135deg,#9cadff,#d8b4ff)}
+.player-mini strong{font-size:12px}
+.player-mini small{font-size:11px;color:#8796ab}
+.vs{color:#ffba77}
+.scoreline{border-top-color:#293342;color:#8d9bb0;font-size:11px}
+.grid2{grid-template-columns:1.08fr .92fr;gap:14px;margin:14px 0 42px}
+.card{background:#10151e;border:1px solid #252f3e;border-radius:13px;padding:19px;box-shadow:none}
+.card-head{margin-bottom:15px;gap:10px}
+.card-title{font-size:18px;letter-spacing:-.4px}
+.card-sub{color:#8f9db1;font-size:12px;line-height:1.55}
+.step{font-size:10px;border-radius:6px;padding:4px 7px;color:#95dccc;background:#77e6cf0b;border-color:#77e6cf25}
+.fields{gap:11px}
+.field{gap:6px}
+.field label{font-size:10px;color:#9aa8bb;letter-spacing:.65px;text-transform:uppercase}
+.field input,.field select{background:#0b1017;border:1px solid #293444;color:#e8edf5;padding:11px 12px;border-radius:8px;min-height:42px;font-size:13px}
+.field input:focus,.field select:focus{border-color:#83aaff;box-shadow:0 0 0 2px #83aaff16}
+.field input::placeholder{color:#68768a}
+.field select option{background:#111722}
+.input-note{color:#78869b}
+.board-row{background:#0c121a;border-color:#253042;border-radius:8px;padding:10px 11px;font-size:11px}
+.board-row strong{color:#86dfcf;font-size:11px}
+.calc-pill{font-size:10px;border-radius:6px;padding:4px 7px}
+.card-bottom{margin-top:15px;gap:10px}
+.tiny-note{color:#818ea2;font-size:10px}
+.joinbox{background:#0b1017;border-color:#293444;border-radius:9px;padding:12px;gap:8px}
+.joinbox input{font-size:19px;color:#e8edf5}
+.divider-label{font-size:9px;letter-spacing:1px;color:#6f7d92;margin:15px 0}
+.divider-label:before,.divider-label:after{background:#253041}
+.sheet-card{background:#0d131b;border:1px solid #252f3e;border-radius:9px;padding:12px;color:#95a2b5;font-size:11px;line-height:1.65}
+.sheet-card strong{color:#dce4ef}
+.how{margin-bottom:42px}
+.section-top h2{font-size:22px;letter-spacing:-.6px}
+.section-top p{color:#8d9bb0;font-size:12px}
+.steps{gap:11px}
+.step-card{padding:15px;background:#10151e;border:1px solid #252f3e;border-radius:11px}
+.step-number{color:#89aaff;font-size:10px;letter-spacing:.8px}
+.step-card h3{font-size:13px}
+.step-card p{font-size:11px;line-height:1.6;color:#8e9bb0}
+.footer{border-top-color:#222c39;color:#78869a;font-size:11px;padding-top:17px}
+.footer b{color:#dce4ef}
+.notice{border-radius:9px;font-size:12px}
+.modal{background:#111722;border-color:#303b4c;border-radius:14px;box-shadow:0 30px 90px #000b}
+.modal-backdrop{background:#05070bdc}
+.modal h2{font-size:21px}
+.toast{background:#151d28;border-color:#303b4c;border-radius:9px}
+.lobby-shell{padding:16px 0 44px}
+.lobby-name{font-size:clamp(25px,3.5vw,36px);letter-spacing:-1.2px}
+.room-hero{background:#0c131c;border-color:#293444;border-radius:10px}
+.room-code-big{color:#83e1d0;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.player-card,.info-box{background:#0d131b;border-color:#273243;border-radius:10px}
+.timerbox{background:#0b1017;border-color:#293444;border-radius:10px}
+.timer{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.tool-btn{background:#141c27;border-color:#2b394c;border-radius:8px;font-size:11px}
+.tool-btn.active{background:#15272a;border-color:#77e6cf;color:#92e5d7}
+.tool-drawer{background:#0d131b;border-color:#293444;border-radius:11px}
+.formula-box{background:#111a26;border-color:#293444;border-radius:8px}
+.formula-box h4{color:#85ddcf}
+.scratch-canvas{background-color:#090e15;background-image:radial-gradient(#29384b 1px,transparent 1px);background-size:14px 14px;border-color:#2b394c;border-radius:9px}
+.calc-wrap{background:#111923;border-color:#293444;border-radius:10px}
+.calc-screen{background:#090e15;border-color:#293444;color:#84e0d0}
+.calc-keys button{background:#1a2431;border-color:#2d394c;border-radius:7px}
+.calc-keys button.op{background:#182337;color:#a6bbff;border-color:#303e56}
+.calc-keys button.eq{background:#dfe8f4;color:#101722}
+.pdf-viewer-container{border-color:#293444;border-radius:11px;box-shadow:none;background:#0b1017}
+.pdf-viewer-header{background:#111722;border-bottom-color:#293444}
+.pdf-mode-pill{background:#182337;color:#a9bcff;border-color:#33405a}
+.score-form .field input,.grade-preview{background:#0b1017;border-color:#293444;border-radius:8px}
+.done-popup{background:linear-gradient(155deg,#151d29,#0c1119);border-color:#77e6cf;border-radius:18px;box-shadow:0 0 50px #77e6cf18,0 35px 100px #000c}
+.done-big-title{background:linear-gradient(90deg,#77e6cf,#e8edf5,#a9bcff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.done-badge{background:#77e6cf10;border-color:#77e6cf;color:#86dfcf}
+@media(max-width:960px){
+  .hero{grid-template-columns:1fr}
+  .grid2,.lobby-grid{grid-template-columns:1fr}
+  .hero-art{max-width:none}
+}
+@media(max-width:580px){
+  .wrap{width:calc(100% - 24px)}
+  .topbar{align-items:flex-start}
+  .brand{flex-wrap:wrap;white-space:normal;font-size:17px;max-width:70%}
+  .brand-mark{font-size:22px}
+  .brand-sub{margin-left:0;flex-basis:100%;width:max-content}
+  .navright{align-items:flex-end;flex-direction:column}
+  .navright .status{max-width:150px;font-size:10px}
+  .hero{padding-top:22px}
+  .card{padding:15px}
+  .card-bottom{align-items:flex-start;flex-direction:column}
+  .card-bottom .btn{width:100%}
+  .versus{grid-template-columns:1fr 34px 1fr}
+  .paper-info{grid-template-columns:1fr 1fr}
+  .players{grid-template-columns:1fr 1fr}
+}
+
+
+
+/* Visual refresh: restrained surfaces, clear hierarchy, same original background */
+:root{
+  --bg:#0b1022;
+  --panel:#111927;
+  --panel2:#151f30;
+  --line:#2b3749;
+  --text:#edf2f8;
+  --muted:#9aa8ba;
+  --purple:#a9baff;
+  --mint:#7de0c7;
+  --orange:#edbd82;
+  --danger:#f08b91;
+  --blue:#9dc7f4;
+  --shadow:0 14px 32px rgba(0,0,0,.18);
+}
+body{
+  background:radial-gradient(ellipse at 12% 0%,#251f54 0,transparent 38%),radial-gradient(ellipse at 95% 12%,#113d4d 0,transparent 32%),var(--bg);
+  color:var(--text);
+  font-size:14px;
+  line-height:1.55;
+}
+.wrap{width:min(1160px,calc(100% - 36px))}
+.topbar{
+  min-height:46px;
+  padding:12px 0 14px;
+  justify-content:flex-end;
+  border-bottom:1px solid rgba(255,255,255,.07);
+}
+.navright{gap:8px}
+.status{
+  padding:6px 10px;
+  border-radius:7px;
+  color:#b4c0d0;
+  background:rgba(9,14,24,.68);
+  border:1px solid rgba(165,184,208,.18);
+  font-size:11px;
+}
+.dot{width:6px;height:6px}
+.dot.live{box-shadow:none}
+.grid2{
+  grid-template-columns:minmax(0,1.04fr) minmax(0,.96fr);
+  gap:18px;
+  margin:20px 0 48px;
+}
+.card{
+  min-width:0;
+  padding:22px;
+  border:1px solid rgba(153,176,207,.18);
+  border-radius:12px;
+  background:rgba(14,21,34,.91);
+  box-shadow:var(--shadow);
+}
+.card-head{margin-bottom:20px;gap:12px}
+.card-title{
+  margin:0;
+  color:#edf2f8;
+  font-size:19px;
+  font-weight:730;
+  line-height:1.25;
+  letter-spacing:-.45px;
+}
+.card-sub{margin-top:6px;color:#9aa8ba;font-size:12px;line-height:1.55}
+.step{
+  padding:4px 7px;
+  border:1px solid rgba(157,184,220,.19);
+  border-radius:6px;
+  color:#aab8ca;
+  background:rgba(255,255,255,.025);
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:.35px;
+}
+.fields{gap:15px 13px}
+.field{gap:7px}
+.field label{
+  color:#a9b7c9;
+  font-size:10.5px;
+  font-weight:700;
+  letter-spacing:.55px;
+  text-transform:uppercase;
+}
+.field input,.field select{
+  min-height:44px;
+  padding:11px 12px;
+  border:1px solid #2b394d;
+  border-radius:7px;
+  background:rgba(7,13,23,.82);
+  color:#edf2f8;
+  font-size:13px;
+  transition:border-color .15s ease,background-color .15s ease,box-shadow .15s ease;
+}
+.field input:hover,.field select:hover{border-color:#3c4c63}
+.field input:focus,.field select:focus{
+  outline:none;
+  border-color:#7bcdbd;
+  background:#0b1420;
+  box-shadow:0 0 0 3px rgba(125,224,199,.09);
+}
+.field input::placeholder{color:#718096}
+.field select option{background:#111927;color:#edf2f8}
+.btn{
+  min-height:39px;
+  padding:10px 14px;
+  border-radius:7px;
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:.05px;
+  box-shadow:none;
+  text-decoration:none;
+  transition:background-color .15s ease,border-color .15s ease,color .15s ease,transform .15s ease;
+}
+.btn:hover:not(:disabled){transform:translateY(-1px);filter:none}
+.btn-primary{background:#dce8ed;color:#101923;border:1px solid #dce8ed}
+.btn-primary:hover:not(:disabled){background:#f3f7f8;border-color:#f3f7f8}
+.btn-secondary{background:#111a28;color:#d1dae5;border:1px solid #344257}
+.btn-secondary:hover:not(:disabled){background:#182437;border-color:#465a74}
+.btn-purple{background:#b6c6f4;color:#111a2b;border:1px solid #b6c6f4}
+.btn-purple:hover:not(:disabled){background:#c8d4f8;border-color:#c8d4f8}
+.btn-ghost{background:transparent;border-color:#344257;color:#aebccd}
+.btn-danger{background:#2a1b25;color:#f1b5ba;border-color:#533440}
+.card-bottom{margin-top:18px;gap:12px}
+.card-bottom .btn{white-space:nowrap}
+.tiny-note{color:#8392a6;font-size:10px;line-height:1.5}
+.board-row{
+  padding:11px 12px;
+  border-radius:7px;
+  background:rgba(255,255,255,.025);
+  border-color:#2b394d;
+  color:#a4b2c4;
+  font-size:11px;
+}
+.board-row strong{color:#a9e3d7;font-size:11.5px}
+.calc-pill{border-radius:5px;font-size:9.5px;letter-spacing:.25px}
+.calc-pill.allowed{background:rgba(125,224,199,.09);color:#a4e6d8;border-color:rgba(125,224,199,.24)}
+.joinbox{
+  margin-top:10px;
+  padding:10px;
+  border:1px solid #2b394d;
+  border-radius:8px;
+  background:rgba(7,13,23,.72);
+}
+.joinbox input{font-size:18px;letter-spacing:4px}
+.divider-label{margin:17px 0;font-size:9px;letter-spacing:1.15px;color:#8291a7}
+.divider-label:before,.divider-label:after{background:#2a3749}
+.sheet-card{
+  padding:12px 13px;
+  border:1px solid rgba(153,176,207,.16);
+  border-radius:8px;
+  background:rgba(10,16,27,.78);
+  color:#a3b0c1;
+  font-size:11px;
+  line-height:1.65;
+}
+.sheet-card strong{color:#e0e8f0;font-weight:680}
+.notice{padding:12px 13px;border-radius:8px;font-size:12px;line-height:1.55}
+.modal-backdrop{background:rgba(4,8,15,.82);backdrop-filter:blur(4px)}
+.modal{
+  padding:24px;
+  border:1px solid #354257;
+  border-radius:12px;
+  background:#111927;
+  box-shadow:0 24px 70px rgba(0,0,0,.4);
+}
+.modal h2{font-size:20px;letter-spacing:-.35px}
+.toast{border-radius:8px;background:#151e2d;border-color:#354257;box-shadow:0 12px 35px rgba(0,0,0,.28)}
+.lobby-shell{padding:20px 0 48px}
+.lobby-toolbar{margin-bottom:18px}
+.lobby-name{font-size:clamp(25px,3.2vw,34px);letter-spacing:-.8px;font-weight:780}
+.lobby-grid{grid-template-columns:minmax(0,1.55fr) minmax(260px,.75fr);gap:18px}
+.room-hero{
+  padding:15px 16px;
+  border:1px solid rgba(125,224,199,.2);
+  border-radius:9px;
+  background:rgba(16,35,41,.58);
+}
+.room-code-big{font-size:28px;color:#a9e5d8}
+.player-card,.info-box{border:1px solid #2b394d;border-radius:8px;background:rgba(8,15,25,.68)}
+.player-card{padding:14px}
+.avatar.small{border-radius:8px}
+.avatar.waiting{border-color:#43516a;background:#141f30;color:#aab8ca}
+.player-score{border-top-color:#283547}
+.paper-info{gap:9px;margin:15px 0}
+.info-box{padding:11px}
+.info-box span{font-size:9px;letter-spacing:.65px;color:#8fa0b4}
+.info-box strong{font-size:12px;line-height:1.45}
+.timerbox{padding:15px 16px;border:1px solid #2b394d;border-radius:9px;background:rgba(7,13,23,.78)}
+.timer{font-size:34px;font-weight:750;letter-spacing:-.7px}
+.timer.running{color:#a2e6d8}
+.timer.locked{color:#edbd82}
+.timerlabel{font-size:10px;letter-spacing:1px;color:#8d9bb0}
+.tool-btn{padding:8px 11px;border:1px solid #344257;border-radius:7px;background:#131d2b;color:#cad4e2;font-size:11px;font-weight:650}
+.tool-btn:hover{background:#1a2738;border-color:#4b5d75}
+.tool-btn.active{background:rgba(125,224,199,.09);border-color:rgba(125,224,199,.5);color:#a9e5d8}
+.tool-drawer{padding:14px;border:1px solid #2b394d;border-radius:9px;background:rgba(8,15,25,.7)}
+.formula-box{border-color:#2b394d;border-radius:7px;background:#111b29}
+.formula-box h4{color:#a9e5d8;letter-spacing:.45px}
+.formula-box code{color:#e1e8f0;line-height:1.7}
+.calc-wrap{border:1px solid #2b394d;border-radius:9px;background:#111a27}
+.calc-screen{border-color:#2b394d;border-radius:7px;color:#a9e5d8}
+.calc-keys{gap:5px}
+.calc-keys button{padding:9px;border:1px solid #2d3b4e;border-radius:6px;background:#1a2636;color:#dbe4ed}
+.calc-keys button:hover{background:#233247}
+.calc-keys button.op{background:#172235;color:#b6c6f4;border-color:#34435d}
+.calc-keys button.eq{background:#dce8ed;color:#101923;border-color:#dce8ed}
+.scratch-canvas{border-color:#2b394d;border-radius:8px;background-color:#090f19;background-image:radial-gradient(#29384b .75px,transparent .75px);background-size:16px 16px}
+.pdf-viewer-container{border:1px solid #2b394d;border-radius:9px;box-shadow:none;background:#080d15}
+.pdf-viewer-header{background:#111927;border-bottom-color:#2b394d}
+.pdf-mode-pill{border-radius:5px;background:#182337;color:#b6c6f4;border-color:#34435d}
+.pdf-mode-pill.ms{background:rgba(125,224,199,.09);color:#a9e5d8;border-color:rgba(125,224,199,.32)}
+.score-form .field input,.grade-preview{border-color:#2b394d;border-radius:7px;background:#0b1220}
+.grade-preview b{color:#a9e5d8}
+.done-popup{
+  padding:34px 28px;
+  border:1px solid #627a83;
+  border-radius:14px;
+  background:#111927;
+  box-shadow:0 24px 80px rgba(0,0,0,.5);
+  animation:popIn .18s ease-out;
+}
+.done-badge{border:1px solid rgba(125,224,199,.35);border-radius:5px;background:rgba(125,224,199,.08);color:#a9e5d8;letter-spacing:1px}
+.done-big-title{background:none;color:#eaf1f7;-webkit-text-fill-color:currentColor;font-size:clamp(38px,5.5vw,60px);letter-spacing:-1.5px}
+.done-sub{font-size:clamp(18px,2.3vw,23px);font-weight:700}
+.done-desc{color:#a4b1c2;line-height:1.7}
+a:not(.btn){color:#a9e5d8;text-decoration:none}
+a:not(.btn):hover{text-decoration:underline}
+@media(max-width:960px){
+  .lobby-grid{grid-template-columns:1fr}
+  .grid2{grid-template-columns:1fr}
+}
+@media(max-width:580px){
+  .wrap{width:calc(100% - 24px)}
+  .topbar{padding-top:10px;padding-bottom:10px}
+  .card{padding:16px}
+  .card-head{margin-bottom:17px}
+  .card-bottom{align-items:stretch;flex-direction:column}
+  .card-bottom .btn{width:100%}
+  .joinbox{grid-template-columns:1fr}
+  .joinbox .btn{width:100%}
+  .players{grid-template-columns:1fr 1fr}
+  .paper-info{grid-template-columns:1fr 1fr}
+  .timer{font-size:29px}
+  .match-actions{width:100%}
+  .match-actions .btn{flex:1}
+  .pdf-frame{height:560px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+
+
+/* Focused match-screen refinements */
+.lobby-grid{grid-template-columns:minmax(0,1fr)!important}
+.paper-info{grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:stretch}
+.info-box.tier-info,.info-box.calculator-info{display:flex;align-items:center;min-height:48px}
+.info-box.tier-info strong{font-size:13px;font-weight:700;color:#e1e8f0}
+.info-box.calculator-info strong{font-size:13px;font-weight:750}
+.calc-pill{background:rgba(255,133,140,.09);color:#ff858c;border-color:rgba(255,133,140,.28)}
+.calc-pill.allowed{background:rgba(125,224,199,.09);color:#a2e6d8;border-color:rgba(125,224,199,.3)}
+#finishPaperBtn{background:#a2e6d8;color:#0d1718;border:1px solid #a2e6d8;box-shadow:none}
+#finishPaperBtn:hover:not(:disabled){background:#b5f0e3;filter:none}
+@media(max-width:580px){.paper-info{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
 <div class="wrap">
   <header class="topbar">
-    <a class="brand" href="#top" aria-label="PaperDuel Maths home">
-      <span class="brand-mark">∑</span>
-      <span>Paper<span style="color:var(--mint)">Duel</span></span>
-      <span class="brand-sub">OFFICIAL EDEXCEL 1MA1 ARCHIVE</span>
-    </a>
     <div class="navright">
-      <span class="status"><i id="statusDot" class="dot"></i><span id="statusText">Connecting…</span></span>
-      <button class="btn btn-secondary" id="settingsOpen">⚙ Admin / DB</button>
+      <span class="status" id="statusPill"><i id="statusDot" class="dot"></i><span id="statusText">Server Inactive</span></span>
     </div>
   </header>
 
   <main id="homeScreen">
-    <section class="hero" id="top">
-      <div>
-        <div class="eyebrow">Official Pearson Edexcel GCSE (9–1) Maths (1MA1)</div>
-        <h1>Real Edexcel Past Papers <span>1v1 Speed-Run.</span></h1>
-        <p>Every actual <strong>Pearson Edexcel GCSE Maths (1MA1)</strong> Question Paper, Mark Scheme, and Worked Model Answer PDF from <strong>June 2017 to June 2025</strong> (Higher &amp; Foundation, Papers 1, 2 &amp; 3) is pre-linked. When the duel starts, the real Edexcel Question Paper renders directly on screen. Click <strong>I'm Done!</strong> to stop your stopwatch and immediately swap the viewer to the <strong>Official Edexcel Mark Scheme PDF</strong>.</p>
-        <div class="hero-actions"><a href="#create" class="btn btn-primary">＋ Create Edexcel 1MA1 Lobby</a><a href="#join" class="btn btn-secondary">Join with Code ↗</a></div>
-      </div>
-      <div class="hero-art" aria-label="Example GCSE Maths 1v1 match card">
-        <div class="duel-title">Official Edexcel 1MA1 Archive</div>
-        <div class="versus">
-          <div class="player-mini"><div class="avatar">J</div><strong>Player One</strong><small>1MA1 Higher</small></div>
-          <div class="vs">VS</div>
-          <div class="player-mini"><div class="avatar purple">S</div><strong>Challenger</strong><small>1MA1 Higher</small></div>
-        </div>
-        <div class="scoreline">
-          <span>📄 <strong>96 Official Edexcel QP + MS PDFs Linked</strong></span>
-          <span>⏱ <strong>June 2017 – June 2025</strong></span>
-        </div>
-      </div>
-    </section>
-
-    <div id="connectionBanner" class="notice red hidden">
-      <strong>Global Supabase Not Configured Yet:</strong> Paste your Supabase Project URL and Anon Key into <code>GLOBAL_SUPABASE_URL</code> and <code>GLOBAL_SUPABASE_ANON_KEY</code> in <code>index.html</code> (or click <strong>⚙ Admin / DB</strong>) so everyone on the site connects automatically.
-    </div>
-
     <section class="grid2" aria-label="Create or join an Edexcel GCSE Maths lobby">
       <article class="card" id="create">
         <div class="card-head">
           <div>
             <h2 class="card-title">Create an Edexcel Maths Lobby</h2>
-            <p class="card-sub">Choose Tier (Higher/Foundation), Paper (1, 2, or 3), and Exam Series (2017–2025).</p>
           </div>
           <span class="step">01 / HOST</span>
         </div>
@@ -107,7 +492,7 @@ button,input,select{font:inherit}button{cursor:pointer;border:0}button:disabled{
               <input id="hostName" maxlength="24" placeholder="e.g. Joel" autocomplete="nickname" required>
             </div>
             <div class="field">
-              <label for="tier">Edexcel 1MA1 Tier</label>
+              <label for="tier">Paper Tier</label>
               <select id="tier" required>
                 <option value="Higher" selected>Higher Tier (1H / 2H / 3H — Grades 4–9)</option>
                 <option value="Foundation">Foundation Tier (1F / 2F / 3F — Grades 1–5)</option>
@@ -128,13 +513,11 @@ button,input,select{font:inherit}button{cursor:pointer;border:0}button:disabled{
             <div class="field full">
               <div class="board-row">
                 <div><span>Linked Official PDF: </span><strong id="formatSummaryLabel">1MA1/1H · June 2024 QP + MS</strong></div>
-                <span class="calc-pill" id="calcStatusBadge">📵 NON-CALCULATOR</span>
+                <span class="calc-pill" id="calcStatusBadge">NON-CALCULATOR</span>
               </div>
-              <div class="input-note" id="linkedUrlPreview">Official Pearson Edexcel Question Paper PDF &amp; Mark Scheme PDF verified and pre-stored.</div>
             </div>
           </div>
           <div class="card-bottom">
-            <span class="tiny-note">Creates a 6-character code for your opponent.</span>
             <button class="btn btn-primary" type="submit">Create Edexcel Duel →</button>
           </div>
         </form>
@@ -158,29 +541,10 @@ button,input,select{font:inherit}button{cursor:pointer;border:0}button:disabled{
             <input id="joinCode" maxlength="6" minlength="6" placeholder="MTH123" aria-label="Six character lobby code" required>
             <button type="submit" class="btn btn-purple">Join Match →</button>
           </div>
-          <p class="card-sub" style="margin-top:12px">Both players get the exact same official Edexcel PDF and synced Stopwatch.</p>
         </form>
-        <div class="divider-label">ACTUAL EDEXCEL 1MA1 PAST PAPERS</div>
-        <div class="sheet-card">
-          <strong>📄 Real Scanned Edexcel Question Papers (2017–2025)</strong><br>
-          Every sitting from June 2017, Nov 2017, June 2018, Nov 2018, June 2019, Nov 2019, Nov 2020, Nov 2021, June 2022, Nov 2022, June 2023, Nov 2023, June 2024, Nov 2024, and June 2025 is directly linked.
-        </div>
-        <div class="sheet-card" style="margin-top:10px">
-          <strong>✅ Official Edexcel Mark Schemes (MS) + Worked Answers (MA)</strong><br>
-          When you click <em>"I'm Done!"</em>, the center-screen popup announces the Mark Scheme and swaps the embedded PDF to the real Pearson Edexcel Mark Scheme (plus optional Written Model Solutions).
-        </div>
       </article>
     </section>
 
-    <section class="how">
-      <div class="section-top"><div><h2>How PaperDuel Edexcel Maths Works</h2><p>Real Edexcel 1MA1 exam papers, live stopwatch, instant mark scheme switch.</p></div></div>
-      <div class="steps">
-        <div class="step-card"><div class="step-number">01 / SELECT</div><h3>Pick 1MA1 Paper &amp; Year</h3><p>Select Higher or Foundation, Paper 1, 2, or 3, and any real Edexcel sitting from June 2017 to June 2025.</p></div>
-        <div class="step-card"><div class="step-number">02 / RACE</div><h3>Embedded Official QP</h3><p>The actual Edexcel Question Paper PDF displays directly inside the page while your stopwatch counts up.</p></div>
-        <div class="step-card"><div class="step-number">03 / FINISH</div><h3>"DONE!" Mark Scheme Swap</h3><p>Click "I'm Done!" to lock your stopwatch time—the PDF automatically changes to the official Edexcel Mark Scheme.</p></div>
-        <div class="step-card"><div class="step-number">04 / COMPARE</div><h3>Marks, Grade 9–1 &amp; Time</h3><p>Mark your work out of 80 using the Edexcel Mark Scheme and submit to see who won on accuracy and speed.</p></div>
-      </div>
-    </section>
   </main>
 
   <main id="lobbyScreen" class="lobby-shell hidden">
@@ -216,19 +580,17 @@ button,input,select{font:inherit}button{cursor:pointer;border:0}button:disabled{
         <div class="players">
           <div class="player-card">
             <div class="player-top"><div class="avatar small" id="hostAvatar">H</div><div><strong id="hostPlayerName">Host</strong><small id="hostReady">Lobby creator</small></div></div>
-            <div class="player-score"><span>Result, Grade &amp; Time</span><b id="hostScoreView">—</b></div>
+            <div class="player-score"><span>Results:</span><b id="hostScoreView">—</b></div>
           </div>
           <div class="player-card">
             <div class="player-top"><div class="avatar small waiting" id="guestAvatar">?</div><div><strong id="guestPlayerName">Waiting for player…</strong><small id="guestReady">Share the code</small></div></div>
-            <div class="player-score"><span>Result, Grade &amp; Time</span><b id="guestScoreView">—</b></div>
+            <div class="player-score"><span>Results:</span><b id="guestScoreView">—</b></div>
           </div>
         </div>
 
         <div class="paper-info">
-          <div class="info-box"><span>EXAM BOARD &amp; CODE</span><strong id="lobbyBoard">Pearson Edexcel (1MA1)</strong></div>
-          <div class="info-box"><span>EDEXCEL PAST PAPER</span><strong id="lobbyPaper">Paper 1 (June 2024)</strong></div>
-          <div class="info-box"><span>TIER &amp; MAX MARKS</span><strong id="lobbyTier">Higher · 80 Marks</strong></div>
-          <div class="info-box"><span>CALCULATOR RULE</span><strong id="lobbyCalcRule" style="color:var(--orange)">📵 Non-Calculator</strong></div>
+          <div class="info-box tier-info"><strong id="lobbyTier">Higher Paper (Out of 80 Marks)</strong></div>
+          <div class="info-box calculator-info"><strong id="lobbyCalcRule" class="calculator-status">Non-Calculator</strong></div>
         </div>
 
         <div id="timerBox" class="timerbox">
@@ -238,99 +600,19 @@ button,input,select{font:inherit}button{cursor:pointer;border:0}button:disabled{
           </div>
           <div class="match-actions">
             <button class="btn btn-primary" id="startBtn">Start Duel</button>
-            <button class="btn btn-purple hidden" id="finishPaperBtn">✓ I'm Done! (Reveal Edexcel Mark Scheme)</button>
+            <button class="btn btn-primary hidden" id="finishPaperBtn">✓ Done! (Shows Mark Scheme)</button>
           </div>
         </div>
 
         <!-- GCSE MATHS TOOLKIT & DOCUMENT SWITCHER BAR -->
         <div id="mathsToolkitBar" class="maths-toolkit-bar hidden">
           <div class="toolkit-left">
-            <button type="button" class="tool-btn" id="toggleFormulaBtn">📐 Edexcel Formulae Sheet</button>
-            <button type="button" class="tool-btn" id="toggleScratchBtn">✏️ Working-Out Scratchpad</button>
-            <button type="button" class="tool-btn hidden" id="toggleCalcBtn">🖩 Scientific Calculator</button>
+            <button type="button" class="tool-btn" id="toggleFormulaBtn">Formula Sheet ↗</button>
           </div>
           <div class="toolkit-right" id="postFinishDocButtons">
             <button type="button" class="tool-btn hidden" id="viewQpBtn">📄 Question Paper (QP)</button>
             <button type="button" class="tool-btn hidden" id="viewMsBtn">✅ Official Mark Scheme (MS)</button>
             <button type="button" class="tool-btn hidden" id="viewMaBtn">✍️ Worked Solutions (MA)</button>
-          </div>
-        </div>
-
-        <!-- Formula Sheet Drawer -->
-        <div id="formulaDrawer" class="tool-drawer hidden">
-          <div class="formula-grid">
-            <div class="formula-box">
-              <h4>Algebra &amp; Quadratics</h4>
-              <code>x = [-b ± √(b² - 4ac)] / 2a</code>
-              <code>a² - b² = (a - b)(a + b)</code>
-              <code>nth term (AP): a + (n - 1)d</code>
-            </div>
-            <div class="formula-box">
-              <h4>Trigonometry &amp; Triangles</h4>
-              <code>Sine Rule: a/sinA = b/sinB = c/sinC</code>
-              <code>Cos Rule: a² = b² + c² - 2bc cosA</code>
-              <code>Area = ½ ab sinC</code>
-            </div>
-            <div class="formula-box">
-              <h4>Exact Trig Values</h4>
-              <code>sin(30°)=½  cos(30°)=√3/2  tan(30°)=1/√3</code>
-              <code>sin(45°)=√2/2 cos(45°)=√2/2 tan(45°)=1</code>
-              <code>sin(60°)=√3/2 cos(60°)=½    tan(60°)=√3</code>
-            </div>
-            <div class="formula-box">
-              <h4>Mensuration &amp; Finance</h4>
-              <code>Compound: Total = P(1 + r/100)ⁿ</code>
-              <code>Cone: V = ⅓πr²h  |  Curved SA = πrl</code>
-              <code>Sphere: V = (4/3)πr³ | SA = 4πr²</code>
-            </div>
-          </div>
-        </div>
-
-        <!-- Interactive Working-Out Grid Scratchpad Drawer -->
-        <div id="scratchDrawer" class="tool-drawer hidden">
-          <div class="scratch-wrap">
-            <div class="scratch-controls">
-              <span style="font-size:12px;font-weight:800;color:var(--mint)">✏️ Rough Working-Out &amp; Geometry Sketchpad</span>
-              <div style="display:flex;gap:6px">
-                <button type="button" class="btn btn-secondary" style="padding:5px 10px;font-size:11px" data-pen="#7ef2c4">Mint Pen</button>
-                <button type="button" class="btn btn-secondary" style="padding:5px 10px;font-size:11px" data-pen="#ffffff">White Pen</button>
-                <button type="button" class="btn btn-secondary" style="padding:5px 10px;font-size:11px" data-pen="#ffb86b">Orange Pen</button>
-                <button type="button" class="btn btn-danger" style="padding:5px 10px;font-size:11px" id="clearScratchBtn">Clear Grid</button>
-              </div>
-            </div>
-            <canvas id="scratchCanvas" class="scratch-canvas" width="820" height="260"></canvas>
-          </div>
-        </div>
-
-        <!-- Built-in Scientific Calculator Drawer (Unlocked on Paper 2 & Paper 3) -->
-        <div id="calcDrawer" class="tool-drawer hidden">
-          <div class="calc-wrap">
-            <input id="calcDisplay" class="calc-screen" type="text" value="0" readonly aria-label="Calculator display">
-            <div class="calc-keys" id="calcKeys">
-              <button type="button" class="op" data-k="C">AC</button>
-              <button type="button" class="op" data-k="(">(</button>
-              <button type="button" class="op" data-k=")">)</button>
-              <button type="button" class="op" data-k="/">÷</button>
-              <button type="button" class="op" data-k="Math.sqrt(">√</button>
-              <button type="button" class="op" data-k="**2">x²</button>
-              <button type="button" class="op" data-k="Math.PI">π</button>
-              <button type="button" class="op" data-k="*">×</button>
-              <button type="button" data-k="7">7</button>
-              <button type="button" class="op" data-k="8">8</button>
-              <button type="button" data-k="9">9</button>
-              <button type="button" class="op" data-k="-">−</button>
-              <button type="button" data-k="4">4</button>
-              <button type="button" data-k="5">5</button>
-              <button type="button" data-k="6">6</button>
-              <button type="button" class="op" data-k="+">+</button>
-              <button type="button" data-k="1">1</button>
-              <button type="button" data-k="2">2</button>
-              <button type="button" data-k="3">3</button>
-              <button type="button" class="eq" data-k="=">=</button>
-              <button type="button" data-k="0" style="grid-column:span 2">0</button>
-              <button type="button" data-k=".">.</button>
-              <button type="button" class="op" data-k="DEL">⌫</button>
-            </div>
           </div>
         </div>
 
@@ -375,39 +657,9 @@ button,input,select{font:inherit}button{cursor:pointer;border:0}button:disabled{
         <div id="resultPanel" class="notice green hidden"></div>
       </section>
 
-      <aside class="card">
-        <div class="card-head"><div><h2 class="card-title">Match Feed</h2><p class="card-sub">Live updates &amp; Edexcel boundaries.</p></div></div>
-        <ol class="activity" id="activityFeed"><li>Edexcel 1MA1 lobby created.</li><li>Send the 6-character code to your opponent.</li></ol>
-        
-        <div class="divider-label">EDEXCEL 1MA1 GRADE BOUNDARIES (PER PAPER / 80)</div>
-        <div class="sheet-card">
-          <strong>Higher Tier (1H / 2H / 3H out of 80):</strong><br>
-          Grade 9: <strong>66+</strong> · Grade 8: <strong>55+</strong> · Grade 7: <strong>45+</strong><br>
-          Grade 6: <strong>34+</strong> · Grade 5: <strong>24+</strong> · Grade 4: <strong>14+</strong>
-        </div>
-        <div class="sheet-card" style="margin-top:9px">
-          <strong>Foundation Tier (1F / 2F / 3F out of 80):</strong><br>
-          Grade 5: <strong>58+</strong> · Grade 4: <strong>47+</strong> · Grade 3: <strong>34+</strong><br>
-          Grade 2: <strong>21+</strong> · Grade 1: <strong>9+</strong>
-        </div>
-
-        <div class="divider-label">EDEXCEL MARK SCHEME CODES</div>
-        <div class="sheet-card">
-          <strong>M (Method):</strong> Awarded for a correct method or partial method.<br>
-          <strong>P (Process):</strong> Awarded for a correct problem-solving process.<br>
-          <strong>A (Accuracy):</strong> Awarded for the correct answer following M/P.<br>
-          <strong>B (Independent):</strong> Unconditional accuracy mark (no method needed).<br>
-          <strong>C (Communication):</strong> Awarded for a correct mathematical statement/reason.
-        </div>
-        <div id="connectionNotice" class="notice green">Connected to global PaperDuel server.</div>
-      </aside>
     </div>
   </main>
 
-  <footer class="footer">
-    <span><b>PaperDuel Maths</b> · Official Pearson Edexcel GCSE (9–1) 1MA1 Past Papers (2017–2025).</span>
-    <span>Embedded Question Papers (QP), Mark Schemes (MS) &amp; Worked Solutions (MA).</span>
-  </footer>
 </div>
 
 <!-- BIG CENTER-SCREEN POPUP WHEN PLAYER FINISHES PAPER -->
@@ -440,7 +692,17 @@ button,input,select{font:inherit}button{cursor:pointer;border:0}button:disabled{
 
 <div class="toast-wrap" id="toasts" aria-live="polite"></div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// Load the multiplayer library asynchronously so a slow CDN cannot block the page UI.
+window.__supabaseReady = new Promise(resolve => {
+  const supabaseScript = document.createElement('script');
+  supabaseScript.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+  supabaseScript.async = true;
+  supabaseScript.onload = () => resolve(true);
+  supabaseScript.onerror = () => resolve(false);
+  document.head.appendChild(supabaseScript);
+});
+</script>
 <script>
 (function(){
 'use strict';
@@ -520,7 +782,7 @@ const state={
   useGoogleViewer:false, // Toggleable compatibility mode if a user's browser forces download on raw PDFs
   penColor:'#7ef2c4'
 };
-const configKey='paperduel_supabase_v1',nameKey='paperduel_name_v1';
+const configKey='maths_ranked_supabase_v1',nameKey='maths_ranked_name_v1',legacyConfigKey='paperduel_supabase_v1',legacyNameKey='paperduel_name_v1';
 const homeScreen=$('homeScreen'), lobbyScreen=$('lobbyScreen');
 
 function toast(msg,type=''){
@@ -583,11 +845,11 @@ function parseRoomPaperUrls(r){
 
 function updateStatus(){
   const live = state.online && !!state.client;
-  $('statusText').textContent = live ? 'Global Edexcel Server Active' : 'Setup Needed';
-  $('statusDot').classList.toggle('live', live);
-  $('connectionBanner').classList.toggle('hidden', live);
+  $('statusText').textContent = 'Server Inactive';
+  $('statusDot').classList.remove('live');
+  $('statusPill').classList.toggle('hidden', live);
   $('onlineSettingsState').textContent = live
-    ? 'Connected to Supabase! Everyone can create and join Edexcel Maths lobbies.'
+    ? 'Connected to Supabase! Everyone can create and join Maths Ranked lobbies.'
     : 'Not connected yet. Paste your Supabase URL and Anon Key.';
 }
 
@@ -610,7 +872,7 @@ function updateFormatBadges(){
 
   $('formatSummaryLabel').textContent = `${info.code} · ${year} (Official QP + MS + MA)`;
   const badge = $('calcStatusBadge');
-  badge.textContent = calc ? '🖩 CALCULATOR PERMITTED' : '📵 NON-CALCULATOR';
+  badge.textContent = calc ? 'CALCULATOR' : 'NON-CALCULATOR';
   badge.classList.toggle('allowed', calc);
 }
 
@@ -652,10 +914,8 @@ function baseRoom(data){
 }
 
 function addActivity(message){
-  const li=document.createElement('li');
-  li.textContent=message;
-  $('activityFeed').prepend(li);
-  while($('activityFeed').children.length>12) $('activityFeed').lastElementChild.remove();
+  // The activity feed was removed from the interface; keep match flow unaffected.
+  return;
 }
 
 function setHome(){
@@ -696,10 +956,6 @@ function ensureEmbeddedPdf(r){
   $('mathsToolkitBar').classList.toggle('hidden', !shouldShow);
   $('preBattlePaperNotice').classList.toggle('hidden', shouldShow);
 
-  const calcAllowed = isCalculatorPaper(r.paper);
-  $('toggleCalcBtn').classList.toggle('hidden', !calcAllowed);
-  if(!calcAllowed) $('calcDrawer').classList.add('hidden');
-
   if(!shouldShow) return;
 
   const finished = isMyPaperFinished(r);
@@ -731,7 +987,7 @@ function ensureEmbeddedPdf(r){
     $('pdfViewerTitle').textContent = `✍️ Edexcel Worked Model Solutions — ${urls.code} (${r.paper})`;
     $('pdfModeBadge').textContent = 'WORKED MODEL ANSWERS (MA)';
   } else {
-    $('pdfViewerTitle').textContent = `📄 Official Edexcel Question Paper — ${urls.code} (${r.paper})`;
+    $('pdfViewerTitle').textContent = `📄 Edexcel Maths Paper — ${urls.code} (${r.paper})`;
     $('pdfModeBadge').textContent = `${r.tier.toUpperCase()} QUESTION PAPER (80 MARKS)`;
   }
   $('pdfModeBadge').classList.toggle('ms', isAnswerMode);
@@ -755,12 +1011,12 @@ function renderRoom(){
   const urls = parseRoomPaperUrls(r);
 
   $('lobbyHeading').textContent = r.status==='finished'
-    ? 'Edexcel Maths Duel Complete'
+    ? 'Maths 1v1 Complete'
     : myPaperFinished
     ? 'Mark Scheme Unlocked — Grade Your Paper'
     : r.status==='active'
-    ? 'Edexcel Maths Duel in Progress!'
-    : 'Your Edexcel Maths Duel is Ready';
+    ? 'Maths 1v1 In Progress'
+    : 'Your Maths 1v1 is Ready';
 
   $('lobbySub').textContent = r.status==='waiting'
     ? (r.guest_name ? `${r.guest_name} joined! Host can start the battle.` : 'Waiting for your challenger to join with the room code.')
@@ -805,11 +1061,9 @@ function renderRoom(){
     ? `Marking… (${formatStopwatch(r.guest_max)})`
     : '—';
 
-  $('lobbyBoard').textContent = `Pearson Edexcel (${urls.code})`;
-  $('lobbyPaper').textContent = r.paper;
-  $('lobbyTier').textContent = `${r.tier} Tier · 80 Marks`;
-  $('lobbyCalcRule').textContent = calcAllowed ? '🖩 Calculator Permitted' : '📵 Non-Calculator';
-  $('lobbyCalcRule').style.color = calcAllowed ? 'var(--mint)' : 'var(--orange)';
+  $('lobbyTier').textContent = `${r.tier} Paper (Out of 80 Marks)`;
+  $('lobbyCalcRule').textContent = calcAllowed ? 'Calculator' : 'Non-Calculator';
+  $('lobbyCalcRule').style.color = calcAllowed ? '#a2e6d8' : '#ff858c';
 
   ensureEmbeddedPdf(r);
 
@@ -1026,91 +1280,15 @@ async function submitScore(e){
   }
 }
 
-function initScratchpad(){
-  const canvas = $('scratchCanvas');
-  const ctx = canvas.getContext('2d');
-  let drawing = false;
-
-  function getPos(e){
-    const rect = canvas.getBoundingClientRect();
-    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-    return {
-      x: (clientX - rect.left) * (canvas.width / rect.width),
-      y: (clientY - rect.top) * (canvas.height / rect.height)
-    };
-  }
-
-  function start(e){
-    drawing = true;
-    const pos = getPos(e);
-    ctx.beginPath();
-    ctx.moveTo(pos.x, pos.y);
-    e.preventDefault();
-  }
-  function move(e){
-    if(!drawing) return;
-    const pos = getPos(e);
-    ctx.strokeStyle = state.penColor;
-    ctx.lineWidth = 2.4;
-    ctx.lineCap = 'round';
-    ctx.lineTo(pos.x, pos.y);
-    ctx.stroke();
-    e.preventDefault();
-  }
-  function end(){ drawing = false; }
-
-  canvas.addEventListener('mousedown', start);
-  canvas.addEventListener('mousemove', move);
-  window.addEventListener('mouseup', end);
-  canvas.addEventListener('touchstart', start, {passive:false});
-  canvas.addEventListener('touchmove', move, {passive:false});
-  window.addEventListener('touchend', end);
-
-  $('clearScratchBtn').addEventListener('click', () => {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-  });
-  document.querySelectorAll('[data-pen]').forEach(btn => {
-    btn.addEventListener('click', () => { state.penColor = btn.dataset.pen; });
-  });
-}
-
-function initCalculator(){
-  const disp = $('calcDisplay');
-  let expr = '';
-  $('calcKeys').addEventListener('click', e => {
-    const btn = e.target.closest('button[data-k]');
-    if(!btn) return;
-    const k = btn.dataset.k;
-    if(k === 'C'){
-      expr = '';
-      disp.value = '0';
-    } else if(k === 'DEL'){
-      expr = expr.slice(0, -1);
-      disp.value = expr || '0';
-    } else if(k === '='){
-      try{
-        const res = Function('"use strict";return (' + (expr || '0') + ')')();
-        expr = Number.isFinite(res) ? String(Number(res.toPrecision(10))) : '';
-        disp.value = expr || 'Error';
-      }catch(err){
-        disp.value = 'Error';
-        expr = '';
-      }
-    } else {
-      expr += k;
-      disp.value = expr;
-    }
-  });
-}
-
 async function initSupabaseConnection(){
+  // Never let the remote library prevent the local UI from rendering.
+  const libraryLoaded = await (window.__supabaseReady || Promise.resolve(!!window.supabase));
   let url = GLOBAL_SUPABASE_URL.trim();
   let key = GLOBAL_SUPABASE_ANON_KEY.trim();
 
   if(!url || !key || url.includes('YOUR-PROJECT-ID') || key.includes('YOUR_PUBLIC_ANON_KEY')){
     try{
-      const saved = JSON.parse(localStorage.getItem(configKey) || 'null');
+      const saved = JSON.parse(localStorage.getItem(configKey) || localStorage.getItem(legacyConfigKey) || 'null');
       if(saved && saved.url && saved.key){
         url = saved.url;
         key = saved.key;
@@ -1121,7 +1299,12 @@ async function initSupabaseConnection(){
   if(url && key && !url.includes('YOUR-PROJECT-ID') && !key.includes('YOUR_PUBLIC_ANON_KEY')){
     $('supabaseUrl').value = url;
     $('supabaseKey').value = key;
-    await connectSupabase(false, url, key);
+    if(libraryLoaded && window.supabase && window.supabase.createClient){
+      await connectSupabase(false, url, key);
+    } else {
+      updateStatus();
+      $('onlineSettingsState').textContent = 'Server Inactive. The connection library could not load; check your internet connection and reload to enable online matches.';
+    }
   } else {
     updateStatus();
   }
@@ -1172,16 +1355,11 @@ $('scoreInput').addEventListener('input', () => {
 });
 
 $('toggleFormulaBtn').addEventListener('click', () => {
-  $('formulaDrawer').classList.toggle('hidden');
-  $('toggleFormulaBtn').classList.toggle('active', !$('formulaDrawer').classList.contains('hidden'));
-});
-$('toggleScratchBtn').addEventListener('click', () => {
-  $('scratchDrawer').classList.toggle('hidden');
-  $('toggleScratchBtn').classList.toggle('active', !$('scratchDrawer').classList.contains('hidden'));
-});
-$('toggleCalcBtn').addEventListener('click', () => {
-  $('calcDrawer').classList.toggle('hidden');
-  $('toggleCalcBtn').classList.toggle('active', !$('calcDrawer').classList.contains('hidden'));
+  const tier = state.room?.tier || $('tier').value || 'Higher';
+  const formulaSheetUrl = /Foundation/i.test(tier)
+    ? 'https://qualifications.pearson.com/content/dam/pdf/GCSE/mathematics/2015/exam-materials/2026-exam-aid-foundation.pdf'
+    : 'https://qualifications.pearson.com/content/dam/pdf/GCSE/mathematics/2015/exam-materials/2026-exam-aid-higher.pdf';
+  window.open(formulaSheetUrl, '_blank', 'noopener');
 });
 
 $('viewQpBtn').addEventListener('click', () => {
@@ -1207,8 +1385,9 @@ $('switchRenderEngineBtn').addEventListener('click', () => {
   if(state.room) ensureEmbeddedPdf(state.room);
 });
 
-$('hostName').value = localStorage.getItem(nameKey)||'';
-$('joinName').value = localStorage.getItem(nameKey)||'';
+const savedDisplayName = localStorage.getItem(nameKey) || localStorage.getItem(legacyNameKey) || '';
+$('hostName').value = savedDisplayName;
+$('joinName').value = savedDisplayName;
 
 $('createForm').addEventListener('submit', async e=>{
   e.preventDefault();
@@ -1285,7 +1464,6 @@ $('leaveBtn').addEventListener('click', ()=>{
   setHome();
 });
 
-$('settingsOpen').addEventListener('click', ()=>$('settingsModal').classList.add('open'));
 $('closeSettings').addEventListener('click', ()=>$('settingsModal').classList.remove('open'));
 $('settingsModal').addEventListener('click', e=>{
   if(e.target===$('settingsModal')) $('settingsModal').classList.remove('open');
@@ -1296,8 +1474,6 @@ $('connectOnline').addEventListener('click', async()=>{
 });
 
 populateEdexcelOptions();
-initScratchpad();
-initCalculator();
 initSupabaseConnection();
 })();
 </script>
