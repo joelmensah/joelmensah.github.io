@@ -9,9 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700;800&family=Lilita+One&display=swap" rel="stylesheet">
 <style>
-:root {
-  --ink: #0f172a;
-}
+:root { --ink: #0f172a; }
 * { box-sizing: border-box; }
 html, body { width: 100%; min-height: 100%; margin: 0; }
 body {
@@ -21,10 +19,9 @@ body {
   background: #fff;
   color: var(--ink);
   font-family: Inter, Arial, sans-serif;
-  transition: background-color .5s ease;
 }
 
-/* Temporary old website shown only for the meteor impact */
+/* Old-style website that the meteor hits. */
 #legacy {
   position: fixed;
   inset: 0;
@@ -36,29 +33,17 @@ body {
   background: #fff;
   opacity: 0;
   visibility: hidden;
-  transition: opacity .35s ease, visibility 0s linear .35s;
+  transition: opacity .4s ease, visibility 0s linear .4s;
 }
-body.legacy-view #legacy {
-  opacity: 1;
-  visibility: visible;
-  transition-delay: 0s;
-}
-body.blackout #legacy,
-body.rising #legacy {
-  opacity: 0;
-  visibility: hidden;
-  transition-delay: 0s;
-}
-
+body.legacy-view #legacy { opacity: 1; visibility: visible; transition-delay: 0s; }
+body.final-start #legacy { opacity: 0; visibility: hidden; }
 .legacy-list {
   width: min(20rem, calc(100vw - 3rem));
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
-
 .btn {
-  position: relative;
   display: block;
   width: 100%;
   padding: 1rem 1.25rem;
@@ -73,289 +58,152 @@ body.rising #legacy {
   text-align: center;
   text-decoration: none;
   overflow-wrap: anywhere;
-  transition:
-    background-color .16s ease,
-    transform .95s cubic-bezier(.2, .85, .2, 1),
-    box-shadow .6s ease,
-    opacity .6s ease,
-    border-color .6s ease;
+  transition: background-color .16s ease, transform .16s ease, box-shadow .16s ease;
 }
-.btn:hover {
-  background: #263650;
-  box-shadow: 0 7px 0 rgba(15, 23, 42, .08);
-  transform: translateY(-2px);
-}
-.btn:active {
-  background: #020617;
-  box-shadow: 0 1px 0 rgba(15, 23, 42, .08);
-  transform: translateY(3px);
-}
+.btn:hover { background: #263650; box-shadow: 0 7px 0 rgba(15, 23, 42, .08); transform: translateY(-2px); }
+.btn:active { background: #020617; box-shadow: 0 1px 0 rgba(15, 23, 42, .08); transform: translateY(3px); }
 .btn:focus-visible { outline: 3px solid #fb7185; outline-offset: 4px; }
 
-/* Final stage container */
+/* New website: goes black after the strike, unlocks the new button, then settles to white. */
 #stage {
   position: fixed;
   inset: 0;
-  z-index: 25;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1.5rem;
-  background: #fff;
+  z-index: 15;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: #000;
   opacity: 0;
   visibility: hidden;
-  transition: background-color .85s ease, opacity .35s ease, visibility 0s linear .35s;
+  transition: background-color 1s ease, opacity .5s ease, visibility 0s linear .5s;
 }
-
-/* Blackout phase right after meteor strike */
-body.blackout {
-  background: #000;
-}
-body.blackout #stage {
-  opacity: 1;
-  visibility: visible;
-  background: #000;
-  transition-delay: 0s;
-}
-
-/* Final phase when button moves to its slot and page returns to white */
-body.rising #stage {
-  opacity: 1;
-  visibility: visible;
-  background: #fff;
-  transition-delay: 0s;
-}
+body.final-start #stage { opacity: 1; visibility: visible; transition-delay: 0s; }
+body.settled #stage { background: #fff; }
 
 #list {
-  position: relative;
-  width: min(20rem, calc(100vw - 3rem));
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(20rem, calc(100vw - 2.5rem));
   display: flex;
   flex-direction: column;
   gap: 1rem;
   margin: 0;
   padding: 0;
+  transform: translate(-50%, -50%);
 }
-
-/* Regular buttons stay hidden during the blackout unlock showcase */
-body.blackout #list .btn:not(.unlocked-btn) {
+/* Hidden until the settle phase; the new button is held at screen centre via --dy. */
+#list .btn {
   opacity: 0;
-  pointer-events: none;
-  transform: translateY(10px) scale(.96);
+  transition: opacity .9s ease, translate 1.3s cubic-bezier(.2,.85,.2,1), scale 1.3s cubic-bezier(.2,.85,.2,1),
+              background-color .16s ease, box-shadow .5s ease, transform .16s ease;
 }
-body.rising #list .btn:not(.unlocked-btn) {
+#list .new-btn {
+  position: relative;
+  overflow: hidden;
+  translate: 0 var(--dy, 0px);
+  scale: 1.12;
+}
+body.unlock #list .new-btn {
   opacity: 1;
-  pointer-events: auto;
-  transform: none;
-  transition-delay: .2s;
+  border-color: #fde68a;
+  box-shadow: 0 0 0 2px #fde68a, 0 0 28px 6px rgba(253,224,71,.65), 0 0 90px 22px rgba(251,191,36,.35);
 }
-
-/* The newly unlocked button (Maths Ranked) starts centered and glowing */
-body.blackout #list .btn.unlocked-btn {
-  z-index: 30;
-  transform: translateY(var(--center-offset, 0px)) scale(1.08);
-  background: linear-gradient(135deg, #1e293b 0%, #0f172a 50%, #1e293b 100%);
-  border-color: #fde047;
-  box-shadow:
-    0 0 25px rgba(250, 204, 21, .9),
-    0 0 60px rgba(250, 204, 21, .55),
-    0 0 110px rgba(251, 146, 60, .35),
-    inset 0 0 15px rgba(254, 240, 138, .4);
-  animation: shinePulse 1.3s ease-in-out infinite alternate;
-  pointer-events: none;
-}
-
-/* Shimmer sweep across the unlocked button */
-body.blackout #list .btn.unlocked-btn::after {
+#list .new-btn::after {
   content: "";
   position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: linear-gradient(
-    110deg,
-    transparent 20%,
-    rgba(255, 255, 255, .5) 48%,
-    rgba(255, 255, 255, .75) 50%,
-    rgba(255, 255, 255, .5) 52%,
-    transparent 80%
-  );
-  background-size: 220% 100%;
-  animation: shimmerSweep 1.6s linear infinite;
-  pointer-events: none;
+  top: 0; bottom: 0; left: -60%;
+  width: 40%;
+  background: linear-gradient(100deg, transparent, rgba(255,255,255,.75), transparent);
+  transform: skewX(-20deg);
+  opacity: 0;
 }
+body.unlock #list .new-btn::after { opacity: 1; animation: sheen 1.5s ease-in-out infinite; }
+@keyframes sheen { from { left: -60%; } to { left: 130%; } }
 
-@keyframes shinePulse {
-  0% {
-    box-shadow:
-      0 0 22px rgba(250, 204, 21, .8),
-      0 0 50px rgba(250, 204, 21, .45),
-      0 0 90px rgba(251, 146, 60, .3),
-      inset 0 0 12px rgba(254, 240, 138, .35);
-  }
-  100% {
-    box-shadow:
-      0 0 36px rgba(254, 240, 138, 1),
-      0 0 80px rgba(250, 204, 21, .8),
-      0 0 140px rgba(251, 146, 60, .55),
-      inset 0 0 22px rgba(255, 255, 255, .65);
-  }
-}
+body.settled #list .btn { opacity: 1; }
+body.settled #list .new-btn { translate: 0 0; scale: 1; }
 
-@keyframes shimmerSweep {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
-}
-
-/* Moves to its real position in the list */
-body.rising #list .btn.unlocked-btn {
-  z-index: 1;
-  transform: translateY(0) scale(1);
-  border-color: rgba(15, 23, 42, .08);
-  box-shadow: 0 5px 0 rgba(15, 23, 42, .08);
-  animation: none;
-  pointer-events: auto;
-}
-body.rising #list .btn.unlocked-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 7px 0 rgba(15, 23, 42, .08);
-}
-body.rising #list .btn.unlocked-btn:active {
-  transform: translateY(3px);
-  box-shadow: 0 1px 0 rgba(15, 23, 42, .08);
-}
-
-/* "New Button Unlocked!" banner + sparkles */
-#unlock-banner {
-  position: fixed;
-  top: calc(50% - 5.2rem);
+/* "New Button Unlocked!" message */
+#unlock-msg {
+  position: absolute;
+  top: calc(50% - 4.6rem);
   left: 50%;
-  z-index: 40;
-  transform: translate(-50%, -50%) scale(.7);
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  text-align: center;
-  white-space: nowrap;
-  transition: opacity .45s ease, transform .5s cubic-bezier(.18, 1.25, .4, 1), visibility 0s linear .45s;
-}
-body.blackout #unlock-banner {
-  opacity: 1;
-  visibility: visible;
-  transform: translate(-50%, -50%) scale(1);
-  transition-delay: .12s, .12s, 0s;
-}
-body.rising #unlock-banner {
-  opacity: 0;
-  visibility: hidden;
-  transform: translate(-50%, -85%) scale(.85);
-  transition-delay: 0s;
-}
-
-.unlock-title {
-  display: inline-block;
+  margin: 0;
   font-family: "Lilita One", Impact, sans-serif;
-  font-size: clamp(1.55rem, 5.5vw, 2.5rem);
-  letter-spacing: .04em;
-  background: linear-gradient(90deg, #fde047, #ffffff, #facc15, #fff7ed, #fde047);
-  background-size: 200% auto;
-  color: #fde047;
+  font-size: clamp(1.7rem, 6vw, 2.8rem);
+  font-weight: 400;
+  white-space: nowrap;
+  letter-spacing: .02em;
+  background: linear-gradient(100deg, #fbbf24 0%, #fff7c2 25%, #fbbf24 50%, #fff7c2 75%, #fbbf24 100%);
+  background-size: 250% 100%;
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 12px rgba(250, 204, 21, .85)) drop-shadow(0 0 28px rgba(234, 179, 8, .55));
-  animation: textShine 2s linear infinite;
-}
-
-@keyframes textShine {
-  to { background-position: 200% center; }
-}
-
-/* Floating star sparkles around the banner & button */
-.sparkle-star {
-  position: fixed;
-  z-index: 38;
-  width: 14px;
-  height: 14px;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 14px rgba(251,191,36,.8));
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(.55);
+  transition: opacity .6s ease, transform .7s cubic-bezier(.2,1.4,.3,1);
   pointer-events: none;
-  background: #fef08a;
-  clip-path: polygon(50% 0%, 63% 37%, 100% 50%, 63% 63%, 50% 100%, 37% 63%, 0% 50%, 37% 37%);
-  box-shadow: 0 0 12px #fde047, 0 0 20px #facc15;
-  animation: twinkle 1s ease-in-out infinite alternate;
 }
+body.unlock #unlock-msg {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+  animation: glint 2s linear infinite;
+}
+@keyframes glint { to { background-position: -250% 0; } }
 
+#sparkles { position: absolute; inset: 0; pointer-events: none; transition: opacity .8s ease; }
+#sparkles.fade { opacity: 0; }
+.star {
+  position: absolute;
+  color: #fde68a;
+  text-shadow: 0 0 8px #fbbf24, 0 0 18px #f59e0b;
+  line-height: 1;
+  opacity: 0;
+  animation: twinkle var(--d, 1.6s) ease-in-out var(--delay, 0s) infinite;
+}
 @keyframes twinkle {
-  0% { transform: scale(.3) rotate(0deg); opacity: .25; }
-  100% { transform: scale(1.25) rotate(45deg); opacity: 1; }
+  0%, 100% { opacity: 0; transform: scale(.2) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1) rotate(90deg); }
 }
 
-/* Used only while resetting a replay */
-body.resetting,
-body.resetting #legacy,
-body.resetting #stage,
-body.resetting .btn,
-body.resetting #unlock-banner {
+body.resetting #legacy, body.resetting #stage, body.resetting #list .btn, body.resetting #unlock-msg {
   transition: none !important;
 }
 
 /* Warning overlay */
 #warn { position: fixed; inset: 0; z-index: 50; display: none; pointer-events: none; }
-#vig {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  background: radial-gradient(ellipse at center, transparent 23%, rgba(255, 0, 0, .62) 100%);
-}
+#vig { position: absolute; inset: 0; opacity: 0; background: radial-gradient(ellipse at center, transparent 23%, rgba(255, 0, 0, .62) 100%); }
 #warnText {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  color: #ff2020;
-  white-space: nowrap;
+  position: absolute; top: 50%; left: 50%;
+  color: #ff2020; white-space: nowrap;
   font: 800 clamp(22px, 5.5vw, 56px)/1 Inter, sans-serif;
-  letter-spacing: .06em;
-  opacity: .1;
+  letter-spacing: .06em; opacity: .1;
   transform: translate(-50%, -50%) scale(.35);
 }
 
-/* Huge, jagged meteor with a very long fiery tail */
+/* Meteor */
 #fx { position: fixed; inset: 0; z-index: 60; overflow: hidden; pointer-events: none; }
 .met { position: absolute; top: 0; left: 0; width: 0; height: 0; }
 .met-in { position: absolute; top: 0; left: 0; transform: rotate(var(--a)); }
 .tail {
-  position: absolute;
-  top: -78px;
-  left: -1420px;
-  width: 1420px;
-  height: 156px;
+  position: absolute; top: -78px; left: -1420px; width: 1420px; height: 156px;
   clip-path: polygon(0 50%, 100% 0, 100% 100%);
   background: linear-gradient(90deg, transparent 0%, rgba(255,45,0,.04) 26%, rgba(255,76,0,.2) 53%, rgba(255,142,23,.72) 78%, rgba(255,221,147,.98) 100%);
   filter: blur(2px);
 }
 .tail::before {
-  content: "";
-  position: absolute;
-  top: 39%;
-  right: 0;
-  width: 100%;
-  height: 22%;
+  content: ""; position: absolute; top: 39%; right: 0; width: 100%; height: 22%;
   background: linear-gradient(90deg, transparent, rgba(255,96,0,.22), rgba(255,243,190,.95));
   filter: blur(6px);
 }
 .tail::after {
-  content: "";
-  position: absolute;
-  top: 17%;
-  right: 0;
-  width: 74%;
-  height: 8%;
+  content: ""; position: absolute; top: 17%; right: 0; width: 74%; height: 8%;
   background: linear-gradient(90deg, transparent, rgba(255,178,54,.65), rgba(255,255,229,.9));
   filter: blur(4px);
 }
 .rock {
-  position: absolute;
-  top: -115px;
-  left: -115px;
-  width: 230px;
-  height: 230px;
-  overflow: hidden;
+  position: absolute; top: -115px; left: -115px; width: 230px; height: 230px; overflow: hidden;
   clip-path: polygon(50% 0%,64% 5%,75% 13%,90% 18%,98% 34%,92% 48%,100% 61%,87% 75%,77% 88%,61% 91%,52% 100%,37% 92%,23% 89%,13% 75%,3% 63%,9% 47%,2% 34%,13% 23%,18% 12%,35% 8%);
   background:
     radial-gradient(ellipse at 32% 26%, rgba(255,255,220,.98) 0 3%, rgba(255,213,108,.96) 7%, rgba(255,129,22,.85) 17%, transparent 31%),
@@ -365,9 +213,7 @@ body.resetting #unlock-banner {
   box-shadow: 0 0 34px 20px rgba(255,107,11,.98), 0 0 100px 52px rgba(255,61,0,.75), 0 0 180px 88px rgba(255,25,0,.36);
 }
 .rock::before {
-  content: "";
-  position: absolute;
-  inset: 0;
+  content: ""; position: absolute; inset: 0;
   background:
     radial-gradient(ellipse at 30% 38%, rgba(255,246,186,.7) 0 2%, transparent 14%),
     radial-gradient(ellipse at 70% 29%, rgba(255,194,75,.55) 0 3%, transparent 15%),
@@ -376,9 +222,7 @@ body.resetting #unlock-banner {
   mix-blend-mode: screen;
 }
 .rock::after {
-  content: "";
-  position: absolute;
-  inset: 9%;
+  content: ""; position: absolute; inset: 9%;
   border: 5px solid rgba(255,177,58,.62);
   border-left-color: rgba(255,245,190,.95);
   border-bottom-color: rgba(255,60,0,.14);
@@ -387,43 +231,22 @@ body.resetting #unlock-banner {
   filter: blur(4px);
 }
 .fb, .ring, .scorch, .puff, .spark { position: absolute; border-radius: 50%; }
-.fb {
-  width: 230px;
-  height: 230px;
-  margin: -115px 0 0 -115px;
-  background: radial-gradient(circle, #fff 0, #fff4bd 12%, #ffc64b 25%, #ff7119 42%, #dd2424 61%, transparent 73%);
-}
-.ring {
-  width: 64px;
-  height: 64px;
-  margin: -32px 0 0 -32px;
-  border: 9px solid #24201c;
-  box-shadow: 0 0 25px rgba(255,140,35,.8), inset 0 0 18px rgba(255,180,45,.35);
-}
-.scorch {
-  width: 500px;
-  height: 500px;
-  margin: -250px 0 0 -250px;
-  background: radial-gradient(ellipse, rgba(15,8,6,.74) 0, rgba(55,20,8,.42) 34%, transparent 71%);
-}
-.puff {
-  width: 180px;
-  height: 180px;
-  margin: -90px 0 0 -90px;
-  background: radial-gradient(circle, rgba(42,37,34,.7), rgba(74,45,29,.32) 42%, transparent 73%);
-}
+.fb { width: 230px; height: 230px; margin: -115px 0 0 -115px; background: radial-gradient(circle, #fff 0, #fff4bd 12%, #ffc64b 25%, #ff7119 42%, #dd2424 61%, transparent 73%); }
+.ring { width: 64px; height: 64px; margin: -32px 0 0 -32px; border: 9px solid #24201c; box-shadow: 0 0 25px rgba(255,140,35,.8), inset 0 0 18px rgba(255,180,45,.35); }
+.scorch { width: 500px; height: 500px; margin: -250px 0 0 -250px; background: radial-gradient(ellipse, rgba(15,8,6,.74) 0, rgba(55,20,8,.42) 34%, transparent 71%); }
+.puff { width: 180px; height: 180px; margin: -90px 0 0 -90px; background: radial-gradient(circle, rgba(42,37,34,.7), rgba(74,45,29,.32) 42%, transparent 73%); }
 .spark { width: 9px; height: 18px; border-radius: 2px; }
 .flash { position: absolute; inset: 0; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
-  #legacy, #stage, .btn, #unlock-banner { transition-duration: .01ms !important; }
+  #legacy, #stage, #list .btn, #unlock-msg { transition-duration: .01ms !important; }
 }
 </style>
 </head>
 <body>
 
-<!-- Temporary old website shown only for the meteor impact -->
+<!-- Temporary old website shown only for the meteor impact. -->
 <div id="legacy" aria-hidden="true">
   <div class="legacy-list" id="legacy-list">
     <a class="btn" href="https://joelmensah.github.io/triweekly/english1">English Tri-Weekly 1</a>
@@ -432,14 +255,11 @@ body.resetting #unlock-banner {
   </div>
 </div>
 
-<!-- Sparkly banner shown during the blackout unlock sequence -->
-<div id="unlock-banner" aria-hidden="true">
-  <span class="unlock-title">✨ New Button Unlocked! ✨</span>
-</div>
-
-<!-- The final website revealed after the old one is destroyed -->
+<!-- Final website. -->
 <main id="stage">
   <nav id="list" aria-label="Links"></nav>
+  <div id="sparkles"></div>
+  <p id="unlock-msg" aria-hidden="true">New Button Unlocked!</p>
 </main>
 
 <div id="warn" aria-hidden="true"><div id="vig"></div><div id="warnText">! WARNING !</div></div>
@@ -449,7 +269,7 @@ body.resetting #unlock-banner {
 English Tri-Weekly 1 https://joelmensah.github.io/triweekly/english1
 GCSE Timetable https://joelmensah.github.io/gcse/timetable
 Hannah Kettle https://joelmensah.github.io/hannah/kettle.html
-Maths: Ranked https://joelmensah.github.io/maths/1v1
+Maths: Ranked https://joelmensah.github.io/maths/ranked
 </script>
 
 <script>
@@ -461,12 +281,11 @@ Maths: Ranked https://joelmensah.github.io/maths/1v1
   const legacyList = $('legacy-list');
   const list = $('list');
   const fx = $('fx');
+  const sparkles = $('sparkles');
   let runId = 0;
   const sequenceTimers = new Set();
   let replayBuffer = '';
   let replayBufferTimer = null;
-  let unlockedBtn = null;
-  let activeSparkles = [];
 
   function later(callback, delay, token = runId) {
     const id = setTimeout(() => {
@@ -476,68 +295,24 @@ Maths: Ranked https://joelmensah.github.io/maths/1v1
     sequenceTimers.add(id);
     return id;
   }
-
   function clearSequenceTimers() {
     for (const id of sequenceTimers) clearTimeout(id);
     sequenceTimers.clear();
   }
 
-  function clearSparkles() {
-    activeSparkles.forEach(s => s.remove());
-    activeSparkles = [];
-  }
-
-  /* Build the final links */
+  /* Build the final links; the last one is the newly unlocked button. */
+  list.replaceChildren();
   $('links').textContent.split('\n').forEach(line => {
     const match = line.trim().match(/^(.*?)\s+(https?:\/\/\S+)$/i);
     if (!match) return;
     const a = document.createElement('a');
     a.href = match[2];
     a.className = 'btn';
-    const label = match[1].trim();
-    a.textContent = label;
-    if (/maths:?\s*ranked/i.test(label)) {
-      a.classList.add('unlocked-btn');
-      unlockedBtn = a;
-    }
+    a.textContent = match[1].trim();
     list.appendChild(a);
   });
-
-  /* Calculate how far the unlocked button needs to shift so it sits dead-center during blackout */
-  function updateCenterOffset() {
-    if (!unlockedBtn) return;
-    const prevTransform = unlockedBtn.style.transform;
-    unlockedBtn.style.transform = 'none';
-    const rect = unlockedBtn.getBoundingClientRect();
-    unlockedBtn.style.transform = prevTransform;
-    const btnCenterY = rect.top + rect.height / 2;
-    const viewportCenterY = window.innerHeight / 2;
-    const offset = viewportCenterY - btnCenterY;
-    unlockedBtn.style.setProperty('--center-offset', `${offset}px`);
-  }
-
-  window.addEventListener('resize', updateCenterOffset);
-
-  function spawnUnlockSparkles() {
-    clearSparkles();
-    const cx = window.innerWidth / 2;
-    const cy = window.innerHeight / 2;
-    for (let i = 0; i < 18; i++) {
-      const star = document.createElement('div');
-      star.className = 'sparkle-star';
-      const rx = cx + rnd(-190, 190);
-      const ry = cy + rnd(-115, 65);
-      const size = rnd(8, 18);
-      star.style.width = `${size}px`;
-      star.style.height = `${size}px`;
-      star.style.left = `${rx - size / 2}px`;
-      star.style.top = `${ry - size / 2}px`;
-      star.style.animationDelay = `${rnd(0, 0.8)}s`;
-      star.style.animationDuration = `${rnd(0.55, 1.15)}s`;
-      document.body.appendChild(star);
-      activeSparkles.push(star);
-    }
-  }
+  const newBtn = list.lastElementChild;
+  newBtn.classList.add('new-btn');
 
   function mk(cls, css) {
     const el = document.createElement('div');
@@ -550,18 +325,14 @@ Maths: Ranked https://joelmensah.github.io/maths/1v1
   function shake(el, amount, duration) {
     const frames = [{ transform: 'none' }];
     for (let i = 0; i < 12; i++) {
-      frames.push({
-        transform: `translate(${rnd(-amount, amount)}px, ${rnd(-amount, amount)}px) rotate(${rnd(-amount / 6, amount / 6)}deg)`
-      });
+      frames.push({ transform: `translate(${rnd(-amount, amount)}px, ${rnd(-amount, amount)}px) rotate(${rnd(-amount / 6, amount / 6)}deg)` });
     }
     frames.push({ transform: 'none' });
     el.animate(frames, { duration, easing: 'linear' });
   }
 
   function warning(done, token) {
-    const w = $('warn');
-    const t = $('warnText');
-    const v = $('vig');
+    const w = $('warn'), t = $('warnText'), v = $('vig');
     w.style.display = 'block';
     const duration = 2400;
     const start = performance.now();
@@ -576,10 +347,7 @@ Maths: Ranked https://joelmensah.github.io/maths/1v1
       v.style.opacity = Math.min(1, .1 + .9 * eased * pulse);
       w.style.background = `rgba(40,0,0,${.32 * eased})`;
       if (progress < 1) requestAnimationFrame(frame);
-      else {
-        w.style.display = 'none';
-        done();
-      }
+      else { w.style.display = 'none'; done(); }
     })(start);
   }
 
@@ -593,87 +361,100 @@ Maths: Ranked https://joelmensah.github.io/maths/1v1
       { transform: `translate(${x0}px, ${y0}px) scale(.3)` },
       { transform: `translate(${cx}px, ${cy}px) scale(2.35)` }
     ], { duration: 1500, easing: 'cubic-bezier(.48, 0, .86, .46)', fill: 'forwards' });
-    animation.onfinish = () => {
-      m.remove();
-      if (token === runId) done();
-    };
+    animation.onfinish = () => { m.remove(); if (token === runId) done(); };
   }
 
   function explode(cx, cy) {
     const at = `left:${cx}px;top:${cy}px;`;
-    mk('scorch', at).animate([
-      { transform: 'scale(.3)', opacity: .9 },
-      { transform: 'scale(1.8)', opacity: 0 }
-    ], { duration: 1600, easing: 'ease-out', fill: 'forwards' });
-    mk('fb', at).animate([
-      { transform: 'scale(.12)', opacity: 1 },
-      { transform: 'scale(6.2)', opacity: 0 }
-    ], { duration: 950, easing: 'ease-out', fill: 'forwards' });
-    mk('ring', at).animate([
-      { transform: 'scale(.7)', opacity: .95 },
-      { transform: 'scale(32)', opacity: 0 }
-    ], { duration: 950, easing: 'ease-out', fill: 'forwards' });
+    mk('scorch', at).animate([{ transform: 'scale(.3)', opacity: .9 }, { transform: 'scale(1.8)', opacity: 0 }], { duration: 3000, easing: 'ease-out', fill: 'forwards' });
+    mk('fb', at).animate([{ transform: 'scale(.12)', opacity: 1 }, { transform: 'scale(6.2)', opacity: 0 }], { duration: 1050, easing: 'ease-out', fill: 'forwards' });
+    mk('ring', at).animate([{ transform: 'scale(.7)', opacity: .95 }, { transform: 'scale(32)', opacity: 0 }], { duration: 1050, easing: 'ease-out', fill: 'forwards' });
     mk('flash', `background:radial-gradient(circle at ${cx}px ${cy}px, #fff 0, rgba(255,205,100,.9) 14%, rgba(255,90,15,.65) 37%, transparent 73%)`)
-      .animate([{ opacity: .98 }, { opacity: 0 }], { duration: 750, fill: 'forwards' });
+      .animate([{ opacity: .98 }, { opacity: 0 }], { duration: 850, fill: 'forwards' });
 
     const colours = ['#ff3b30', '#ff9500', '#ffcc00', '#25201d', '#fff0bd'];
-    for (let i = 0; i < 90; i++) {
+    for (let i = 0; i < 100; i++) {
       const angle = rnd(0, Math.PI * 2);
       const distance = rnd(150, Math.max(innerWidth, innerHeight) * .82);
-      const colour = colours[i % colours.length];
-      mk('spark', at + 'background:' + colour).animate([
+      mk('spark', at + 'background:' + colours[i % colours.length]).animate([
         { transform: 'translate(0,0) rotate(0)', opacity: 1 },
         { transform: `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance + 100}px) rotate(${rnd(-760, 760)}deg)`, opacity: 0 }
-      ], { duration: rnd(900, 1500), easing: 'cubic-bezier(.1,.8,.3,1)', fill: 'forwards' });
+      ], { duration: rnd(1000, 1750), easing: 'cubic-bezier(.1,.8,.3,1)', fill: 'forwards' });
     }
-    shake(legacyList, 22, 500);
+    for (let i = 0; i < 9; i++) {
+      mk('puff', at).animate([
+        { transform: 'translate(0,0) scale(.35)', opacity: .85 },
+        { transform: `translate(${rnd(-220, 220)}px, ${rnd(-260, -70)}px) scale(${rnd(2.5, 3.7)})`, opacity: 0 }
+      ], { duration: 1900, delay: rnd(50, 370), easing: 'ease-out', fill: 'forwards' });
+    }
+    shake(legacyList, 22, 780);
+    [...legacyList.children].forEach(child => child.animate([
+      { transform: 'none' },
+      { transform: `translate(${rnd(-24, 24)}px, ${rnd(-18, 18)}px) rotate(${rnd(-7, 7)}deg)` },
+      { transform: 'none' }
+    ], { duration: 720, easing: 'ease-out' }));
   }
 
-  function revealUnlockedSequence(token) {
-    updateCenterOffset();
-    body.classList.add('blackout');
-    spawnUnlockSparkles();
+  /* Sparkles around the message and the glowing button. */
+  function makeSparkles() {
+    sparkles.classList.remove('fade');
+    sparkles.replaceChildren();
+    const spreadX = Math.min(innerWidth * .42, 230);
+    for (let i = 0; i < 34; i++) {
+      const s = document.createElement('div');
+      s.className = 'star';
+      s.textContent = i % 3 ? '✦' : '✧';
+      s.style.left = `calc(50% + ${rnd(-spreadX, spreadX)}px)`;
+      s.style.top = `calc(50% + ${rnd(-130, 50)}px)`;
+      s.style.fontSize = rnd(10, 26) + 'px';
+      s.style.setProperty('--d', rnd(1.1, 2.2) + 's');
+      s.style.setProperty('--delay', rnd(0, 2) + 's');
+      sparkles.appendChild(s);
+    }
+  }
 
-    /* Hold the glowing button and sparkling text in the middle, then move to its slot */
+  /* Black screen -> new button shines in the centre -> it travels to its place. */
+  function revealFinalSite(token) {
+    body.classList.add('final-start');                // page goes black
     later(() => {
-      clearSparkles();
-      body.classList.remove('blackout');
-      body.classList.add('rising');
-    }, 2300, token);
-
-    later(() => fx.replaceChildren(), 4200, token);
+      makeSparkles();
+      body.classList.add('unlock');                   // message + glowing button
+    }, 1000, token);
+    later(() => {
+      body.classList.remove('unlock');
+      body.classList.add('settled');                  // button glides into position
+      sparkles.classList.add('fade');
+    }, 4800, token);
+    later(() => { sparkles.replaceChildren(); fx.replaceChildren(); }, 6200, token);
   }
 
   function playFullSequence() {
     runId++;
     const token = runId;
     clearSequenceTimers();
-    clearSparkles();
-    if (replayBufferTimer !== null) {
-      clearTimeout(replayBufferTimer);
-      replayBufferTimer = null;
-    }
+    if (replayBufferTimer !== null) { clearTimeout(replayBufferTimer); replayBufferTimer = null; }
     replayBuffer = '';
 
-    document.getAnimations().forEach(animation => {
-      try { animation.cancel(); } catch (error) {}
-    });
+    document.getAnimations().forEach(a => { try { a.cancel(); } catch (e) {} });
     body.classList.add('resetting');
     void body.offsetWidth;
-    body.classList.remove('legacy-view', 'blackout', 'rising');
+    body.classList.remove('legacy-view', 'final-start', 'unlock', 'settled');
     fx.replaceChildren();
+    sparkles.replaceChildren();
 
-    const warningOverlay = $('warn');
-    const warningText = $('warnText');
-    const vignette = $('vig');
-    warningOverlay.style.display = 'none';
-    warningOverlay.style.background = '';
-    warningText.style.opacity = '.1';
-    warningText.style.transform = 'translate(-50%, -50%) scale(.35)';
-    warningText.style.textShadow = '';
-    vignette.style.opacity = '0';
+    /* Measure how far the new button must sit from screen centre while it is held there. */
+    newBtn.style.setProperty('--dy', '0px');
+    const r = newBtn.getBoundingClientRect();
+    newBtn.style.setProperty('--dy', (innerHeight / 2 - (r.top + r.height / 2)) + 'px');
 
-    updateCenterOffset();
+    const wo = $('warn'), wt = $('warnText'), vg = $('vig');
+    wo.style.display = 'none';
+    wo.style.background = '';
+    wt.style.opacity = '.1';
+    wt.style.transform = 'translate(-50%, -50%) scale(.35)';
+    wt.style.textShadow = '';
+    vg.style.opacity = '0';
+
     void body.offsetWidth;
     body.classList.remove('resetting');
     void body.offsetWidth;
@@ -689,9 +470,9 @@ Maths: Ranked https://joelmensah.github.io/maths/1v1
           if (token !== runId) return;
           explode(cx, cy);
           later(() => {
-            revealUnlockedSequence(token);
-            try { localStorage.setItem(KEY, '1'); } catch (error) {}
-          }, 180, token);
+            revealFinalSite(token);
+            try { localStorage.setItem(KEY, '1'); } catch (e) {}
+          }, 260, token);
         }, token);
       }, token);
     }, 650, token);
@@ -699,12 +480,12 @@ Maths: Ranked https://joelmensah.github.io/maths/1v1
 
   let storageOK = true;
   let seen = null;
-  try { seen = localStorage.getItem(KEY); } catch (error) { storageOK = false; }
+  try { seen = localStorage.getItem(KEY); } catch (e) { storageOK = false; }
   const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const forceIntro = /[?&]intro\b/.test(location.search);
   const playIntro = forceIntro || (storageOK && !seen && !reduceMotion);
 
-  /* Typing "replay" anywhere on the page restarts the sequence */
+  /* Typing "replay" anywhere restarts the whole sequence. */
   window.addEventListener('keydown', event => {
     if (event.ctrlKey || event.altKey || event.metaKey || event.key.length !== 1) return;
     replayBuffer = (replayBuffer + event.key.toLowerCase()).slice(-6);
@@ -716,17 +497,11 @@ Maths: Ranked https://joelmensah.github.io/maths/1v1
       return;
     }
     if (replayBufferTimer !== null) clearTimeout(replayBufferTimer);
-    replayBufferTimer = setTimeout(() => {
-      replayBuffer = '';
-      replayBufferTimer = null;
-    }, 2500);
+    replayBufferTimer = setTimeout(() => { replayBuffer = ''; replayBufferTimer = null; }, 2500);
   });
 
-  if (!playIntro) {
-    body.classList.add('rising');
-  } else {
-    playFullSequence();
-  }
+  if (!playIntro) body.classList.add('final-start', 'settled');
+  else playFullSequence();
 })();
 </script>
 </body>
