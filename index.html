@@ -282,14 +282,6 @@
       border-radius: 50%;
       background: radial-gradient(circle, rgba(148, 163, 184, .85), rgba(148, 163, 184, 0) 72%);
     }
-    .fx-text-pop {
-      position: absolute;
-      font-family: "Lilita One", Impact, sans-serif;
-      font-size: 1.3rem;
-      color: #ef4444;
-      text-shadow: 0 2px 0 #fff;
-      white-space: nowrap;
-    }
 
     #replay-btn {
       position: fixed;
@@ -377,7 +369,7 @@
       <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
       <path d="M3 3v5h5"/>
     </svg>
-    Replay Intro
+    Replay Animation
   </button>
 
   <script>
@@ -504,14 +496,6 @@
         ], { duration: 460, easing: 'cubic-bezier(.2,.8,.3,1)' });
 
         impactBurst(tx, ty, ['#94a3b8', '#cbd5e1', '#fbbf24', '#f87171'], 22);
-
-        const pop = mk('fx-text-pop', `left:${tx + 12}px;top:${ty - 24}px;`);
-        pop.textContent = 'KOBE! 🗑️';
-        pop.animate([
-          { transform: 'translate(-50%, 0) scale(.5) rotate(-8deg)', opacity: 1 },
-          { transform: 'translate(-50%, -44px) scale(1.1) rotate(6deg)', opacity: 1, offset: 0.4 },
-          { transform: 'translate(-50%, -68px) scale(.9) rotate(10deg)', opacity: 0 }
-        ], { duration: 880, easing: 'ease-out', fill: 'forwards' });
       }
 
       function makeSparkles(centerY) {
@@ -594,7 +578,7 @@
           trashWrap.classList.add('enter');
         }, 400, token);
 
-        // 2. Open lid + small burst (no cracking)
+        // 2. Open lid + small burst
         later(() => {
           trashWrap.classList.add('open');
           const r = btnMaths.getBoundingClientRect();
@@ -611,7 +595,6 @@
           const endX = tRect.left + tRect.width * 0.52;
           const endY = tRect.top + tRect.height * 0.32;
 
-          // Shrink the real button away
           btnMaths.style.transform = 'scale(0.12) rotate(-20deg)';
           btnMaths.style.opacity = '0';
 
