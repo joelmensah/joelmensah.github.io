@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maths Tri-Weekly 2 | Rank</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Calibri:wght@400;700&family=Inter:wght@400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Calibri', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #f3f4f6;
+            color: #111827;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .paper-sheet {
+            background: #ffffff;
+            max-width: 820px;
+            margin: 0 auto;
+            padding: 32px 40px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
+
+        .table-scroll-wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            position: relative;
+            width: 100%;
+        }
+
+        table.assessment-table {
+            border-collapse: separate;
+            border-spacing: 0;
+            width: 100%;
+            font-size: 13px;
+            line-height: 1.2;
+        }
+
+        table.assessment-table th,
+        table.assessment-table td {
+            padding: 4px 8px;
+            text-align: center;
+            border-bottom: 1px solid rgba(229, 231, 235, 0.8);
+        }
+
+        /* Horizontal headers (was vertical) */
+        .vertical-header {
+            vertical-align: middle;
+            padding: 12px 10px !important;
+            font-weight: 700;
+            font-size: 12.5px;
+            color: #111827;
+            white-space: nowrap;
+        }
+
+        .vertical-text {
+            display: inline-block;
+            font-weight: 700;
+            font-size: 12.5px;
+            letter-spacing: 0.01em;
+            color: #111827;
+            white-space: nowrap;
+        }
+
+        .horizontal-header {
+            vertical-align: middle;
+            padding: 12px 10px !important;
+            font-weight: 700;
+            font-size: 12.5px;
+            color: #111827;
+        }
+
+        /* Rank on the left */
+        td.col-rank {
+            width: 56px;
+            min-width: 48px;
+            background-color: #ffffff;
+            color: #111827;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            border-right: 1px solid #e5e7eb;
+        }
+
+        /* Surname, Forename column */
+        td.col-name {
+            background-color: #ffffff;
+            text-align: left;
+            padding-left: 14px !important;
+            font-weight: 500;
+            color: #111827;
+            white-space: nowrap;
+        }
+
+        /* Set column */
+        td.col-set {
+            width: 95px;
+            min-width: 80px;
+            text-align: center;
+            font-weight: 600;
+            color: #374151;
+            background-color: #f9fafb;
+            border-left: 1px solid #f3f4f6;
+            border-right: 1px solid #e5e7eb;
+        }
+
+        td.col-set.set-dark {
+            background-color: #eef2ff;
+            color: #3730a3;
+        }
+
+        /* Heatmap Mark & Grade columns */
+        td.col-score {
+            width: 76px;
+            min-width: 64px;
+            font-variant-numeric: tabular-nums;
+            border-left: 1px solid rgba(255, 255, 255, 0.5) !important;
+            border-right: 1px solid rgba(255, 255, 255, 0.5) !important;
+        }
+
+        tbody tr:hover td {
+            outline: 1.5px solid #3b82f6;
+            position: relative;
+            z-index: 5;
+        }
+
+        th.bg-white { background-color: #ffffff; }
+        th.hover\:bg-gray-50:hover { background-color: #f9fafb; }
+
+        @media (max-width: 640px) {
+            .paper-sheet {
+                padding: 12px 8px;
+                border-radius: 8px;
+            }
+
+            table.assessment-table {
+                font-size: 12px;
+            }
+
+            table.assessment-table th,
+            table.assessment-table td {
+                padding: 5px 6px;
+            }
+
+            .vertical-header {
+                padding: 10px 8px !important;
+            }
+
+            .vertical-text {
+                font-size: 11.5px;
+            }
+
+            .horizontal-header {
+                padding: 10px 8px !important;
+                font-size: 11.5px;
+            }
+
+            th.sticky-rank,
+            td.col-rank {
+                position: sticky;
+                left: 0;
+                z-index: 3;
+                width: 50px;
+                min-width: 50px;
+                box-shadow: 1px 0 3px rgba(0,0,0,0.05);
+            }
+
+            th.sticky-name,
+            td.col-name {
+                position: sticky;
+                left: 50px;
+                z-index: 3;
+                min-width: 155px;
+                max-width: 175px;
+                padding-left: 8px !important;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                box-shadow: 2px 0 5px -2px rgba(0, 0, 0, 0.1);
+            }
+        }
+
+        @media print {
+            body { background: #ffffff !important; }
+            .no-print { display: none !important; }
+            .paper-sheet {
+                background: #ffffff !important;
+                box-shadow: none !important;
+                padding: 0;
+                max-width: 100%;
+                margin: 0;
+            }
+            table.assessment-table { font-size: 10.5px; }
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                color: #000 !important;
+            }
+        }
+    </style>
+</head>
+<body class="py-3 sm:py-6 px-2 sm:px-6">
+
+    <!-- Clean Top Toolbar -->
+    <div class="no-print max-w-[820px] mx-auto mb-3 sm:mb-4 bg-white rounded-xl shadow-sm border border-gray-200 p-3 flex justify-center">
+        <div class="flex flex-col sm:flex-row items-center gap-3 w-full max-w-sm sm:max-w-none sm:w-auto">
+            <div class="relative w-full sm:w-[230px]">
+                <input 
+                    type="text" 
+                    id="search-input" 
+                    placeholder="Search student..." 
+                    class="w-full pl-9 pr-3 py-2 text-base sm:text-sm border border-gray-300 rounded-lg bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                <svg class="w-4 h-4 text-gray-400 absolute left-3 top-3 sm:top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+            </div>
+
+            <select id="set-filter" class="w-full sm:w-[120px] text-base sm:text-sm border border-gray-300 rounded-lg px-3 py-2 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option value="all">All Sets</option>
+                <option value="11/Ma1">11/Ma1</option>
+                <option value="11/Ma2">11/Ma2</option>
+                <option value="11/Ma3">11/Ma3</option>
+                <option value="11/Ma4">11/Ma4</option>
+                <option value="11/Ma5">11/Ma5</option>
+                <option value="11/Ma6">11/Ma6</option>
+                <option value="11/Ma7">11/Ma7</option>
+                <option value="11/Ma8">11/Ma8</option>
+            </select>
+
+            <select id="grade-filter" class="w-full sm:w-[140px] text-base sm:text-sm border border-gray-300 rounded-lg px-3 py-2 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option value="all">All Grades</option>
+                <option value="9">Grade 9</option>
+                <option value="8">Grade 8</option>
+                <option value="7">Grade 7</option>
+                <option value="6">Grade 6</option>
+                <option value="5">Grade 5</option>
+                <option value="4">Grade 4</option>
+                <option value="3">Grade 3</option>
+                <option value="2">Grade 2</option>
+                <option value="1">Grade 1</option>
+            </select>
+        </div>
+    </div>
+
+    <div id="sheet-container" class="paper-sheet rounded-sm">
+        <div class="table-scroll-wrapper">
+            <table class="assessment-table" id="assessment-table">
+                <thead>
+                    <tr>
+                        <th class="vertical-header sticky-rank cursor-pointer hover:bg-gray-50 bg-white border-r border-gray-200" data-sort="index">
+                            <span class="vertical-text">Rank</span>
+                        </th>
+                        <th class="horizontal-header sticky-name cursor-pointer hover:bg-gray-50 bg-white text-left pl-3.5" data-sort="name">
+                            Surname, Forename
+                        </th>
+                        <th class="vertical-header cursor-pointer hover:bg-gray-50 bg-white border-x border-gray-200" data-sort="setOrder">
+                            <span class="vertical-text">Set</span>
+                        </th>
+                        <th class="vertical-header cursor-pointer hover:bg-gray-50 bg-white" data-sort="mark">
+                            <span class="vertical-text">Triweekly 2 Mark</span>
+                        </th>
+                        <th class="vertical-header cursor-pointer hover:bg-gray-50 bg-white" data-sort="levelNum">
+                            <span class="vertical-text">Grade</span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="table-body">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Format: [rankDisplay, fname, lname, set, mark, level]
+        const rawData = [
+            ["1", "Peter", "Oyenola", "11/Ma1", 80, "9+"],
+            ["2", "Levon", "Scott", "11/Ma1", 78, "9+"],
+            ["3", "Stevin", "Suresh", "11/Ma1", 77, "9+"],
+            ["4", "Alex", "Bui", "11/Ma1", 76, "9+"],
+            ["5", "Jayden", "Barker", "11/Ma1", 75, "9+"],
+            ["~6", "Ikechukwu", "Agbonye", "11/Ma1", 74, "9+"],
+            ["~6", "Georgios", "Christoforatos", "11/Ma1", 74, "9+"],
+            ["~6", "Ye", "Ma", "11/Ma1", 74, "9+"],
+            ["~6", "Gedion", "Meshesha", "11/Ma1", 74, "9+"],
+            ["~6", "Joshua", "Williams", "11/Ma1", 74, "9+"],
+            ["~11", "Joel", "Masabanda-Tiban", "11/Ma1", 71, "9"],
+            ["~11", "Maximilian", "Mitomi", "11/Ma1", 71, "9"],
+            ["~11", "Harishram", "Sivagobikrishna", "11/Ma1", 71, "9"],
+            ["~14", "Oghenevwegba", "Fydoro-Okiti", "11/Ma1", 70, "9"],
+            ["~14", "Ovuefe Cedric", "Uloho", "11/Ma1", 70, "9"],
+            ["16", "Jason", "Nkansah", "11/Ma1", 69, "9-"],
+            ["~17", "Piers", "Mills Husey", "11/Ma1", 68, "9-"],
+            ["~17", "Jamal", "Shittu", "11/Ma1", 68, "9-"],
+            ["~19", "Sayed", "Hussain", "11/Ma1", 67, "9-"],
+            ["~19", "Qoyhum", "Onafowokan", "11/Ma1", 67, "9-"],
+            ["~19", "Jayden", "Gebre", "11/Ma2", 67, "9-"],
+            ["~22", "Lionel", "Berhane", "11/Ma1", 66, "8+"],
+            ["~22", "Ewaen", "Michael Idugboe", "11/Ma1", 66, "8+"],
+            ["~22", "Victor", "Ogundega", "11/Ma2", 66, "8+"],
+            ["~25", "Nathan", "Frampton", "11/Ma1", 64, "8+"],
+            ["~25", "Thomas", "Ngome-Okezie", "11/Ma1", 64, "8+"],
+            ["~25", "Stephen", "Olubajo", "11/Ma1", 64, "8+"],
+            ["~25", "Ibrahim Marco", "Raveneau-Sylla", "11/Ma1", 64, "8+"],
+            ["~25", "Prince Kwabena", "Awuah", "11/Ma2", 64, "8+"],
+            ["~30", "Aaron", "Awuku", "11/Ma1", 63, "8"],
+            ["~30", "Cameron", "Green", "11/Ma1", 63, "8"],
+            ["~30", "Isaiah", "Zango", "11/Ma1", 63, "8"],
+            ["~30", "David", "Boakye", "11/Ma2", 63, "8"],
+            ["~34", "Kevin", "Baah", "11/Ma2", 61, "8"],
+            ["~34", "Chidubem", "Chima", "11/Ma2", 61, "8"],
+            ["~36", "Prince-Mikhael", "Dombo", "11/Ma1", 60, "8"],
+            ["~36", "Jeremie", "Adeyemi", "11/Ma2", 60, "8"],
+            ["~36", "Charlie", "Ford", "11/Ma2", 60, "8"],
+            ["~36", "Al-Amin", "Yusuf", "11/Ma2", 60, "8"],
+            ["~36", "Samuel", "Arigbabu", "11/Ma3", 60, "8"],
+            ["41", "David", "Okebu", "11/Ma2", 59, "8-"],
+            ["42", "Alexander", "Asagba", "11/Ma2", 58, "8-"],
+            ["~43", "Paul", "Famosa", "11/Ma2", 57, "8-"],
+            ["~43", "Sidney", "Peacock", "11/Ma2", 57, "8-"],
+            ["~45", "Aaron", "McDonald", "11/Ma1", 56, "8-"],
+            ["~45", "Kosisochukwu", "Ibe", "11/Ma2", 56, "8-"],
+            ["~47", "Aize", "Momoh", "11/Ma1", 55, "7+"],
+            ["~47", "Osazenomwan", "Momoh", "11/Ma2", 55, "7+"],
+            ["~47", "Yeshvasin", "Purmessur", "11/Ma2", 55, "7+"],
+            ["~50", "King", "Bakare", "11/Ma2", 53, "7+"],
+            ["~50", "Reuben", "Walusimbi", "11/Ma2", 53, "7+"],
+            ["~52", "Jayden", "Ntiamoah", "11/Ma2", 52, "7"],
+            ["~52", "Israel", "Joseph", "11/Ma3", 52, "7"],
+            ["~52", "Oluwatobi", "Olorunnisomo", "11/Ma3", 52, "7"],
+            ["~55", "Uzoma", "Nwachukwu", "11/Ma2", 51, "7"],
+            ["~55", "Jordan", "Ogundeyin", "11/Ma2", 51, "7"],
+            ["~57", "Uyiosa", "Erhabor", "11/Ma3", 50, "7"],
+            ["~57", "Joel", "Kiwanuka", "11/Ma3", 50, "7"],
+            ["~59", "D'Andre", "Minott", "11/Ma2", 48, "7-"],
+            ["~59", "Hakeem", "Sesay", "11/Ma2", 48, "7-"],
+            ["~59", "Boubacar", "Jakiteh", "11/Ma3", 48, "7-"],
+            ["62", "Makai", "Kibuuka-Musoke", "11/Ma3", 47, "7-"],
+            ["~63", "Joel Sebastian", "Garzon Moron", "11/Ma2", 46, "7-"],
+            ["~63", "Rafael", "Kassaye Wood", "11/Ma3", 46, "7-"],
+            ["~63", "Musa", "Rahmani", "11/Ma3", 46, "7-"],
+            ["~63", "Leule", "Sisay", "11/Ma3", 46, "7-"],
+            ["~63", "David", "Matti", "11/Ma4", 46, "7-"],
+            ["~68", "Shaback", "Amaechi", "11/Ma3", 45, "7-"],
+            ["~68", "Gavontae", "Purcell-Owen", "11/Ma3", 45, "7-"],
+            ["~68", "Lemuel", "Adou", "11/Ma4", 45, "7-"],
+            ["~71", "Funete", "Solomon", "11/Ma3", 44, "6+"],
+            ["~71", "Sam", "Wiafe", "11/Ma3", 44, "6+"],
+            ["~73", "Aidan", "Clase Martinez", "11/Ma2", 43, "6+"],
+            ["~73", "Osazeme", "Osas", "11/Ma3", 43, "6+"],
+            ["75", "Jonathan", "Addae", "11/Ma3", 42, "6"],
+            ["76", "Otobong", "Umoren", "11/Ma2", 41, "6"],
+            ["~77", "Olamide", "Awe", "11/Ma2", 40, "6"],
+            ["~77", "Hezekiah", "Acquah", "11/Ma3", 40, "6"],
+            ["~77", "Israel", "Aladesuru", "11/Ma3", 40, "6"],
+            ["~77", "Jeantai", "Lindsay", "11/Ma3", 40, "6"],
+            ["~77", "Richmond", "Ogunfuyi", "11/Ma3", 40, "6"],
+            ["~77", "Israel", "Ajo", "11/Ma4", 40, "6"],
+            ["~83", "Makar", "Onysko", "11/Ma3", 39, "6"],
+            ["~83", "Jack", "Persson", "11/Ma3", 39, "6"],
+            ["85", "Samuel", "Ajayi", "11/Ma4", 38, "6-"],
+            ["~86", "David", "Agyemang", "11/Ma3", 37, "6-"],
+            ["~86", "Malachi-Saddeiq", "Smith", "11/Ma4", 37, "6-"],
+            ["~88", "Chibuikem", "Uchendu", "11/Ma2", 36, "6-"],
+            ["~88", "Darrell David", "Akoto", "11/Ma3", 36, "6-"],
+            ["~88", "Imran", "Sesay", "11/Ma4", 36, "6-"],
+            ["~91", "Oladamola", "Mobolaji", "11/Ma3", 34, "5+"],
+            ["~91", "Isaiah", "Ashie", "11/Ma4", 34, "5+"],
+            ["~91", "Tilyan", "Elliah", "11/Ma4", 34, "5+"],
+            ["~94", "Jamiel Benjamin", "Jackson-Davis", "11/Ma4", 33, "5+"],
+            ["~94", "Jibril", "Shittu", "11/Ma4", 33, "5+"],
+            ["~94", "Zy'Shae", "Brown-Thomas", "11/Ma5", 33, "5+"],
+            ["~97", "Jordell", "Dayle", "11/Ma4", 32, "5"],
+            ["~97", "Samuel", "Famose", "11/Ma4", 32, "5"],
+            ["~97", "Osaremel", "Osayande", "11/Ma4", 32, "5"],
+            ["~100", "Enoch", "Adeoshun", "11/Ma2", 31, "5"],
+            ["~100", "Ajibola", "Abass", "11/Ma4", 31, "5"],
+            ["~100", "Rayhan", "Afful", "11/Ma5", 31, "5"],
+            ["~103", "Izaiah", "Gayle", "11/Ma5", 30, "5"],
+            ["~103", "Anuoluwatomiwa", "Oluremi", "11/Ma6", 30, "5"],
+            ["105", "David", "Sorinwa", "11/Ma5", 29, "5"],
+            ["~106", "Daniel", "Osazuwa", "11/Ma4", 28, "5-"],
+            ["~106", "Wesley", "Boakye", "11/Ma5", 28, "5-"],
+            ["108", "Daniel", "Diali", "11/Ma5", 27, "5-"],
+            ["~109", "Warees", "Adeniregun", "11/Ma4", 26, "5-"],
+            ["~109", "Adeoluwa", "Odeyemi", "11/Ma4", 26, "5-"],
+            ["~111", "Nathan", "Okoh", "11/Ma4", 25, "5-"],
+            ["~111", "Cairo", "Bent Pateman", "11/Ma5", 25, "5-"],
+            ["~111", "Abdoul", "Sangare", "11/Ma5", 25, "5-"],
+            ["114", "Serhii", "Mykhailevych", "11/Ma7", 61, "4+"],
+            ["~115", "Louis", "Bauer", "11/Ma4", 24, "4+"],
+            ["~115", "Akinjuwon", "Akinleye", "11/Ma6", 24, "4+"],
+            ["~117", "Isaiah", "Lawrence", "11/Ma5", 23, "4+"],
+            ["~117", "Olaoluwa", "Oladipo", "11/Ma5", 23, "4+"],
+            ["~117", "Oliver", "Sengebwila", "11/Ma5", 23, "4+"],
+            ["~120", "Elijah", "Fyffe", "11/Ma4", 22, "4+"],
+            ["~120", "Joseph", "Aikhionbare", "11/Ma6", 22, "4+"],
+            ["122", "Paul", "Benson", "11/Ma6", 20, "4"],
+            ["~123", "Kai", "McDermott", "11/Ma5", 19, "4"],
+            ["~123", "Osman", "Kanu", "11/Ma6", 19, "4"],
+            ["125", "Brian", "Mbunga", "11/Ma7", 56, "4-"],
+            ["~126", "Israel", "Atobrah Marfo", "11/Ma5", 18, "4-"],
+            ["~126", "Adam", "Haid", "11/Ma5", 18, "4-"],
+            ["~126", "Joshua", "Blackwood", "11/Ma6", 18, "4-"],
+            ["~126", "Michael", "Tijani", "11/Ma6", 18, "4-"],
+            ["~130", "Maison", "Chambers-Huseyin", "11/Ma4", 17, "4-"],
+            ["~130", "Karim", "Fernandez", "11/Ma6", 17, "4-"],
+            ["132", "Franck-Harvey", "Bassama Zibi", "11/Ma6", 16, "4-"],
+            ["~133", "Ethan", "Donkor", "11/Ma6", 15, "4-"],
+            ["~133", "Ja'Zai", "Haywood", "11/Ma6", 15, "4-"],
+            ["~135", "Jeffrey", "Oshodin", "11/Ma7", 51, "3+"],
+            ["~135", "Massire", "Sow", "11/Ma7", 51, "3+"],
+            ["137", "Keyondre", "Graham", "11/Ma7", 49, "3+"],
+            ["~138", "Kwabena", "Davis", "11/Ma4", 14, "3+"],
+            ["~138", "Jonathan", "Ubazue", "11/Ma6", 14, "3+"],
+            ["~140", "Adrians", "Metra", "11/Ma7", 45, "3"],
+            ["~140", "Mark", "Moigura", "11/Ma7", 45, "3"],
+            ["142", "Jordan", "Obukohwo", "11/Ma6", 13, "3"],
+            ["143", "Emmanuel", "Ogunbase", "11/Ma7", 43, "3-"],
+            ["144", "Kathene", "Fayama", "11/Ma6", 11, "3-"],
+            ["~145", "Micah", "Ashie", "11/Ma7", 37, "2+"],
+            ["~145", "Eliab", "Berhane", "11/Ma7", 37, "2+"],
+            ["147", "Jaydon", "Pettican Castillo", "11/Ma8", 27, "2-"],
+            ["148", "Jaiden", "Kigozi", "11/Ma8", 24, "2-"],
+            ["149", "Kennedy", "Asare", "11/Ma8", 18, "1"],
+            ["150", "Arsenii", "Karuk", "11/Ma8", 16, "1"]
+        ];
+
+        const setPriority = {
+            "11/Ma1": 1,
+            "11/Ma2": 2,
+            "11/Ma3": 3,
+            "11/Ma4": 4,
+            "11/Ma5": 5,
+            "11/Ma6": 6,
+            "11/Ma7": 7,
+            "11/Ma8": 8
+        };
+
+        function parseLevelScore(lvl) {
+            const base = parseInt(lvl, 10);
+            if (lvl.includes('+')) return base + 0.3;
+            if (lvl.includes('-')) return base - 0.3;
+            return base;
+        }
+
+        const students = rawData.map((row, idx) => {
+            const rankStr = row[0];
+            const cleanRank = parseInt(rankStr.replace('~', ''), 10);
+            const fname = row[1];
+            const lname = row[2];
+            const set = row[3];
+            const levelStr = row[5];
+            return {
+                index: idx + 1,
+                rank: rankStr,
+                rankNum: cleanRank,
+                fname: fname,
+                lname: lname,
+                name: `${lname}, ${fname}`,
+                set: set,
+                isFoundation: set === "11/Ma7" || set === "11/Ma8",
+                setOrder: setPriority[set] || 99,
+                mark: row[4],
+                level: levelStr,
+                levelNum: parseLevelScore(levelStr),
+                baseGrade: String(parseInt(levelStr, 10))
+            };
+        });
+
+        let currentSort = { key: 'index', asc: true };
+
+        function getHeatmapStyle(col, s) {
+            let ratio = 0;
+            if (col === 'mark') {
+                ratio = Math.max(0, Math.min(1, (s.mark - 11) / (80 - 11)));
+            } else if (col === 'level') {
+                ratio = Math.max(0, Math.min(1, (s.levelNum - 1) / (9.3 - 1)));
+            }
+            const hue = Math.round(ratio * 130);
+            const weight = col === 'level' ? 'font-weight: 700;' : 'font-weight: 600;';
+            return `background-color: hsl(${hue}, 70%, 85%); color: #111827; ${weight}`;
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('table-body');
+            const searchQuery = document.getElementById('search-input').value.trim().toLowerCase();
+            const setFilter = document.getElementById('set-filter').value;
+            const gradeFilter = document.getElementById('grade-filter').value;
+
+            const filtered = students.filter(s => {
+                const matchesSet = setFilter === 'all' || s.set === setFilter;
+                const matchesGrade = gradeFilter === 'all' || s.baseGrade === gradeFilter;
+                const fullName = `${s.fname} ${s.lname}`.toLowerCase();
+                const sheetName = s.name.toLowerCase();
+                const matchesSearch = !searchQuery || 
+                    sheetName.includes(searchQuery) || 
+                    fullName.includes(searchQuery) ||
+                    s.rank.toLowerCase().includes(searchQuery) ||
+                    s.set.toLowerCase().includes(searchQuery) ||
+                    s.level.toLowerCase().includes(searchQuery);
+                return matchesSet && matchesGrade && matchesSearch;
+            });
+
+            filtered.sort((a, b) => {
+                let valA = a[currentSort.key];
+                let valB = b[currentSort.key];
+                if (valA === valB) {
+                    return a.index - b.index;
+                }
+                if (typeof valA === 'string') {
+                    return currentSort.asc ? valA.localeCompare(valB) : valB.localeCompare(valA);
+                }
+                return currentSort.asc ? valA - valB : valB - valA;
+            });
+
+            tbody.innerHTML = filtered.map(s => `
+                <tr>
+                    <td class="col-rank">${s.rank}</td>
+                    <td class="col-name" title="${s.name}">${s.name}</td>
+                    <td class="col-set ${s.isFoundation ? 'set-dark' : ''}">${s.set}</td>
+                    <td class="col-score" style="${getHeatmapStyle('mark', s)}">${s.mark}</td>
+                    <td class="col-score" style="${getHeatmapStyle('level', s)}">${s.level}</td>
+                </tr>
+            `).join('');
+        }
+
+        document.getElementById('search-input').addEventListener('input', renderTable);
+        document.getElementById('set-filter').addEventListener('change', renderTable);
+        document.getElementById('grade-filter').addEventListener('change', renderTable);
+
+        document.querySelectorAll('th[data-sort]').forEach(th => {
+            th.addEventListener('click', () => {
+                const sortKey = th.getAttribute('data-sort');
+                if (currentSort.key === sortKey) {
+                    currentSort.asc = !currentSort.asc;
+                } else {
+                    currentSort.key = sortKey;
+                    currentSort.asc = ['index', 'name', 'setOrder'].includes(sortKey);
+                }
+                renderTable();
+            });
+        });
+
+        renderTable();
+    </script>
+</body>
+</html>
