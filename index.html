@@ -7,7 +7,7 @@
   <title>Links</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700;800&family=Lilita+One&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
       --ink: #0f172a;
@@ -27,10 +27,6 @@
       background: #fff;
       color: var(--ink);
       font-family: Inter, Arial, sans-serif;
-      transition: background-color 0.7s ease;
-    }
-    body.upgrade-dim {
-      background: #090d16;
     }
 
     #stage {
@@ -73,10 +69,7 @@
       transition:
         background-color .16s ease,
         transform .45s cubic-bezier(.2, .85, .2, 1),
-        box-shadow .35s ease,
-        opacity .35s ease,
-        border-color .35s ease,
-        filter .3s ease;
+        box-shadow .35s ease;
     }
     .btn:hover {
       background: #263650;
@@ -93,194 +86,13 @@
       outline-offset: 4px;
     }
 
-    body.animating .btn {
-      pointer-events: none;
+    /* Maths Tri-Weekly 2 fade-in states */
+    #btn-maths2.dimmed {
+      opacity: .06;
+      transition: none;
     }
-
-    .maths-slot {
-      max-height: 76px;
-      overflow: hidden;
-      transition: max-height 0.5s cubic-bezier(.4, 0, .2, 1), margin-top 0.5s cubic-bezier(.4, 0, .2, 1);
-    }
-    .maths-slot.collapsed {
-      max-height: 0 !important;
-      margin-top: -1rem !important;
-      pointer-events: none;
-    }
-
-    .btn.targeted {
-      border-color: #ef4444;
-      background: #1e1b2e;
-      box-shadow: 0 0 0 3px rgba(239, 68, 68, .45), 0 5px 0 rgba(239, 68, 68, .25);
-    }
-
-    #trash-wrap {
-      position: fixed;
-      left: clamp(1.2rem, 4vw, 2.75rem);
-      bottom: clamp(1.2rem, 4vh, 2.5rem);
-      z-index: 40;
-      width: 92px;
-      height: 112px;
-      transform: translate(-160%, 120%) rotate(-18deg);
-      transition: transform .55s cubic-bezier(.2, 1.3, .3, 1), opacity .4s ease;
-      pointer-events: none;
-    }
-    #trash-wrap.enter {
-      transform: translate(0, 0) rotate(0deg);
-    }
-    #trash-wrap.exit {
-      transform: translate(-170%, 60%) rotate(-22deg);
-      opacity: 0;
-    }
-    #trash-svg {
-      width: 100%;
-      height: 100%;
-      overflow: visible;
-      filter: drop-shadow(0 8px 0 rgba(15, 23, 42, .14));
-    }
-    #trash-lid {
-      transform-origin: 16px 32px;
-      transition: transform .28s cubic-bezier(.2, 1.4, .3, 1);
-    }
-    #trash-wrap.open #trash-lid {
-      transform: rotate(-68deg) translate(-4px, -4px);
-    }
-
-    .crumpled-ball {
-      position: fixed;
-      z-index: 42;
-      width: 58px;
-      height: 58px;
-      margin: -29px 0 0 -29px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background:
-        radial-gradient(circle at 30% 25%, #334155 0%, #0f172a 65%, #020617 100%);
-      border: 2px solid #f87171;
-      clip-path: polygon(16% 4%, 49% 0%, 83% 9%, 100% 34%, 93% 71%, 74% 96%, 38% 100%, 10% 85%, 0% 52%);
-      color: #fca5a5;
-      font-size: .58rem;
-      font-weight: 800;
-      text-align: center;
-      line-height: 1.05;
-      padding: 4px;
-      box-shadow: 0 8px 18px rgba(15, 23, 42, .35);
-      pointer-events: none;
-    }
-    .crumpled-ball::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background:
-        linear-gradient(125deg, transparent 40%, rgba(255,255,255,.18) 44%, transparent 48%),
-        linear-gradient(25deg, transparent 52%, rgba(255,255,255,.15) 55%, transparent 60%);
-    }
-
-    body.upgrade-dim #list .btn:not(.upgrading) {
-      opacity: .16;
-      filter: blur(1px);
-      transform: scale(.96);
-    }
-    .btn.upgrading {
-      z-index: 30;
-      overflow: hidden;
-      transform: scale(1.13) translateY(-4px);
-      border-color: #fde68a;
-      background: #0f172a;
-      box-shadow:
-        0 0 0 2px #fde68a,
-        0 0 30px 6px rgba(253, 224, 71, .68),
-        0 0 90px 24px rgba(251, 191, 36, .35);
-    }
-    .btn.upgrading::after {
-      content: "";
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: -65%;
-      width: 45%;
-      background: linear-gradient(100deg, transparent, rgba(255, 255, 255, .82), transparent);
-      transform: skewX(-20deg);
-      animation: sheen 1.3s ease-in-out infinite;
-    }
-    @keyframes sheen {
-      from { left: -65%; }
-      to { left: 135%; }
-    }
-
-    #upgrade-msg {
-      position: fixed;
-      top: calc(50% - 6.8rem);
-      left: 50%;
-      z-index: 46;
-      margin: 0;
-      font-family: "Lilita One", Impact, sans-serif;
-      font-size: clamp(1.75rem, 6vw, 2.85rem);
-      font-weight: 400;
-      white-space: nowrap;
-      letter-spacing: .02em;
-      background: linear-gradient(100deg, #fbbf24 0%, #fff7c2 25%, #fbbf24 50%, #fff7c2 75%, #fbbf24 100%);
-      background-size: 250% 100%;
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      filter: drop-shadow(0 0 14px rgba(251, 191, 36, .8));
-      opacity: 0;
-      transform: translate(-50%, -50%) scale(.55);
-      transition: opacity .5s ease, transform .6s cubic-bezier(.2, 1.4, .3, 1);
-      pointer-events: none;
-    }
-    #upgrade-msg.show {
-      opacity: 1;
-      transform: translate(-50%, -50%) scale(1);
-      animation: glint 2s linear infinite;
-    }
-    @keyframes glint {
-      to { background-position: -250% 0; }
-    }
-
-    #sparkles {
-      position: fixed;
-      inset: 0;
-      z-index: 25;
-      pointer-events: none;
-      transition: opacity .7s ease;
-    }
-    #sparkles.fade {
-      opacity: 0;
-    }
-    .star {
-      position: absolute;
-      color: #fde68a;
-      text-shadow: 0 0 8px #fbbf24, 0 0 18px #f59e0b;
-      line-height: 1;
-      opacity: 0;
-      animation: twinkle var(--d, 1.5s) ease-in-out var(--delay, 0s) infinite;
-    }
-    @keyframes twinkle {
-      0%, 100% { opacity: 0; transform: scale(.2) rotate(0deg); }
-      50% { opacity: 1; transform: scale(1) rotate(90deg); }
-    }
-
-    #fx {
-      position: fixed;
-      inset: 0;
-      z-index: 50;
-      overflow: hidden;
-      pointer-events: none;
-    }
-    .fx-dot {
-      position: absolute;
-      border-radius: 50%;
-    }
-    .fx-puff {
-      position: absolute;
-      width: 24px;
-      height: 24px;
-      margin: -12px 0 0 -12px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(148, 163, 184, .85), rgba(148, 163, 184, 0) 72%);
+    #btn-maths2.fading {
+      transition: opacity 2.4s ease;
     }
 
     #replay-btn {
@@ -303,27 +115,17 @@
       opacity: 0;
       transform: translateY(8px);
       transition: opacity .35s ease, transform .35s ease, color .16s ease, border-color .16s ease;
+      pointer-events: none;
     }
     body.settled #replay-btn {
       opacity: .75;
       transform: translateY(0);
+      pointer-events: auto;
     }
     #replay-btn:hover {
       opacity: 1 !important;
       color: var(--ink);
       border-color: rgba(15, 23, 42, .3);
-    }
-
-    body.resetting *, body.resetting *::before, body.resetting *::after {
-      transition: none !important;
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation-duration: .01ms !important;
-        animation-iteration-count: 1 !important;
-        scroll-behavior: auto !important;
-      }
     }
   </style>
 </head>
@@ -331,38 +133,12 @@
 
   <main id="stage">
     <nav id="list" aria-label="Links">
-      <a class="btn" id="btn-english" href="https://joelmensah.github.io/triweekly/english1">English Tri-Weekly 1</a>
-      <a class="btn" id="btn-gcse" href="https://joelmensah.github.io/gcse/timetable">GCSE Timetable</a>
-      <a class="btn" id="btn-hannah" href="https://joelmensah.github.io/hannah/kettle.html">Hannah Kettle</a>
-      <div class="maths-slot" id="maths-slot">
-        <a class="btn" id="btn-maths" href="https://joelmensah.github.io/maths/ranked">
-          Maths: Ranked
-        </a>
-      </div>
+      <a class="btn" href="https://joelmensah.github.io/triweekly/english1">English Tri-Weekly 1</a>
+      <a class="btn" id="btn-maths2" href="maths2.html">Maths Tri-Weekly 2</a>
+      <a class="btn" href="https://joelmensah.github.io/gcse/timetable">GCSE Timetable</a>
+      <a class="btn" href="https://joelmensah.github.io/hannah/kettle.html">Hannah Kettle</a>
     </nav>
   </main>
-
-  <div id="sparkles" aria-hidden="true"></div>
-  <p id="upgrade-msg" aria-hidden="true">BUTTON UPGRADED!</p>
-
-  <div id="trash-wrap" aria-hidden="true">
-    <svg id="trash-svg" viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <ellipse cx="50" cy="112" rx="34" ry="6" fill="rgba(15, 23, 42, 0.14)"/>
-      <g id="trash-body">
-        <path d="M20 34H80L73 106C72.5 110 69 113 65 113H35C31 113 27.5 110 27 106L20 34Z" fill="#1E293B" stroke="#0F172A" stroke-width="4" stroke-linejoin="round"/>
-        <line x1="36" y1="46" x2="39" y2="98" stroke="#475569" stroke-width="4" stroke-linecap="round"/>
-        <line x1="50" y1="46" x2="50" y2="98" stroke="#475569" stroke-width="4" stroke-linecap="round"/>
-        <line x1="64" y1="46" x2="61" y2="98" stroke="#475569" stroke-width="4" stroke-linecap="round"/>
-        <rect x="17" y="30" width="66" height="7" rx="3.5" fill="#334155" stroke="#0F172A" stroke-width="3"/>
-      </g>
-      <g id="trash-lid">
-        <path d="M38 22C38 17.5 41.5 14 46 14H54C58.5 14 62 17.5 62 22V24H38V22Z" fill="#475569" stroke="#0F172A" stroke-width="3.5"/>
-        <rect x="14" y="22" width="72" height="10" rx="5" fill="#334155" stroke="#0F172A" stroke-width="3.5"/>
-      </g>
-    </svg>
-  </div>
-
-  <div id="fx" aria-hidden="true"></div>
 
   <button id="replay-btn" type="button" title="Type 'replay' or click to watch again">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -374,295 +150,50 @@
 
   <script>
     (() => {
-      const KEY = 'links_intro_v9';
-      const $ = id => document.getElementById(id);
-      const rnd = (a, b) => a + Math.random() * (b - a);
-
+      const KEY = 'links_seen_maths2_v2';
+      const btn = document.getElementById('btn-maths2');
+      const replayBtn = document.getElementById('replay-btn');
       const body = document.body;
-      const mathsSlot = $('maths-slot');
-      const btnMaths = $('btn-maths');
-      const btnGcse = $('btn-gcse');
-      const trashWrap = $('trash-wrap');
-      const upgradeMsg = $('upgrade-msg');
-      const sparkles = $('sparkles');
-      const fx = $('fx');
-      const replayBtn = $('replay-btn');
 
-      let runId = 0;
-      const sequenceTimers = new Set();
       let replayBuffer = '';
       let replayBufferTimer = null;
 
-      function later(callback, delay, token = runId) {
-        const id = setTimeout(() => {
-          sequenceTimers.delete(id);
-          if (token === runId) callback();
-        }, delay);
-        sequenceTimers.add(id);
-        return id;
-      }
+      function playFade(token) {
+        body.classList.remove('settled');
+        btn.classList.remove('fading');
+        btn.classList.add('dimmed');
 
-      function clearSequenceTimers() {
-        for (const id of sequenceTimers) clearTimeout(id);
-        sequenceTimers.clear();
-      }
-
-      function mk(cls, css) {
-        const el = document.createElement('div');
-        el.className = cls;
-        if (css) el.style.cssText = css;
-        fx.appendChild(el);
-        return el;
-      }
-
-      function shake(el, amount, duration) {
-        const frames = [{ transform: 'none' }];
-        const steps = 14;
-        for (let i = 0; i < steps; i++) {
-          frames.push({
-            transform: `translate(${rnd(-amount, amount)}px, ${rnd(-amount, amount)}px) rotate(${rnd(-amount / 3, amount / 3)}deg)`
+        // Let the browser paint the faint state first
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            btn.classList.add('fading');
+            requestAnimationFrame(() => {
+              btn.classList.remove('dimmed');
+            });
           });
-        }
-        frames.push({ transform: 'none' });
-        el.animate(frames, { duration, easing: 'linear' });
-      }
-
-      function impactBurst(cx, cy, colours, count = 28) {
-        for (let i = 0; i < count; i++) {
-          const angle = rnd(0, Math.PI * 2);
-          const dist = rnd(40, 155);
-          const size = rnd(5, 11);
-          const dot = mk('fx-dot', `left:${cx}px;top:${cy}px;width:${size}px;height:${size}px;background:${colours[i % colours.length]};margin:${-size / 2}px 0 0 ${-size / 2}px;`);
-          dot.animate([
-            { transform: 'translate(0,0) scale(1)', opacity: 1 },
-            { transform: `translate(${Math.cos(angle) * dist}px, ${Math.sin(angle) * dist + 25}px) scale(0.2)`, opacity: 0 }
-          ], { duration: rnd(480, 820), easing: 'cubic-bezier(.15,.85,.3,1)', fill: 'forwards' });
-        }
-      }
-
-      function throwIntoTrash(startX, startY, endX, endY, done, token) {
-        const ball = document.createElement('div');
-        ball.className = 'crumpled-ball';
-        ball.textContent = 'Maths: Ranked';
-        fx.appendChild(ball);
-
-        const duration = 740;
-        const startTime = performance.now();
-        const peakLift = Math.min(240, Math.max(140, window.innerHeight * 0.25));
-        let lastTrail = 0;
-
-        function step(now) {
-          if (token !== runId) {
-            ball.remove();
-            return;
-          }
-          const t = Math.min(1, (now - startTime) / duration);
-          const x = startX + (endX - startX) * t;
-          const arc = -4 * peakLift * t * (1 - t);
-          const linearY = startY + (endY - startY) * t;
-          const y = linearY + arc;
-          const rot = t * -760;
-          const scale = 1 - 0.38 * t;
-
-          ball.style.left = `${x}px`;
-          ball.style.top = `${y}px`;
-          ball.style.transform = `rotate(${rot}deg) scale(${scale})`;
-
-          if (now - lastTrail > 38 && t < 0.92) {
-            lastTrail = now;
-            const puff = mk('fx-puff', `left:${x}px;top:${y}px;`);
-            puff.animate([
-              { transform: 'scale(.7)', opacity: .75 },
-              { transform: 'scale(1.6)', opacity: 0 }
-            ], { duration: 360, easing: 'ease-out', fill: 'forwards' });
-          }
-
-          if (t < 1) {
-            requestAnimationFrame(step);
-          } else {
-            ball.remove();
-            done();
-          }
-        }
-        requestAnimationFrame(step);
-      }
-
-      function trashSlamEffect(tx, ty) {
-        trashWrap.animate([
-          { transform: 'translate(0, 0) scale(1, 1)' },
-          { transform: 'translate(0, 10px) scale(1.18, 0.82)' },
-          { transform: 'translate(0, -6px) scale(0.94, 1.06)' },
-          { transform: 'translate(0, 0) scale(1, 1)' }
-        ], { duration: 460, easing: 'cubic-bezier(.2,.8,.3,1)' });
-
-        impactBurst(tx, ty, ['#94a3b8', '#cbd5e1', '#fbbf24', '#f87171'], 22);
-      }
-
-      function makeSparkles(centerY) {
-        sparkles.classList.remove('fade');
-        sparkles.replaceChildren();
-        const spreadX = Math.min(window.innerWidth * 0.44, 240);
-        for (let i = 0; i < 34; i++) {
-          const s = document.createElement('div');
-          s.className = 'star';
-          s.textContent = i % 3 ? '✦' : '✧';
-          s.style.left = `calc(50% + ${rnd(-spreadX, spreadX)}px)`;
-          s.style.top = `${centerY + rnd(-115, 75)}px`;
-          s.style.fontSize = rnd(11, 26) + 'px';
-          s.style.setProperty('--d', rnd(1.0, 2.0) + 's');
-          s.style.setProperty('--delay', rnd(0, 1.4) + 's');
-          sparkles.appendChild(s);
-        }
-      }
-
-      function applySettledStateInstant() {
-        body.classList.add('resetting');
-        body.classList.remove('animating', 'upgrade-dim');
-        upgradeMsg.classList.remove('show');
-        trashWrap.classList.remove('enter', 'open', 'exit');
-        btnMaths.classList.remove('targeted');
-        btnMaths.style.display = 'none';
-        btnMaths.style.opacity = '';
-        btnMaths.style.transform = '';
-        mathsSlot.classList.add('collapsed');
-        btnGcse.classList.remove('upgrading');
-        btnGcse.textContent = 'GCSE Countdown & Timetable';
-        sparkles.replaceChildren();
-        fx.replaceChildren();
-        body.classList.add('settled');
-        void body.offsetWidth;
-        body.classList.remove('resetting');
-      }
-
-      function playFullSequence() {
-        runId++;
-        const token = runId;
-        clearSequenceTimers();
-        if (replayBufferTimer !== null) {
-          clearTimeout(replayBufferTimer);
-          replayBufferTimer = null;
-        }
-        replayBuffer = '';
-
-        document.getAnimations().forEach(a => {
-          try { a.cancel(); } catch (e) {}
         });
 
-        body.classList.add('resetting');
-        body.classList.remove('settled', 'upgrade-dim');
-        body.classList.add('animating');
-
-        upgradeMsg.classList.remove('show');
-        trashWrap.classList.remove('enter', 'open', 'exit');
-
-        mathsSlot.classList.remove('collapsed');
-        btnMaths.style.display = '';
-        btnMaths.style.opacity = '1';
-        btnMaths.style.transform = 'none';
-        btnMaths.classList.remove('targeted');
-
-        btnGcse.classList.remove('upgrading');
-        btnGcse.textContent = 'GCSE Timetable';
-
-        sparkles.replaceChildren();
-        fx.replaceChildren();
-
-        void body.offsetWidth;
-        body.classList.remove('resetting');
-        void body.offsetWidth;
-
-        // 1. Target Maths + bring trash in
-        later(() => {
-          btnMaths.classList.add('targeted');
-          shake(btnMaths, 5, 420);
-          trashWrap.classList.add('enter');
-        }, 400, token);
-
-        // 2. Open lid + small burst
-        later(() => {
-          trashWrap.classList.add('open');
-          const r = btnMaths.getBoundingClientRect();
-          impactBurst(r.left + r.width / 2, r.top + r.height / 2, ['#ef4444', '#fca5a5', '#0f172a', '#fbbf24'], 22);
-          shake(btnMaths, 8, 380);
-        }, 1300, token);
-
-        // 3. Crumple + throw into trash
-        later(() => {
-          const mRect = btnMaths.getBoundingClientRect();
-          const tRect = trashWrap.getBoundingClientRect();
-          const startX = mRect.left + mRect.width / 2;
-          const startY = mRect.top + mRect.height / 2;
-          const endX = tRect.left + tRect.width * 0.52;
-          const endY = tRect.top + tRect.height * 0.32;
-
-          btnMaths.style.transform = 'scale(0.12) rotate(-20deg)';
-          btnMaths.style.opacity = '0';
-
-          later(() => {
-            mathsSlot.classList.add('collapsed');
-          }, 160, token);
-
-          later(() => {
-            btnMaths.style.display = 'none';
-          }, 650, token);
-
-          throwIntoTrash(startX, startY, endX, endY, () => {
-            trashWrap.classList.remove('open');
-            trashSlamEffect(endX, endY);
-          }, token);
-        }, 2000, token);
-
-        // 4. Trash exits
-        later(() => {
-          trashWrap.classList.add('exit');
-        }, 3200, token);
-
-        // 5. Upgrade GCSE
-        later(() => {
-          body.classList.add('upgrade-dim');
-          btnGcse.classList.add('upgrading');
-
-          const gRect = btnGcse.getBoundingClientRect();
-          const gCenterX = gRect.left + gRect.width / 2;
-          const gCenterY = gRect.top + gRect.height / 2;
-
-          makeSparkles(gCenterY);
-          upgradeMsg.classList.add('show');
-
-          later(() => {
-            btnGcse.textContent = 'GCSE Countdown & Timetable';
-            impactBurst(gCenterX, gCenterY, ['#fde68a', '#fbbf24', '#ffffff', '#38bdf8'], 36);
-            btnGcse.animate([
-              { transform: 'scale(1.26) translateY(-4px)' },
-              { transform: 'scale(1.13) translateY(-4px)' }
-            ], { duration: 420, easing: 'cubic-bezier(.2, 1.5, .3, 1)' });
-          }, 420, token);
-        }, 4000, token);
-
-        // 6. Settle
-        later(() => {
-          body.classList.remove('upgrade-dim', 'animating');
+        setTimeout(() => {
           body.classList.add('settled');
-          btnGcse.classList.remove('upgrading');
-          upgradeMsg.classList.remove('show');
-          sparkles.classList.add('fade');
-          btnMaths.style.display = 'none';
-          mathsSlot.classList.add('collapsed');
-          try { localStorage.setItem(KEY, '1'); } catch (e) {}
-        }, 7000, token);
-
-        later(() => {
-          sparkles.replaceChildren();
-          fx.replaceChildren();
-        }, 7800, token);
+          if (token === 0) {
+            try { localStorage.setItem(KEY, '1'); } catch (e) {}
+          }
+        }, 2500);
       }
 
-      let storageOK = true;
       let seen = null;
-      try { seen = localStorage.getItem(KEY); } catch (e) { storageOK = false; }
-      const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
-      const forceIntro = /[?&]intro\b/.test(location.search);
-      const playIntro = forceIntro || (storageOK && !seen && !reduceMotion);
+      try { seen = localStorage.getItem(KEY); } catch (e) {}
+
+      if (seen) {
+        // Returning visitor — button at full opacity, replay available
+        body.classList.add('settled');
+      } else {
+        playFade(0);
+      }
+
+      replayBtn.addEventListener('click', () => {
+        playFade(1);
+      });
 
       window.addEventListener('keydown', event => {
         if (event.ctrlKey || event.altKey || event.metaKey || event.key.length !== 1) return;
@@ -671,7 +202,7 @@
           replayBuffer = '';
           if (replayBufferTimer !== null) clearTimeout(replayBufferTimer);
           replayBufferTimer = null;
-          playFullSequence();
+          playFade(1);
           return;
         }
         if (replayBufferTimer !== null) clearTimeout(replayBufferTimer);
@@ -680,16 +211,6 @@
           replayBufferTimer = null;
         }, 2500);
       });
-
-      replayBtn.addEventListener('click', () => {
-        playFullSequence();
-      });
-
-      if (!playIntro) {
-        applySettledStateInstant();
-      } else {
-        playFullSequence();
-      }
     })();
   </script>
 </body>
