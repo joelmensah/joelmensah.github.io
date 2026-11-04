@@ -185,7 +185,6 @@
       try { seen = localStorage.getItem(KEY); } catch (e) {}
 
       if (seen) {
-        // Returning visitor — button at full opacity, replay available
         body.classList.add('settled');
       } else {
         playFade(0);
