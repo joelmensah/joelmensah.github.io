@@ -1,29 +1,388 @@
-1. Assess the extent to which the accuracy of the results and reliability of the conclusions could be proved. (9 marks)
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>River Tillingbourne — Fieldwork Evaluation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        .task-transition {
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .fade-out {
+            opacity: 0;
+            transform: scale(0.95) translateY(-10px);
+            pointer-events: none;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="text-slate-800 min-h-screen pb-16">
 
-- Our results were reasonably accurate because we collected quantitative data at different sites along the River Tillingbourne, allowing us to compare downstream changes.
-- Cross-sectional area increased from 0.38m² at Crossways Farm to 1.50m² at Abinger Hammer, showing the river channel became larger downstream.
-- Average depth also increased from 0.156m to 0.324m, supporting our conclusion that the river became deeper.
-- Using measuring tapes and stopwatches helped us collect numerical data rather than relying on observations.
-- However, human error when measuring depth and timing the cork could have reduced accuracy.
-- Uneven riverbeds and rocks may also have affected our measurements.
-- Overall, our conclusions were reasonably reliable because multiple results supported downstream changes, although some inaccuracies could not be avoided.
+    <!-- Sticky Header & Progress Bar -->
+    <header class="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
+        <div class="max-w-4xl mx-auto px-4 py-4">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <div>
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <span class="px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider bg-blue-900 text-amber-400 rounded-md">Fieldwork</span>
+                        <h1 class="text-lg sm:text-xl font-extrabold text-slate-900">River Tillingbourne</h1>
+                        <span class="px-2 py-0.5 text-[11px] font-bold rounded-full border border-slate-300 text-slate-600">27 marks</span>
+                    </div>
+                    <p class="text-xs sm:text-sm text-slate-500 mt-0.5">Click <span class="font-semibold text-emerald-600">"Done"</span> as you finish writing each answer to remove it.</p>
+                </div>
 
-2. To what extent did the data collected allow you to reach valid conclusions? (9 marks)
+                <!-- Controls -->
+                <div class="flex flex-wrap items-center gap-2">
+                    <button id="undoBtn" onclick="undoLast()" disabled class="px-3 py-1.5 text-xs font-semibold rounded-lg border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 disabled:opacity-40 disabled:pointer-events-none transition flex items-center gap-1.5 shadow-sm">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"/></svg>
+                        Undo
+                    </button>
+                    <button id="toggleShowBtn" onclick="toggleShowCompleted()" class="px-3 py-1.5 text-xs font-semibold rounded-lg border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 transition flex items-center gap-1.5 shadow-sm">
+                        <span id="toggleShowText">Show Completed</span>
+                    </button>
+                    <button onclick="openResetModal()" class="px-3 py-1.5 text-xs font-semibold rounded-lg border border-rose-200 bg-rose-50 text-rose-700 hover:bg-rose-100 transition shadow-sm">
+                        Reset All
+                    </button>
+                </div>
+            </div>
 
-- The data collected allowed us to reach valid conclusions because we gathered quantitative measurements at different locations along the River Tillingbourne.
-- Cross-sectional area increased from 0.38m² at Crossways Farm to 1.50m² at Abinger Hammer, suggesting the river channel became larger downstream.
-- Average depth also increased from 0.156m to 0.324m, supporting our conclusion that the river became deeper.
-- These findings supported our original hypothesis about downstream changes in the river.
-- Collecting several types of measurements allowed us to compare different river characteristics.
-- However, human error and uneven riverbeds may have affected the accuracy of our results.
-- Overall, our data allowed us to reach valid conclusions to a large extent, although further measurements could have improved reliability.
+            <!-- Progress Bar -->
+            <div class="mt-4">
+                <div class="flex justify-between items-center text-xs font-semibold mb-1.5">
+                    <span id="progressText" class="text-slate-600">0 of 3 answers written</span>
+                    <span id="progressPercent" class="text-blue-700 font-bold">0%</span>
+                </div>
+                <div class="w-full h-2.5 bg-slate-200 rounded-full overflow-hidden">
+                    <div id="progressBar" class="h-full bg-gradient-to-r from-blue-600 to-emerald-500 transition-all duration-500 rounded-full" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+    </header>
 
-3. To what extent did the data collected help you obtain accurate results and reach valid conclusions? (9 marks)
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-4 mt-6">
 
-- Collecting quantitative data at different sites along the River Tillingbourne helped us identify patterns in downstream changes.
-- Cross-sectional area increased from 0.38m² at Crossways Farm to 1.50m² at Abinger Hammer, indicating the river channel became larger.
-- Average depth also increased from 0.156m to 0.324m, supporting our conclusion that the river became deeper downstream.
-- Using the same measuring techniques at different sites helped make our results more consistent and comparable.
-- However, human error when measuring and timing the cork could have affected accuracy.
-- Uneven riverbeds and rocks may also have influenced our measurements.
-- Overall, the data helped us obtain reasonably accurate results and reach valid conclusions, although repeating measurements could have improved reliability.
+        <!-- Info Bar -->
+        <div class="mb-6 bg-blue-50/80 border border-blue-200 rounded-xl p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="flex items-center gap-2.5 text-sm text-blue-950">
+                <svg class="w-5 h-5 text-blue-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <span>Highlighted figures are your key evidence — use them to back up each evaluation point.</span>
+            </div>
+            <div class="flex items-center gap-2 text-xs font-semibold text-blue-800">
+                <span class="px-2 py-1 rounded-md bg-white border border-blue-200">0.38 m² → 1.50 m²</span>
+                <span class="px-2 py-1 rounded-md bg-white border border-blue-200">0.156 m → 0.324 m</span>
+            </div>
+        </div>
+
+        <!-- Questions Container -->
+        <div id="questionsContainer" class="space-y-6"></div>
+
+        <!-- Celebration Screen when 100% finished -->
+        <div id="allDoneBanner" class="hidden mt-12 text-center bg-white border-2 border-emerald-200 rounded-2xl p-8 shadow-lg">
+            <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+            </div>
+            <h2 class="text-2xl font-extrabold text-slate-900">All Answers Written!</h2>
+            <p class="text-slate-600 mt-2 max-w-md mx-auto">You've completed all three evaluation questions — accuracy &amp; reliability, validity, and the combined question.</p>
+            <div class="mt-6 flex justify-center gap-3 flex-wrap">
+                <button onclick="toggleShowCompleted()" class="px-4 py-2 text-sm font-semibold rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
+                    Review Completed Answers
+                </button>
+                <button onclick="openResetModal()" class="px-4 py-2 text-sm font-semibold rounded-xl bg-blue-600 text-white hover:bg-blue-700 transition">
+                    Start Over
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-slate-900 text-white px-4 py-2.5 rounded-xl shadow-lg flex items-center gap-2 text-sm font-medium pointer-events-none">
+        <span id="toastMessage">Copied to clipboard!</span>
+    </div>
+
+    <!-- Custom Reset Modal -->
+    <div id="resetModal" class="fixed inset-0 z-50 hidden bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-xl border border-slate-200">
+            <h3 class="text-lg font-bold text-slate-900">Reset all progress?</h3>
+            <p class="text-sm text-slate-600 mt-2">This will bring back all three questions and uncheck everything you've marked as done.</p>
+            <div class="mt-6 flex justify-end gap-2">
+                <button onclick="closeResetModal()" class="px-4 py-2 text-sm font-semibold rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 transition">Cancel</button>
+                <button onclick="confirmResetAll()" class="px-4 py-2 text-sm font-semibold rounded-xl bg-rose-600 text-white hover:bg-rose-700 transition">Yes, Reset Everything</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* ---------------- DATA ---------------- */
+        // Wrap key numbers in [[ ]] to highlight them automatically.
+        const questionsData = [
+            {
+                id: "q1",
+                number: "Question 1",
+                marks: 9,
+                title: "Assess the extent to which the accuracy of the results and reliability of the conclusions could be proved.",
+                points: [
+                    "Our results were reasonably accurate because we collected quantitative data at different sites along the River Tillingbourne, allowing us to compare downstream changes.",
+                    "Cross-sectional area increased from [[0.38 m²]] at Crossways Farm to [[1.50 m²]] at Abinger Hammer, showing the river channel became larger downstream.",
+                    "Average depth also increased from [[0.156 m]] to [[0.324 m]], supporting our conclusion that the river became deeper.",
+                    "Using measuring tapes and stopwatches helped us collect numerical data rather than relying on observations.",
+                    "However, human error when measuring depth and timing the cork could have reduced accuracy.",
+                    "Uneven riverbeds and rocks may also have affected our measurements.",
+                    "Overall, our conclusions were reasonably reliable because multiple results supported downstream changes, although some inaccuracies could not be avoided."
+                ]
+            },
+            {
+                id: "q2",
+                number: "Question 2",
+                marks: 9,
+                title: "To what extent did the data collected allow you to reach valid conclusions?",
+                points: [
+                    "The data collected allowed us to reach valid conclusions because we gathered quantitative measurements at different locations along the River Tillingbourne.",
+                    "Cross-sectional area increased from [[0.38 m²]] at Crossways Farm to [[1.50 m²]] at Abinger Hammer, suggesting the river channel became larger downstream.",
+                    "Average depth also increased from [[0.156 m]] to [[0.324 m]], supporting our conclusion that the river became deeper.",
+                    "These findings supported our original hypothesis about downstream changes in the river.",
+                    "Collecting several types of measurements allowed us to compare different river characteristics.",
+                    "However, human error and uneven riverbeds may have affected the accuracy of our results.",
+                    "Overall, our data allowed us to reach valid conclusions to a large extent, although further measurements could have improved reliability."
+                ]
+            },
+            {
+                id: "q3",
+                number: "Question 3",
+                marks: 9,
+                title: "To what extent did the data collected help you obtain accurate results and reach valid conclusions?",
+                points: [
+                    "Collecting quantitative data at different sites along the River Tillingbourne helped us identify patterns in downstream changes.",
+                    "Cross-sectional area increased from [[0.38 m²]] at Crossways Farm to [[1.50 m²]] at Abinger Hammer, indicating the river channel became larger.",
+                    "Average depth also increased from [[0.156 m]] to [[0.324 m]], supporting our conclusion that the river became deeper downstream.",
+                    "Using the same measuring techniques at different sites helped make our results more consistent and comparable.",
+                    "However, human error when measuring and timing the cork could have affected accuracy.",
+                    "Uneven riverbeds and rocks may also have influenced our measurements.",
+                    "Overall, the data helped us obtain reasonably accurate results and reach valid conclusions, although repeating measurements could have improved reliability."
+                ]
+            }
+        ];
+
+        /* ---------------- STATE ---------------- */
+        const STORAGE_KEY = 'tillingbourne_eval_v1';
+        let completed = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        let historyStack = [];
+        let showCompleted = false;
+
+        const totalQuestions = questionsData.length;
+
+        function saveState() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(completed));
+        }
+
+        /* ---------------- HELPERS ---------------- */
+        function formatPoint(text) {
+            return text.replace(/\[\[(.*?)\]\]/g,
+                '<span class="font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded-md whitespace-nowrap tabular-nums">$1</span>'
+            );
+        }
+
+        function plainPoint(text) {
+            return text.replace(/\[\[(.*?)\]\]/g, '$1');
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMessage').textContent = msg;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            clearTimeout(toast._timer);
+            toast._timer = setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 2200);
+        }
+
+        /* ---------------- ACTIONS ---------------- */
+        function markDone(id) {
+            const q = questionsData.find(item => item.id === id);
+            if (!q) return;
+
+            if (completed.includes(id)) {
+                // Undo this single item
+                completed = completed.filter(x => x !== id);
+                saveState();
+                renderHomework();
+                showToast("Question restored");
+                return;
+            }
+
+            const cardEl = document.getElementById(`card-${id}`);
+            if (cardEl && !showCompleted) cardEl.classList.add('fade-out');
+
+            historyStack.push([id]);
+            setTimeout(() => {
+                if (!completed.includes(id)) completed.push(id);
+                saveState();
+                renderHomework();
+            }, 300);
+        }
+
+        function undoLast() {
+            if (historyStack.length === 0) return;
+            const lastBatch = historyStack.pop();
+            completed = completed.filter(id => !lastBatch.includes(id));
+            saveState();
+            renderHomework();
+            showToast("Restored last completed item");
+        }
+
+        function toggleShowCompleted() {
+            showCompleted = !showCompleted;
+            const btnText = document.getElementById('toggleShowText');
+            const btn = document.getElementById('toggleShowBtn');
+            if (showCompleted) {
+                btnText.textContent = "Hide Completed";
+                btn.classList.add('bg-blue-50', 'border-blue-300', 'text-blue-700');
+                btn.classList.remove('bg-white', 'text-slate-700');
+            } else {
+                btnText.textContent = "Show Completed";
+                btn.classList.remove('bg-blue-50', 'border-blue-300', 'text-blue-700');
+                btn.classList.add('bg-white', 'text-slate-700');
+            }
+            renderHomework();
+        }
+
+        function copyAnswer(id) {
+            const q = questionsData.find(item => item.id === id);
+            if (!q) return;
+
+            const text = q.title + "\n\n" + q.points.map(p => "• " + plainPoint(p)).join("\n");
+
+            const fallbackCopy = () => {
+                const tempInput = document.createElement("textarea");
+                tempInput.value = text;
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                document.execCommand("copy");
+                document.body.removeChild(tempInput);
+                showToast("Copied answer to clipboard!");
+            };
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text)
+                    .then(() => showToast("Copied answer to clipboard!"))
+                    .catch(fallbackCopy);
+            } else {
+                fallbackCopy();
+            }
+        }
+
+        function openResetModal() {
+            document.getElementById('resetModal').classList.remove('hidden');
+        }
+
+        function closeResetModal() {
+            document.getElementById('resetModal').classList.add('hidden');
+        }
+
+        function confirmResetAll() {
+            completed = [];
+            historyStack = [];
+            saveState();
+            closeResetModal();
+            renderHomework();
+            showToast("All progress reset");
+        }
+
+        /* ---------------- UI ---------------- */
+        function updateProgressUI() {
+            const done = completed.length;
+            const percent = Math.round((done / totalQuestions) * 100);
+
+            document.getElementById('progressText').textContent = `${done} of ${totalQuestions} answers written`;
+            document.getElementById('progressPercent').textContent = `${percent}%`;
+            document.getElementById('progressBar').style.width = `${percent}%`;
+
+            document.getElementById('undoBtn').disabled = historyStack.length === 0;
+
+            const allDoneBanner = document.getElementById('allDoneBanner');
+            if (done === totalQuestions && !showCompleted) {
+                allDoneBanner.classList.remove('hidden');
+            } else {
+                allDoneBanner.classList.add('hidden');
+            }
+        }
+
+        function renderHomework() {
+            const container = document.getElementById('questionsContainer');
+            container.innerHTML = '';
+
+            questionsData.forEach(q => {
+                const isDone = completed.includes(q.id);
+                if (isDone && !showCompleted) return;
+
+                const card = document.createElement('section');
+                card.id = `card-${q.id}`;
+                card.className = `task-transition bg-white rounded-2xl border shadow-sm overflow-hidden ${
+                    isDone ? 'border-emerald-200 bg-emerald-50/20' : 'border-slate-200'
+                }`;
+
+                /* Header */
+                const headerHTML = `
+                    <div class="bg-slate-50/80 border-b border-slate-200 px-5 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div class="min-w-0">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <span class="text-xs font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-md bg-slate-800 text-white">${q.number}</span>
+                                <span class="px-2.5 py-0.5 text-[11px] font-bold rounded-full border border-slate-300 text-slate-600">${q.marks} marks</span>
+                                ${isDone ? `<span class="text-xs font-semibold text-emerald-600 flex items-center gap-1">✓ Written</span>` : ''}
+                            </div>
+                            <h2 class="text-base sm:text-lg font-bold text-slate-900 mt-1.5 leading-snug ${isDone ? 'line-through text-slate-400' : ''}">${q.title}</h2>
+                        </div>
+
+                        <div class="flex items-center gap-2 shrink-0">
+                            <button onclick="copyAnswer('${q.id}')" title="Copy answer" class="px-3 py-2 text-xs font-semibold rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-100 active:scale-95 transition flex items-center gap-1.5">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                                Copy
+                            </button>
+                            <button onclick="markDone('${q.id}')" class="px-4 py-2 text-xs font-bold rounded-xl ${
+                                isDone
+                                    ? 'bg-slate-200 text-slate-700 hover:bg-slate-300'
+                                    : 'bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-600 hover:text-white'
+                            } active:scale-95 transition flex items-center gap-1.5">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                                ${isDone ? 'Undo' : 'Done'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                /* Bullet points */
+                const pointsHTML = `
+                    <ul class="divide-y divide-slate-100">
+                        ${q.points.map(p => `
+                            <li class="px-5 py-3.5 flex items-start gap-3 ${isDone ? 'opacity-60' : 'hover:bg-slate-50/40'} transition">
+                                <span class="mt-2 w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0"></span>
+                                <p class="text-sm sm:text-[15px] leading-relaxed font-medium text-slate-800 ${isDone ? 'line-through text-slate-400' : ''}">${formatPoint(p)}</p>
+                            </li>
+                        `).join('')}
+                    </ul>
+                `;
+
+                card.innerHTML = headerHTML + pointsHTML;
+                container.appendChild(card);
+            });
+
+            updateProgressUI();
+        }
+
+        /* ---------------- INIT ---------------- */
+        window.onload = function () {
+            renderHomework();
+        };
+    </script>
+</body>
+</html>
